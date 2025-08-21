@@ -1,5 +1,10 @@
 [![official project](http://jb.gg/badges/official.svg)](https://github.com/JetBrains#jetbrains-on-github)
 
+
+# NOTE Alex D 2025-08-21
+Archiving this experiment. I don't think the effort is worth it for a feature as small as recipe scaling.
+This is a useful tool to keep around though, as other features may benefit from this approach.
+
 # Multiplatform library template
 
 ## What is it?
