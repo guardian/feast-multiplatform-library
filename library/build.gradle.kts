@@ -39,12 +39,6 @@ kotlin {
             isStatic = true
         }
     }
-    linuxX64()
-    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
-        binaries.executable()
-    }
 
     sourceSets {
         val commonMain by getting {
@@ -55,11 +49,6 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(libs.kotlin.test)
-            }
-        }
-        val wasmJsMain by getting {
-            dependencies {
-                // Wasm-specific dependencies
             }
         }
     }
