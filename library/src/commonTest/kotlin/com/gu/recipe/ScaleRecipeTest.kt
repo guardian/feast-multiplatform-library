@@ -1,4 +1,4 @@
-package io.github.kotlin.fibonacci
+package io.github.kotlin.fibonacci.com.gu.recipe
 
 import com.gu.recipe.Recipe
 import com.gu.recipe.RecipeTemplate
