@@ -10,8 +10,8 @@ plugins {
     kotlin("plugin.serialization") version "1.9.0"
 }
 
-group = "io.github.kotlin"
-version = "1.0.0"
+group = "com.gu"
+version = "0.0.1"
 
 kotlin {
     androidTarget {
@@ -67,6 +67,15 @@ android {
 }
 
 mavenPublishing {
+
+    val sonatypeToken = providers.environmentVariable("AUTOMATED_MAVEN_RELEASE_SONATYPE_TOKEN")
+        .orNull?.split(":")
+
+    if (sonatypeToken != null && sonatypeToken.size == 2) {
+        System.setProperty("ORG_GRADLE_PROJECT_mavenCentralUsername", sonatypeToken[0])
+        System.setProperty("ORG_GRADLE_PROJECT_mavenCentralPassword", sonatypeToken[1])
+    }
+
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
     signAllPublications()
@@ -74,28 +83,28 @@ mavenPublishing {
     coordinates(group.toString(), "library", version.toString())
 
     pom {
-        name = "My library"
-        description = "A library."
-        inceptionYear = "2024"
-        url = "https://github.com/kotlin/multiplatform-library-template/"
+        name = "Feast Multiplatform Library"
+        description = "A Kotlin Multiplatform library to handle recipe templates"
+        inceptionYear = "2025"
+        url = "https://github.com/guardian/feast-multiplatform-library"
         licenses {
             license {
-                name = "XXX"
-                url = "YYY"
-                distribution = "ZZZ"
+                name = "Apache-2.0"
+                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution = "repo"
             }
         }
         developers {
             developer {
-                id = "XXX"
-                name = "YYY"
-                url = "ZZZ"
+                id = "guardian"
+                name = "The Guardian"
+                url = "https://github.com/guardian"
             }
         }
         scm {
-            url = "XXX"
-            connection = "YYY"
-            developerConnection = "ZZZ"
+            url = "https://github.com/guardian/feast-multiplatform-library"
+            connection = "scm:git:git://github.com/guardian/feast-multiplatform-library.git"
+            developerConnection = "scm:git:ssh://git@github.com/guardian/feast-multiplatform-library.git"
         }
     }
 }

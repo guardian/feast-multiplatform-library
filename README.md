@@ -277,7 +277,7 @@ You can set up continuous integration which builds and publishes your library fo
 To get started, add the following workflow to your repository, in the `.github/workflows/publish.yml` file.
 
 ```yaml
-# .github/workflows/publish.yml
+# .github/workflows/release.yml
 
 name: Publish
 on:
