@@ -3,6 +3,7 @@ agp = "8.5.2"
 kotlin = "2.1.10"
 android-minSdk = "24"
 android-compileSdk = "34"
+metalava = "0.4.0-alpha03"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -11,3 +12,4 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.29.0" }
+metalava = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava"}
