@@ -68,15 +68,6 @@ android {
 }
 
 mavenPublishing {
-
-    val sonatypeToken = providers.environmentVariable("AUTOMATED_MAVEN_RELEASE_SONATYPE_TOKEN")
-        .orNull?.split(":")
-
-    if (sonatypeToken != null && sonatypeToken.size == 2) {
-        System.setProperty("ORG_GRADLE_PROJECT_mavenCentralUsername", sonatypeToken[0])
-        System.setProperty("ORG_GRADLE_PROJECT_mavenCentralPassword", sonatypeToken[1])
-    }
-
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
     signAllPublications()
