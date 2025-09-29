@@ -1,0 +1,106 @@
+// Signature format: 4.0
+package com.gu.recipe {
+
+  public final class ParsedTemplate {
+    ctor public ParsedTemplate(java.util.List<? extends com.gu.recipe.TemplateElement> elements);
+    method public java.util.List<com.gu.recipe.TemplateElement> component1();
+    method public com.gu.recipe.ParsedTemplate copy(java.util.List<? extends com.gu.recipe.TemplateElement> elements);
+    method public java.util.List<com.gu.recipe.TemplateElement> getElements();
+    property public final java.util.List<com.gu.recipe.TemplateElement> elements;
+  }
+
+  public final class Recipe {
+    ctor public Recipe(String id, String title, java.util.List<java.lang.String> ingredients, java.util.List<java.lang.String> instructions);
+    method public String component1();
+    method public String component2();
+    method public java.util.List<java.lang.String> component3();
+    method public java.util.List<java.lang.String> component4();
+    method public com.gu.recipe.Recipe copy(String id, String title, java.util.List<java.lang.String> ingredients, java.util.List<java.lang.String> instructions);
+    method public String getId();
+    method public java.util.List<java.lang.String> getIngredients();
+    method public java.util.List<java.lang.String> getInstructions();
+    method public String getTitle();
+    property public final String id;
+    property public final java.util.List<java.lang.String> ingredients;
+    property public final java.util.List<java.lang.String> instructions;
+    property public final String title;
+  }
+
+  public final class RecipeTemplate {
+    ctor public RecipeTemplate(String id, String title, java.util.List<com.gu.recipe.Template> ingredients, java.util.List<com.gu.recipe.Template> instructions);
+    method public String component1();
+    method public String component2();
+    method public java.util.List<com.gu.recipe.Template> component3();
+    method public java.util.List<com.gu.recipe.Template> component4();
+    method public com.gu.recipe.RecipeTemplate copy(String id, String title, java.util.List<com.gu.recipe.Template> ingredients, java.util.List<com.gu.recipe.Template> instructions);
+    method public String getId();
+    method public java.util.List<com.gu.recipe.Template> getIngredients();
+    method public java.util.List<com.gu.recipe.Template> getInstructions();
+    method public String getTitle();
+    property public final String id;
+    property public final java.util.List<com.gu.recipe.Template> ingredients;
+    property public final java.util.List<com.gu.recipe.Template> instructions;
+    property public final String title;
+  }
+
+  public final class ScaleRecipeKt {
+    method public static com.gu.recipe.ParsedTemplate parseTemplate(com.gu.recipe.Template template);
+    method public static com.gu.recipe.Recipe scaleRecipe(com.gu.recipe.RecipeTemplate recipe, float factor);
+    method public static String scaleTemplate(com.gu.recipe.ParsedTemplate template, float factor);
+  }
+
+  public final class Template {
+    ctor public Template(String value);
+    method public String component1();
+    method public com.gu.recipe.Template copy(String value);
+    method public String getValue();
+    property public final String value;
+  }
+
+  public sealed interface TemplateElement {
+  }
+
+  @kotlinx.serialization.Serializable public static final class TemplateElement.OvenTemperaturePlaceholder implements com.gu.recipe.TemplateElement {
+    ctor public TemplateElement.OvenTemperaturePlaceholder(int temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
+    method public int component1();
+    method public Integer? component2();
+    method public Integer? component3();
+    method public Float? component4();
+    method public com.gu.recipe.TemplateElement.OvenTemperaturePlaceholder copy(int temperatureC, Integer? temperatureFanC, Integer? temperatureF, Float? gasMark);
+    method public Float? getGasMark();
+    method public int getTemperatureC();
+    method public Integer? getTemperatureF();
+    method public Integer? getTemperatureFanC();
+    property public final Float? gasMark;
+    property public final int temperatureC;
+    property public final Integer? temperatureF;
+    property public final Integer? temperatureFanC;
+  }
+
+  @kotlinx.serialization.Serializable public static final class TemplateElement.QuantityPlaceholder implements com.gu.recipe.TemplateElement {
+    ctor public TemplateElement.QuantityPlaceholder(float min, optional Float? max, optional String? unit, optional boolean scale);
+    method public float component1();
+    method public Float? component2();
+    method public String? component3();
+    method public boolean component4();
+    method public com.gu.recipe.TemplateElement.QuantityPlaceholder copy(float min, Float? max, String? unit, boolean scale);
+    method public Float? getMax();
+    method public float getMin();
+    method public boolean getScale();
+    method public String? getUnit();
+    property public final Float? max;
+    property public final float min;
+    property public final boolean scale;
+    property public final String? unit;
+  }
+
+  public static final class TemplateElement.TemplateConst implements com.gu.recipe.TemplateElement {
+    ctor public TemplateElement.TemplateConst(String value);
+    method public String component1();
+    method public com.gu.recipe.TemplateElement.TemplateConst copy(String value);
+    method public String getValue();
+    property public final String value;
+  }
+
+}
+
