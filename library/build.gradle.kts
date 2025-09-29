@@ -1,18 +1,14 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
+    `maven-publish`
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.vanniktech.mavenPublish)
     alias(libs.plugins.metalava)
     kotlin("plugin.serialization") version "1.9.0"
 }
-
-group = "com.gu"
-version = "0.0.1"
 
 kotlin {
     androidTarget {
@@ -65,38 +61,72 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    // Create a single variant for publishing called "release". Add separate jars for javadoc
+    // and sources.
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.gu"
+            artifactId = "library"
 
-    signAllPublications()
+            version = file("../version.txt").readText().trim()
 
-    coordinates(group.toString(), "library", version.toString())
 
-    pom {
-        name = "Feast Multiplatform Library"
-        description = "A Kotlin Multiplatform library to handle recipe templates"
-        inceptionYear = "2025"
-        url = "https://github.com/guardian/feast-multiplatform-library"
-        licenses {
-            license {
-                name = "Apache-2.0"
-                url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                distribution = "repo"
+            pom {
+                name.set("Feast Multiplatform Library")
+                description.set("A Kotlin Multiplatform library to handle recipe templates")
+                url.set("https://github.com/guardian/feast-multiplatform-library")
+                packaging = "aar"
+                licenses {
+                    license {
+                        name.set("Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("guardian/android-developers")
+                        name.set("The Guardian")
+                        email.set("contact@guardian.co.uk")
+                        url.set("https://github.com/guardian")
+                    }
+                }
+                organization {
+                    name.set("Guardian News & Media")
+                    url.set("https://www.theguardian.com")
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/guardian/feast-multiplatform-library.git")
+                    developerConnection.set("scm:git:git://github.com/guardian/feast-multiplatform-library.git")
+                    url.set("https://github.com/guardian/feast-multiplatform-library")
+                }
+            }
+
+            // Use the artifacts called "release" for publishing.
+            afterEvaluate {
+                from(components["release"])
             }
         }
-        developers {
-            developer {
-                id = "guardian"
-                name = "The Guardian"
-                url = "https://github.com/guardian"
-            }
-        }
-        scm {
-            url = "https://github.com/guardian/feast-multiplatform-library"
-            connection = "scm:git:git://github.com/guardian/feast-multiplatform-library.git"
-            developerConnection = "scm:git:ssh://git@github.com/guardian/feast-multiplatform-library.git"
+    }
+
+    repositories {
+        // Adds a task for publishing locally to the build directory.
+        // Use as `./gradlew :library:publishReleasePublicationToCustomRepository`
+        // Use with -Prepo.local=$LOCAL_ARTIFACTS_STAGING_PATH to output to a custom path.
+        maven {
+            name = "custom"
+            url = uri(
+                (project.findProperty("repo.local") as? String)
+                    ?: "${project.layout.buildDirectory.asFile.get().path}/custom"
+            )
         }
     }
 }
