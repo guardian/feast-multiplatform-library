@@ -75,7 +75,7 @@ publishing {
     publications {
         register<MavenPublication>("release") {
             groupId = "com.gu"
-            artifactId = "library"
+            artifactId = "feast-multiplatform-library"
 
             version = file("../version.txt").readText().trim()
 
