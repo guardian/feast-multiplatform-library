@@ -15,3 +15,76 @@ jobs:
       PGP_PRIVATE_KEY: ${{ secrets.AUTOMATED_MAVEN_RELEASE_PGP_SECRET }}
       GITHUB_APP_PRIVATE_KEY: ${{ secrets.AUTOMATED_MAVEN_GRADLE_RELEASE_GITHUB_APP_PRIVATE_KEY }}
 
+  publish-ios:
+    needs: release
+    runs-on: macos-latest
+    permissions: { contents: write }
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Read version
+        id: version
+        run: echo "VERSION=$(cat version.txt)" >> $GITHUB_OUTPUT
+
+      - name: Build and zip XCFramework
+        run: ./gradlew :library:publishXCFrameworkToGitHub
+
+      - name: Upload XCFramework artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeastSharedLib-xcframework-${{ steps.version.outputs.VERSION }}
+          path: library/build/distributions/FeastSharedLib.xcframework.zip
+
+      - name: Commit and push Package.swift changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Package.swift
+          git commit -m "Update Package.swift for release ${{ steps.version.outputs.VERSION }}"
+          git push
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            const version = '${{ steps.version.outputs.VERSION }}';
+            const zipPath = 'library/build/distributions/FeastSharedLib.xcframework.zip';
+            
+            // Create release
+            const release = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: version,
+              name: `Release ${version}`,
+              draft: false,
+              prerelease: false,
+              generate_release_notes: false
+            });
+            
+            // Upload asset
+            const zipContent = fs.readFileSync(zipPath);
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id,
+              name: 'FeastSharedLib.xcframework.zip',
+              data: zipContent,
+              headers: {
+                'content-type': 'application/zip'
+              }
+            });
