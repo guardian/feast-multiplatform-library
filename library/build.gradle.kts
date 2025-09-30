@@ -150,9 +150,14 @@ tasks.register("zipXCFramework", Zip::class) {
 tasks.register("publishXCFrameworkToGitHub") {
     dependsOn("zipXCFramework")
 
+    // Use Provider APIs for configuration cache compatibility
+    val versionFile = layout.projectDirectory.file("../version.txt")
+    val zipFileProvider = layout.buildDirectory.file("distributions/FeastSharedLib.xcframework.zip")
+    val packageSwiftFile = layout.projectDirectory.file("../Package.swift")
+
     doLast {
-        val version = file("../version.txt").readText().trim()
-        val zipFile = layout.buildDirectory.file("distributions/FeastSharedLib.xcframework.zip").get().asFile
+        val version = versionFile.asFile.readText().trim()
+        val zipFile = zipFileProvider.get().asFile
 
         println("Ready to publish XCFramework version $version")
         println("Zip file location: ${zipFile.absolutePath}")
@@ -190,8 +195,7 @@ tasks.register("publishXCFrameworkToGitHub") {
         )
         """.trimIndent()
 
-        val packageSwiftFile = file("../Package.swift")
-        packageSwiftFile.writeText(packageSwiftContent)
+        packageSwiftFile.asFile.writeText(packageSwiftContent)
 
         println("Generated Package.swift with version $version and checksum $checksum")
     }
