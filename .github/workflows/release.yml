@@ -24,6 +24,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Pull latest changes from release job
+        run: git pull origin ${{ github.ref_name }}
 
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -53,7 +57,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull
           git add Package.swift
           git commit -m "Update Package.swift for release ${{ steps.version.outputs.VERSION }}"
           git push
