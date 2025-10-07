@@ -2,8 +2,12 @@ package com.gu.recipe
 
 import kotlinx.serialization.json.*
 import kotlinx.serialization.Serializable
-
-data class Template(val value: String)
+import com.gu.recipe.generated.RecipeV2
+import com.gu.recipe.generated.RecipeV3
+import com.gu.recipe.generated.StringTemplate
+import com.gu.recipe.generated.IngredientElement
+import com.gu.recipe.generated.IngredientsListIngredientsList
+import com.gu.recipe.generated.InstructionElement
 
 sealed interface TemplateElement {
     data class TemplateConst(
@@ -31,16 +35,15 @@ data class ParsedTemplate(
     val elements: List<TemplateElement>
 )
 
-fun parseTemplate(template: Template): ParsedTemplate {
+fun parseTemplate(template: StringTemplate): ParsedTemplate {
     val pattern = Regex("""\{(?:[^{}"]|"(?:[^"\\\\]|\\\\.)*")*\}""")
     val parts = mutableListOf<TemplateElement>()
     var lastEnd = 0
-    val templateText = template.value
 
-    pattern.findAll(templateText).forEach { match ->
+    pattern.findAll(template).forEach { match ->
         // Add text before JSON
         if (match.range.first > lastEnd) {
-            val textPart = templateText.substring(lastEnd, match.range.first)
+            val textPart = template.substring(lastEnd, match.range.first)
             if (textPart.isNotBlank()) {
                 parts.add(TemplateElement.TemplateConst(textPart))
             }
@@ -67,8 +70,8 @@ fun parseTemplate(template: Template): ParsedTemplate {
     }
 
     // Add remaining text
-    if (lastEnd < templateText.length) {
-        val remaining = templateText.substring(lastEnd)
+    if (lastEnd < template.length) {
+        val remaining = template.substring(lastEnd)
         if (remaining.isNotBlank()) {
             parts.add(TemplateElement.TemplateConst(remaining))
         }
@@ -108,28 +111,61 @@ fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
     return scaledParts.joinToString("")
 }
 
-data class RecipeTemplate(
-    val id: String,
-    val title: String,
-    val ingredients: List<Template>,
-    val instructions: List<Template>
-)
+typealias ClientSideRecipe = RecipeV2
+typealias SeverSideRecipe = RecipeV3
+fun scaleRecipe(recipe: SeverSideRecipe, factor: Float): ClientSideRecipe {
+    val scaledIngredients = recipe.ingredientsTemplate?.map { ingredientSection ->
+        IngredientElement(
+            ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
+                val scaledText = templateIngredient.template?.let { template ->
+                    scaleTemplate(parseTemplate(template), factor)
+                } ?: templateIngredient.text
 
-data class Recipe(
-    val id: String,
-    val title: String,
-    val ingredients: List<String>,
-    val instructions: List<String>
-)
+                IngredientsListIngredientsList(
+                    amount = templateIngredient.amount,
+                    ingredientID = templateIngredient.ingredientID,
+                    name = templateIngredient.name,
+                    optional = templateIngredient.optional,
+                    prefix = templateIngredient.prefix,
+                    suffix = templateIngredient.suffix,
+                    text = scaledText,
+                    unit = templateIngredient.unit
+                )
+            },
+            recipeSection = ingredientSection.recipeSection
+        )
+    }
+    val scaledInstructions = recipe.instructionsTemplate?.map { it ->
+        val description = scaleTemplate(parseTemplate(it.descriptionTemplate), factor)
+        InstructionElement(
+            description = description,
+            images = it.images,
+            stepNumber = it.stepNumber,
+        )
+    }
 
-fun scaleRecipe(recipe: RecipeTemplate, factor: Float): Recipe {
-    val scaledIngredients = recipe.ingredients.map { it -> scaleTemplate(parseTemplate(it), factor) }
-    val scaledInstructions = recipe.instructions.map { it -> scaleTemplate(parseTemplate(it), factor) }
-
-    return Recipe(
-        id = recipe.id,
-        title = recipe.title,
-        ingredients = scaledIngredients,
-        instructions = scaledInstructions
+    return ClientSideRecipe(
+        bookCredit= recipe.bookCredit,
+        byline= recipe.byline,
+        canonicalArticle= recipe.canonicalArticle,
+        celebrationIDS= recipe.celebrationIDS,
+        composerID= recipe.composerID,
+        contributors= recipe.contributors,
+        cuisineIDS= recipe.cuisineIDS,
+        description= recipe.description,
+        difficultyLevel= recipe.difficultyLevel,
+        featuredImage= recipe.featuredImage,
+        id= recipe.id,
+        ingredients= scaledIngredients,
+        instructions= scaledInstructions,
+        isAppReady= recipe.isAppReady,
+        mealTypeIDS= recipe.mealTypeIDS,
+        serves= recipe.serves,
+        suitableForDietIDS= recipe.suitableForDietIDS,
+        techniquesUsedIDS= recipe.techniquesUsedIDS,
+        timings= recipe.timings,
+        title= recipe.title,
+        utensilsAndApplianceIDS= recipe.utensilsAndApplianceIDS,
+        webPublicationDate= recipe.webPublicationDate,
     )
 }
