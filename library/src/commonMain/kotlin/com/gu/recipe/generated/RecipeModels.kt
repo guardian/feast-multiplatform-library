@@ -5,7 +5,7 @@ typealias StringTemplate = String
 /**
  * Image metadata including URL, media identifiers, and attribution
  */
-data class Image (
+data class Image(
     /**
      * Caption or description of the image
      */
@@ -50,7 +50,7 @@ data class Image (
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientItem (
+data class IngredientItem(
     /**
      * Amount of the ingredient as a range or null
      */
@@ -88,7 +88,7 @@ data class IngredientItem (
 /**
  * A numeric range with minimum and maximum values
  */
-data class RangeClass (
+data class RangeClass(
     /**
      * The maximum value of the range
      */
@@ -103,7 +103,7 @@ data class RangeClass (
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientsList (
+data class IngredientsList(
     /**
      * List of ingredients in this section
      */
@@ -118,7 +118,7 @@ data class IngredientsList (
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientsListIngredientsList (
+data class IngredientsListIngredientsList(
     /**
      * Amount of the ingredient as a range or null
      */
@@ -156,7 +156,7 @@ data class IngredientsListIngredientsList (
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientsTemplateList (
+data class IngredientsTemplateList(
     /**
      * List of ingredients in this section
      */
@@ -171,7 +171,7 @@ data class IngredientsTemplateList (
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientsTemplateListIngredientsList (
+data class IngredientsTemplateListIngredientsList(
     /**
      * Amount of the ingredient as a range or null
      */
@@ -211,7 +211,7 @@ data class IngredientsTemplateListIngredientsList (
 /**
  * A single cooking instruction step with optional images
  */
-data class InstructionTemplate (
+data class InstructionTemplate(
     /**
      * Detailed description of the cooking step
      */
@@ -231,7 +231,7 @@ data class InstructionTemplate (
 /**
  * A single cooking instruction step with optional images
  */
-data class Instruction (
+data class Instruction(
     /**
      * Detailed description of the cooking step
      */
@@ -251,7 +251,7 @@ data class Instruction (
 /**
  * A numeric range with minimum and maximum values
  */
-data class Range (
+data class Range(
     /**
      * The maximum value of the range
      */
@@ -266,7 +266,7 @@ data class Range (
 /**
  * Complete recipe with metadata, ingredients, instructions, and categorization
  */
-data class RecipeV2 (
+data class RecipeV2(
     /**
      * Credit to cookbook or publication source
      */
@@ -381,7 +381,7 @@ data class RecipeV2 (
 /**
  * Image metadata including URL, media identifiers, and attribution
  */
-data class ImageClass (
+data class ImageClass(
     /**
      * Caption or description of the image
      */
@@ -426,7 +426,7 @@ data class ImageClass (
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientElement (
+data class IngredientElement(
     /**
      * List of ingredients in this section
      */
@@ -441,7 +441,7 @@ data class IngredientElement (
 /**
  * A single cooking instruction step with optional images
  */
-data class InstructionElement (
+data class InstructionElement(
     /**
      * Detailed description of the cooking step
      */
@@ -461,7 +461,7 @@ data class InstructionElement (
 /**
  * Information about how many servings the recipe makes
  */
-data class ServeElement (
+data class ServeElement(
     /**
      * Number of servings as a range or null
      */
@@ -481,7 +481,7 @@ data class ServeElement (
 /**
  * Timing information for recipe preparation or cooking
  */
-data class TimingElement (
+data class TimingElement(
     /**
      * Duration in minutes as a range or null
      */
@@ -501,7 +501,7 @@ data class TimingElement (
 /**
  * Complete recipe with metadata, ingredients, instructions, and categorization
  */
-data class RecipeV3 (
+data class RecipeV3(
     /**
      * Credit to cookbook or publication source
      */
@@ -626,7 +626,7 @@ data class RecipeV3 (
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientsTemplateElement (
+data class IngredientsTemplateElement(
     /**
      * List of ingredients in this section
      */
@@ -641,7 +641,7 @@ data class IngredientsTemplateElement (
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientsTemplateIngredientsList (
+data class IngredientsTemplateIngredientsList(
     /**
      * Amount of the ingredient as a range or null
      */
@@ -681,7 +681,7 @@ data class IngredientsTemplateIngredientsList (
 /**
  * A single cooking instruction step with optional images
  */
-data class InstructionsTemplateElement (
+data class InstructionsTemplateElement(
     /**
      * Detailed description of the cooking step
      */
@@ -701,7 +701,7 @@ data class InstructionsTemplateElement (
 /**
  * Information about how many servings the recipe makes
  */
-data class Serves (
+data class Serves(
     /**
      * Number of servings as a range or null
      */
@@ -721,7 +721,7 @@ data class Serves (
 /**
  * Timing information for recipe preparation or cooking
  */
-data class Timing (
+data class Timing(
     /**
      * Duration in minutes as a range or null
      */
