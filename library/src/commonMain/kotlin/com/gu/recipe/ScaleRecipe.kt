@@ -1,83 +1,16 @@
 package com.gu.recipe
 
-import kotlinx.serialization.json.*
-import kotlinx.serialization.Serializable
+import com.gu.recipe.generated.*
+import com.gu.recipe.template.ParsedTemplate
+import com.gu.recipe.template.TemplateElement
+import com.gu.recipe.template.parseTemplate
 
-data class Template(val value: String)
-
-sealed interface TemplateElement {
-    data class TemplateConst(
-        val value: String
-    ) : TemplateElement
-
-    @Serializable
-    data class QuantityPlaceholder(
-        val min: Float,
-        val max: Float? = null,
-        val unit: String? = null,
-        val scale: Boolean = false,
-    ) : TemplateElement
-
-    @Serializable
-    data class OvenTemperaturePlaceholder(
-        val temperatureC: Int,
-        val temperatureFanC: Int? = null,
-        val temperatureF: Int? = null,
-        val gasMark: Float? = null,
-    ) : TemplateElement
+sealed interface IngredientUnit {
+    object Imperial : IngredientUnit
+    object Metric : IngredientUnit
 }
 
-data class ParsedTemplate(
-    val elements: List<TemplateElement>
-)
-
-fun parseTemplate(template: Template): ParsedTemplate {
-    val pattern = Regex("""\{(?:[^{}"]|"(?:[^"\\\\]|\\\\.)*")*\}""")
-    val parts = mutableListOf<TemplateElement>()
-    var lastEnd = 0
-    val templateText = template.value
-
-    pattern.findAll(templateText).forEach { match ->
-        // Add text before JSON
-        if (match.range.first > lastEnd) {
-            val textPart = templateText.substring(lastEnd, match.range.first)
-            if (textPart.isNotBlank()) {
-                parts.add(TemplateElement.TemplateConst(textPart))
-            }
-        }
-
-        // Try to parse JSON
-        try {
-            val jsonObj = Json.parseToJsonElement(match.value).jsonObject
-            if (jsonObj.keys.contains("min")) {
-                Json.decodeFromJsonElement<TemplateElement.QuantityPlaceholder>(jsonObj).let {
-                    parts.add(it)
-                }
-            } else {
-                Json.decodeFromJsonElement<TemplateElement.OvenTemperaturePlaceholder>(jsonObj).let {
-                    parts.add(it)
-                }
-            }
-        } catch (e: Exception) {
-            print("Failed to parse JSON: ${match.value}, error: ${e.message}")
-            parts.add(TemplateElement.TemplateConst(match.value))
-        }
-
-        lastEnd = match.range.last + 1
-    }
-
-    // Add remaining text
-    if (lastEnd < templateText.length) {
-        val remaining = templateText.substring(lastEnd)
-        if (remaining.isNotBlank()) {
-            parts.add(TemplateElement.TemplateConst(remaining))
-        }
-    }
-
-    return ParsedTemplate(parts)
-}
-
-fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
+private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
     val scaledParts = template.elements.map { element ->
         when (element) {
             is TemplateElement.TemplateConst -> element.value
@@ -97,6 +30,7 @@ fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
                     "${scaledMin.toInt()} $unit"
                 }
             }
+
             is TemplateElement.OvenTemperaturePlaceholder -> {
                 val tempC = element.temperatureC
                 val tempFanC = element.temperatureFanC
@@ -108,28 +42,62 @@ fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
     return scaledParts.joinToString("")
 }
 
-data class RecipeTemplate(
-    val id: String,
-    val title: String,
-    val ingredients: List<Template>,
-    val instructions: List<Template>
-)
+typealias ClientSideRecipe = RecipeV2
+typealias SeverSideRecipe = RecipeV3
 
-data class Recipe(
-    val id: String,
-    val title: String,
-    val ingredients: List<String>,
-    val instructions: List<String>
-)
+fun scaleRecipe(recipe: SeverSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
+    val scaledIngredients = recipe.ingredientsTemplate?.map { ingredientSection ->
+        IngredientElement(
+            ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
+                val scaledText = templateIngredient.template?.let { template ->
+                    scaleTemplate(parseTemplate(template), factor)
+                } ?: templateIngredient.text
 
-fun scaleRecipe(recipe: RecipeTemplate, factor: Float): Recipe {
-    val scaledIngredients = recipe.ingredients.map { it -> scaleTemplate(parseTemplate(it), factor) }
-    val scaledInstructions = recipe.instructions.map { it -> scaleTemplate(parseTemplate(it), factor) }
+                IngredientsListIngredientsList(
+                    amount = templateIngredient.amount,
+                    ingredientID = templateIngredient.ingredientID,
+                    name = templateIngredient.name,
+                    optional = templateIngredient.optional,
+                    prefix = templateIngredient.prefix,
+                    suffix = templateIngredient.suffix,
+                    text = scaledText,
+                    unit = templateIngredient.unit
+                )
+            },
+            recipeSection = ingredientSection.recipeSection
+        )
+    }
+    val scaledInstructions = recipe.instructionsTemplate?.map { it ->
+        val description = scaleTemplate(parseTemplate(it.descriptionTemplate), factor)
+        InstructionElement(
+            description = description,
+            images = it.images,
+            stepNumber = it.stepNumber,
+        )
+    }
 
-    return Recipe(
+    return ClientSideRecipe(
+        bookCredit = recipe.bookCredit,
+        byline = recipe.byline,
+        canonicalArticle = recipe.canonicalArticle,
+        celebrationIDS = recipe.celebrationIDS,
+        composerID = recipe.composerID,
+        contributors = recipe.contributors,
+        cuisineIDS = recipe.cuisineIDS,
+        description = recipe.description,
+        difficultyLevel = recipe.difficultyLevel,
+        featuredImage = recipe.featuredImage,
         id = recipe.id,
-        title = recipe.title,
         ingredients = scaledIngredients,
-        instructions = scaledInstructions
+        instructions = scaledInstructions,
+        isAppReady = recipe.isAppReady,
+        mealTypeIDS = recipe.mealTypeIDS,
+        serves = recipe.serves,
+        suitableForDietIDS = recipe.suitableForDietIDS,
+        techniquesUsedIDS = recipe.techniquesUsedIDS,
+        timings = recipe.timings,
+        title = recipe.title,
+        utensilsAndApplianceIDS = recipe.utensilsAndApplianceIDS,
+        webPublicationDate = recipe.webPublicationDate,
     )
 }
