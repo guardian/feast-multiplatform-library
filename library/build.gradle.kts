@@ -10,6 +10,7 @@ object Config {
     const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibrary"
     const val BUNDLE_ID = "com.gu.feast.shared"
     const val GITHUB_REPO = "guardian/feast-multiplatform-library"
+    const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library to handle recipe templates"
 }
 
 plugins {
@@ -17,7 +18,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.metalava)
-    kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -47,10 +48,26 @@ kotlin {
         }
     }
 
+    val versionFile = layout.projectDirectory.file("../version.txt")
+    js(IR) {
+        useCommonJs()
+        binaries.executable()
+        nodejs()
+        generateTypeScriptDefinitions()
+
+        compilations["main"].packageJson {
+            customField("name", "@guardian/feast-multiplatform-library")
+            customField("version", versionFile.asFile.readText().trim())
+            customField("description", Config.PACKAGE_DESCRIPTION)
+            customField("keywords", listOf("kotlin", "multiplatform"))
+            customField("license", "Apache-2.0")
+        }
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+                implementation(libs.kotlinx.serialization.json)
             }
         }
         val commonTest by getting {
@@ -92,7 +109,7 @@ publishing {
 
             pom {
                 name.set("Feast Multiplatform Library")
-                description.set("A Kotlin Multiplatform library to handle recipe templates")
+                description.set(Config.PACKAGE_DESCRIPTION)
                 url.set("https://github.com/${Config.GITHUB_REPO}")
                 packaging = "aar"
                 licenses {
@@ -207,4 +224,10 @@ tasks.register("publishXCFrameworkToGitHub") {
 
         println("Generated Package.swift with version $version and checksum $checksum")
     }
+}
+
+tasks.register<Exec>("publishToNpm") {
+    dependsOn("build")
+    workingDir = file("build/js/packages/feast-multiplatform-library-library")
+    commandLine("npm", "publish", "--access", "public")
 }
