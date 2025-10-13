@@ -225,9 +225,3 @@ tasks.register("publishXCFrameworkToGitHub") {
         println("Generated Package.swift with version $version and checksum $checksum")
     }
 }
-
-tasks.register<Exec>("publishToNpm") {
-    dependsOn("build")
-    workingDir = file("build/js/packages/feast-multiplatform-library-library")
-    commandLine("npm", "publish", "--access", "public")
-}
