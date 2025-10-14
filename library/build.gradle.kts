@@ -225,3 +225,9 @@ tasks.register("publishXCFrameworkToGitHub") {
         println("Generated Package.swift with version $version and checksum $checksum")
     }
 }
+
+tasks.withType<Test> {
+    reports {
+        junitXml.required.set(true)
+    }
+}
