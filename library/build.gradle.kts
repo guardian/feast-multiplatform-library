@@ -160,7 +160,7 @@ publishing {
 
 // iOS XCFramework publishing tasks
 tasks.register("zipXCFramework", Zip::class) {
-    dependsOn("assembleFeastSharedLibXCFramework")
+    dependsOn("assemble${Config.SPM_FRAMEWORK_NAME}XCFramework")
 
     val xcframeworkPath = layout.buildDirectory.dir("XCFrameworks/release/${Config.SPM_FRAMEWORK_NAME}.xcframework")
     from(xcframeworkPath)
