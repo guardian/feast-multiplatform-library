@@ -50,8 +50,8 @@ jobs:
       - name: Upload XCFramework artifact
         uses: actions/upload-artifact@v4
         with:
-          name: FeastSharedLib-xcframework-${{ steps.version.outputs.VERSION }}
-          path: library/build/distributions/FeastSharedLib.xcframework.zip
+          name: FeastMultiplatformLibrary-xcframework-${{ steps.version.outputs.VERSION }}
+          path: library/build/distributions/FeastMultiplatformLibrary.xcframework.zip
 
       - name: Commit and push Package.swift changes
         run: |
@@ -69,7 +69,7 @@ jobs:
             const path = require('path');
             
             const version = '${{ steps.version.outputs.VERSION }}';
-            const zipPath = 'library/build/distributions/FeastSharedLib.xcframework.zip';
+            const zipPath = 'library/build/distributions/FeastMultiplatformLibrary.xcframework.zip';
             
             // Create release
             const release = await github.rest.repos.createRelease({
@@ -88,7 +88,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: release.data.id,
-              name: 'FeastSharedLib.xcframework.zip',
+              name: 'FeastMultiplatformLibrary.xcframework.zip',
               data: zipContent,
               headers: {
                 'content-type': 'application/zip'
