@@ -12,6 +12,10 @@ package com.gu.recipe {
     field public static final com.gu.recipe.IngredientUnit.Metric INSTANCE;
   }
 
+  public final class ScaleRecipeJsContractKt {
+    method public static String scaleRecipe(String recipe, float factor, String unit);
+  }
+
   public final class ScaleRecipeKt {
     method public static com.gu.recipe.generated.RecipeV2 scaleRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
   }
