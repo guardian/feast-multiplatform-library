@@ -5,7 +5,7 @@ jobs:
   release:
     if: github.repository == 'guardian/feast-multiplatform-library'
     permissions: { contents: write, pull-requests: write }
-    uses: guardian/gha-gradle-library-release-workflow/.github/workflows/reusable-release.yml@b2bf9c33e58792d68d3338767d2f648758b6af1d
+    uses: guardian/gha-gradle-library-release-workflow/.github/workflows/reusable-release.yml@f5240dec53346b509b908103aefda50ac560700c
     with:
       MODULES: 'library'
       API_FILE: 'api.txt'
