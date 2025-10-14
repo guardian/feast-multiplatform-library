@@ -179,6 +179,7 @@ tasks.register("publishXCFrameworkToGitHub") {
     val versionFile = layout.projectDirectory.file("../version.txt")
     val zipFileProvider = layout.buildDirectory.file("distributions/${Config.SPM_FRAMEWORK_NAME}.xcframework.zip")
     val packageSwiftFile = layout.projectDirectory.file("../Package.swift")
+    val iosVersion = libs.versions.ios.get()
 
     doLast {
         val version = versionFile.asFile.readText().trim()
@@ -206,7 +207,7 @@ tasks.register("publishXCFrameworkToGitHub") {
         let package = Package(
             name: "${Config.SPM_FRAMEWORK_NAME}",
             platforms: [
-                .iOS(.v${libs.versions.ios.get()}),
+                .iOS(.v${iosVersion}),
             ],
             products: [
                 .library(name: "${Config.SPM_FRAMEWORK_NAME}", targets: ["${Config.SPM_FRAMEWORK_NAME}"])
