@@ -5,7 +5,7 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 fun scaleRecipe(recipe: String, factor: Float, unit: String): String {
-    val parsedRecipe = Json.decodeFromString<SeverSideRecipe>(recipe)
+    val parsedRecipe = Json.decodeFromString<ServerSideRecipe>(recipe)
     val ingredientUnit = when (unit) {
         "Imperial" -> IngredientUnit.Imperial
         "Metric" -> IngredientUnit.Metric

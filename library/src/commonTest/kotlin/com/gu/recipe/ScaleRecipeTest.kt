@@ -2,7 +2,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 
 import com.gu.recipe.ClientSideRecipe
 import com.gu.recipe.IngredientUnit
-import com.gu.recipe.SeverSideRecipe
+import com.gu.recipe.ServerSideRecipe
 import com.gu.recipe.generated.*
 import com.gu.recipe.scaleRecipe
 import kotlin.test.Test
@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class ScaleRecipeTest {
     @Test
     fun `scale a recipe`() {
-        val recipeTemplate = SeverSideRecipe(
+        val recipeTemplate = ServerSideRecipe(
             id = "test-recipe",
             ingredientsTemplate = listOf(
                 IngredientsTemplateElement(
