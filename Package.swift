@@ -4,17 +4,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "FeastSharedLib",
+    name: "FeastMultiplatformLibrary",
     platforms: [
         .iOS(.v17),
     ],
     products: [
-        .library(name: "FeastSharedLib", targets: ["FeastSharedLib"])
+        .library(name: "FeastMultiplatformLibrary", targets: ["FeastMultiplatformLibrary"])
     ],
     targets: [
         .binaryTarget(
-            name: "FeastSharedLib",
-            url: "https://github.com/guardian/feast-multiplatform-library/releases/download/1.0.0/FeastSharedLib.xcframework.zip",
-            checksum:"28256d5fb331b1f2274916be568d2a9250eb75e9fec4f41ce3fc6c3d03ef0d9e")
+            name: "FeastMultiplatformLibrary",
+            url: "https://github.com/guardian/feast-multiplatform-library/releases/download/1.1.3/FeastMultiplatformLibrary.xcframework.zip",
+            checksum:"5154cef4d4777af73871e25e3a73bd264deefa4d8c48a0c82b95d141172b0671")
     ]
 )
