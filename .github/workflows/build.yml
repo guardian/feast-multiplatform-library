@@ -19,13 +19,10 @@ jobs:
         include:
           - target: iosSimulatorArm64Test
             os: macos-latest
-            publish-action: EnricoMi/publish-unit-test-result-action/macos@v2
           - target: testDebugUnitTest
             os: ubuntu-latest
-            publish-action: EnricoMi/publish-unit-test-result-action/linux@v2
           - target: testReleaseUnitTest
             os: ubuntu-latest
-            publish-action: EnricoMi/publish-unit-test-result-action/linux@v2
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -47,8 +44,27 @@ jobs:
       with:
         arguments: ${{ matrix.target }}
 
-    - name: Publish Unit Test Results
-      uses: ${{ matrix.publish-action }}
+    - name: Upload Test Results
       if: (!cancelled())
+      uses: actions/upload-artifact@v4
       with:
-        files: '**/build/test-results/*/*.xml'
+        name: Test Results (target ${{ matrix.target }})
+        path: '**/build/test-results/*/*.xml'
+
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: build
+    runs-on: ubuntu-latest
+    if: (!cancelled())
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/*.xml"
+
