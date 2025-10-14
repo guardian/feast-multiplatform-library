@@ -43,9 +43,9 @@ private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
 }
 
 typealias ClientSideRecipe = RecipeV2
-typealias SeverSideRecipe = RecipeV3
+typealias ServerSideRecipe = RecipeV3
 
-fun scaleRecipe(recipe: SeverSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
+fun scaleRecipe(recipe: ServerSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
     val scaledIngredients = recipe.ingredientsTemplate?.map { ingredientSection ->
         IngredientElement(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->

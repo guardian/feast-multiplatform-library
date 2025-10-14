@@ -4,12 +4,21 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import java.io.FileInputStream
 import java.security.MessageDigest
 
+object Config {
+    const val GROUP_ID = "com.gu"
+    const val MAVEN_ARTIFACT_ID = "feast-multiplatform-library"
+    const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibrary"
+    const val BUNDLE_ID = "com.gu.feast.shared"
+    const val GITHUB_REPO = "guardian/feast-multiplatform-library"
+    const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library to handle recipe templates"
+}
+
 plugins {
     `maven-publish`
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.metalava)
-    kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -17,12 +26,12 @@ kotlin {
         publishLibraryVariants("release")
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.get()))
         }
     }
 
 
-    val xcf = XCFramework("FeastSharedLib")
+    val xcf = XCFramework(Config.SPM_FRAMEWORK_NAME)
 
     listOf(
         iosX64(),
@@ -30,19 +39,35 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach {
         it.binaries.framework {
-            baseName = "FeastSharedLib"
+            baseName = Config.SPM_FRAMEWORK_NAME
 
             // Specify CFBundleIdentifier to uniquely identify the framework
-            binaryOption("bundleId", "com.gu.feast.shared")
+            binaryOption("bundleId", Config.BUNDLE_ID)
             xcf.add(this)
             isStatic = true
+        }
+    }
+
+    val versionFile = layout.projectDirectory.file("../version.txt")
+    js(IR) {
+        useCommonJs()
+        binaries.executable()
+        nodejs()
+        generateTypeScriptDefinitions()
+
+        compilations["main"].packageJson {
+            customField("name", "@guardian/feast-multiplatform-library")
+            customField("version", versionFile.asFile.readText().trim())
+            customField("description", Config.PACKAGE_DESCRIPTION)
+            customField("keywords", listOf("kotlin", "multiplatform"))
+            customField("license", "Apache-2.0")
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+                implementation(libs.kotlinx.serialization.json)
             }
         }
         val commonTest by getting {
@@ -54,14 +79,14 @@ kotlin {
 }
 
 android {
-    namespace = "org.jetbrains.kotlinx.multiplatform.library.template"
+    namespace = Config.BUNDLE_ID
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jvm.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jvm.get())
     }
     // Create a single variant for publishing called "release". Add separate jars for javadoc
     // and sources.
@@ -76,16 +101,16 @@ android {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.gu"
-            artifactId = "feast-multiplatform-library"
+            groupId = Config.GROUP_ID
+            artifactId = Config.MAVEN_ARTIFACT_ID
 
             version = file("../version.txt").readText().trim()
 
 
             pom {
                 name.set("Feast Multiplatform Library")
-                description.set("A Kotlin Multiplatform library to handle recipe templates")
-                url.set("https://github.com/guardian/feast-multiplatform-library")
+                description.set(Config.PACKAGE_DESCRIPTION)
+                url.set("https://github.com/${Config.GITHUB_REPO}")
                 packaging = "aar"
                 licenses {
                     license {
@@ -106,9 +131,9 @@ publishing {
                     url.set("https://www.theguardian.com")
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/guardian/feast-multiplatform-library.git")
-                    developerConnection.set("scm:git:git://github.com/guardian/feast-multiplatform-library.git")
-                    url.set("https://github.com/guardian/feast-multiplatform-library")
+                    connection.set("scm:git:git://github.com/${Config.GITHUB_REPO}.git")
+                    developerConnection.set("scm:git:git://github.com/${Config.GITHUB_REPO}.git")
+                    url.set("https://github.com/${Config.GITHUB_REPO}")
                 }
             }
 
@@ -137,9 +162,9 @@ publishing {
 tasks.register("zipXCFramework", Zip::class) {
     dependsOn("assembleFeastSharedLibXCFramework")
 
-    val xcframeworkPath = layout.buildDirectory.dir("XCFrameworks/release/FeastSharedLib.xcframework")
+    val xcframeworkPath = layout.buildDirectory.dir("XCFrameworks/release/${Config.SPM_FRAMEWORK_NAME}.xcframework")
     from(xcframeworkPath)
-    archiveFileName.set("FeastSharedLib.xcframework.zip")
+    archiveFileName.set("${Config.SPM_FRAMEWORK_NAME}.xcframework.zip")
     destinationDirectory.set(layout.buildDirectory.dir("distributions"))
 
     doLast {
@@ -152,7 +177,7 @@ tasks.register("publishXCFrameworkToGitHub") {
 
     // Use Provider APIs for configuration cache compatibility
     val versionFile = layout.projectDirectory.file("../version.txt")
-    val zipFileProvider = layout.buildDirectory.file("distributions/FeastSharedLib.xcframework.zip")
+    val zipFileProvider = layout.buildDirectory.file("distributions/${Config.SPM_FRAMEWORK_NAME}.xcframework.zip")
     val packageSwiftFile = layout.projectDirectory.file("../Package.swift")
 
     doLast {
@@ -179,17 +204,17 @@ tasks.register("publishXCFrameworkToGitHub") {
         import PackageDescription
         
         let package = Package(
-            name: "FeastSharedLib",
+            name: "${Config.SPM_FRAMEWORK_NAME}",
             platforms: [
-                .iOS(.v17),
+                .iOS(.v${libs.versions.ios.get()}),
             ],
             products: [
-                .library(name: "FeastSharedLib", targets: ["FeastSharedLib"])
+                .library(name: "${Config.SPM_FRAMEWORK_NAME}", targets: ["${Config.SPM_FRAMEWORK_NAME}"])
             ],
             targets: [
                 .binaryTarget(
-                    name: "FeastSharedLib",
-                    url: "https://github.com/guardian/feast-multiplatform-library/releases/download/$version/FeastSharedLib.xcframework.zip",
+                    name: "${Config.SPM_FRAMEWORK_NAME}",
+                    url: "https://github.com/${Config.GITHUB_REPO}/releases/download/$version/${Config.SPM_FRAMEWORK_NAME}.xcframework.zip",
                     checksum:"$checksum")
             ]
         )
@@ -198,5 +223,11 @@ tasks.register("publishXCFrameworkToGitHub") {
         packageSwiftFile.asFile.writeText(packageSwiftContent)
 
         println("Generated Package.swift with version $version and checksum $checksum")
+    }
+}
+
+tasks.withType<Test> {
+    reports {
+        junitXml.required.set(true)
     }
 }
