@@ -1,11 +1,35 @@
+// To parse the JSON, install kotlin's serialization plugin and do:
+//
+// val json                    = Json { allowStructuredMapKeys = true }
+// val image                   = json.parse(Image.serializer(), jsonString)
+// val ingredientItem          = json.parse(IngredientItem.serializer(), jsonString)
+// val ingredientsList         = json.parse(IngredientsList.serializer(), jsonString)
+// val ingredientsTemplateList = json.parse(IngredientsTemplateList.serializer(), jsonString)
+// val instructionTemplate     = json.parse(InstructionTemplate.serializer(), jsonString)
+// val instruction             = json.parse(Instruction.serializer(), jsonString)
+// val project                 = json.parse(Project.serializer(), jsonString)
+// val range                   = json.parse(Range.serializer(), jsonString)
+// val recipeV2                = json.parse(RecipeV2.serializer(), jsonString)
+// val recipeV3                = json.parse(RecipeV3.serializer(), jsonString)
+// val serves                  = json.parse(Serves.serializer(), jsonString)
+// val stringTemplate          = json.parse(StringTemplate.serializer(), jsonString)
+// val timing                  = json.parse(Timing.serializer(), jsonString)
+
 package com.gu.recipe.generated
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.encoding.*
+
+typealias Project = JsonElement?
 typealias StringTemplate = String
 
 /**
  * Image metadata including URL, media identifiers, and attribution
  */
-data class Image(
+@Serializable
+data class Image (
     /**
      * Caption or description of the image
      */
@@ -14,6 +38,7 @@ data class Image(
     /**
      * Identifier for the specific crop of the image
      */
+    @SerialName("cropId")
     val cropID: String,
 
     /**
@@ -24,11 +49,13 @@ data class Image(
     /**
      * API URL for accessing the media
      */
+    @SerialName("mediaApiUrl")
     val mediaAPIURL: String? = null,
 
     /**
      * Unique identifier for the media
      */
+    @SerialName("mediaId")
     val mediaID: String,
 
     /**
@@ -50,7 +77,8 @@ data class Image(
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientItem(
+@Serializable
+data class IngredientItem (
     /**
      * Amount of the ingredient as a range or null
      */
@@ -59,6 +87,7 @@ data class IngredientItem(
     /**
      * Unique identifier for the ingredient
      */
+    @SerialName("ingredientId")
     val ingredientID: String? = null,
 
     /**
@@ -88,7 +117,8 @@ data class IngredientItem(
 /**
  * A numeric range with minimum and maximum values
  */
-data class RangeClass(
+@Serializable
+data class RangeClass (
     /**
      * The maximum value of the range
      */
@@ -103,7 +133,8 @@ data class RangeClass(
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientsList(
+@Serializable
+data class IngredientsList (
     /**
      * List of ingredients in this section
      */
@@ -118,7 +149,8 @@ data class IngredientsList(
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientsListIngredientsList(
+@Serializable
+data class IngredientsListIngredientsList (
     /**
      * Amount of the ingredient as a range or null
      */
@@ -127,6 +159,7 @@ data class IngredientsListIngredientsList(
     /**
      * Unique identifier for the ingredient
      */
+    @SerialName("ingredientId")
     val ingredientID: String? = null,
 
     /**
@@ -156,7 +189,8 @@ data class IngredientsListIngredientsList(
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientsTemplateList(
+@Serializable
+data class IngredientsTemplateList (
     /**
      * List of ingredients in this section
      */
@@ -171,7 +205,8 @@ data class IngredientsTemplateList(
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientsTemplateListIngredientsList(
+@Serializable
+data class IngredientsTemplateListIngredientsList (
     /**
      * Amount of the ingredient as a range or null
      */
@@ -180,6 +215,7 @@ data class IngredientsTemplateListIngredientsList(
     /**
      * Unique identifier for the ingredient
      */
+    @SerialName("ingredientId")
     val ingredientID: String? = null,
 
     /**
@@ -211,7 +247,8 @@ data class IngredientsTemplateListIngredientsList(
 /**
  * A single cooking instruction step with optional images
  */
-data class InstructionTemplate(
+@Serializable
+data class InstructionTemplate (
     /**
      * Detailed description of the cooking step
      */
@@ -231,7 +268,8 @@ data class InstructionTemplate(
 /**
  * A single cooking instruction step with optional images
  */
-data class Instruction(
+@Serializable
+data class Instruction (
     /**
      * Detailed description of the cooking step
      */
@@ -251,7 +289,8 @@ data class Instruction(
 /**
  * A numeric range with minimum and maximum values
  */
-data class Range(
+@Serializable
+data class Range (
     /**
      * The maximum value of the range
      */
@@ -266,7 +305,8 @@ data class Range(
 /**
  * Complete recipe with metadata, ingredients, instructions, and categorization
  */
-data class RecipeV2(
+@Serializable
+data class RecipeV2 (
     /**
      * Credit to cookbook or publication source
      */
@@ -285,11 +325,13 @@ data class RecipeV2(
     /**
      * Identifiers for celebrations or holidays associated with the recipe
      */
+    @SerialName("celebrationIds")
     val celebrationIDS: List<String?>? = null,
 
     /**
      * Identifier for the content management system
      */
+    @SerialName("composerId")
     val composerID: String? = null,
 
     /**
@@ -300,6 +342,7 @@ data class RecipeV2(
     /**
      * Identifiers for cuisine types
      */
+    @SerialName("cuisineIds")
     val cuisineIDS: List<String?>? = null,
 
     /**
@@ -340,6 +383,7 @@ data class RecipeV2(
     /**
      * Identifiers for meal types (breakfast, lunch, dinner, etc.)
      */
+    @SerialName("mealTypeIds")
     val mealTypeIDS: List<String?>? = null,
 
     /**
@@ -350,11 +394,13 @@ data class RecipeV2(
     /**
      * Identifiers for dietary restrictions the recipe accommodates
      */
+    @SerialName("suitableForDietIds")
     val suitableForDietIDS: List<String?>? = null,
 
     /**
      * Identifiers for cooking techniques used in the recipe
      */
+    @SerialName("techniquesUsedIds")
     val techniquesUsedIDS: List<String?>? = null,
 
     /**
@@ -370,6 +416,7 @@ data class RecipeV2(
     /**
      * Identifiers for required utensils and appliances
      */
+    @SerialName("utensilsAndApplianceIds")
     val utensilsAndApplianceIDS: List<String?>? = null,
 
     /**
@@ -381,7 +428,8 @@ data class RecipeV2(
 /**
  * Image metadata including URL, media identifiers, and attribution
  */
-data class ImageClass(
+@Serializable
+data class ImageClass (
     /**
      * Caption or description of the image
      */
@@ -390,6 +438,7 @@ data class ImageClass(
     /**
      * Identifier for the specific crop of the image
      */
+    @SerialName("cropId")
     val cropID: String,
 
     /**
@@ -400,11 +449,13 @@ data class ImageClass(
     /**
      * API URL for accessing the media
      */
+    @SerialName("mediaApiUrl")
     val mediaAPIURL: String? = null,
 
     /**
      * Unique identifier for the media
      */
+    @SerialName("mediaId")
     val mediaID: String,
 
     /**
@@ -426,7 +477,8 @@ data class ImageClass(
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientElement(
+@Serializable
+data class IngredientElement (
     /**
      * List of ingredients in this section
      */
@@ -441,7 +493,8 @@ data class IngredientElement(
 /**
  * A single cooking instruction step with optional images
  */
-data class InstructionElement(
+@Serializable
+data class InstructionElement (
     /**
      * Detailed description of the cooking step
      */
@@ -461,7 +514,8 @@ data class InstructionElement(
 /**
  * Information about how many servings the recipe makes
  */
-data class ServeElement(
+@Serializable
+data class ServeElement (
     /**
      * Number of servings as a range or null
      */
@@ -481,7 +535,8 @@ data class ServeElement(
 /**
  * Timing information for recipe preparation or cooking
  */
-data class TimingElement(
+@Serializable
+data class TimingElement (
     /**
      * Duration in minutes as a range or null
      */
@@ -501,7 +556,8 @@ data class TimingElement(
 /**
  * Complete recipe with metadata, ingredients, instructions, and categorization
  */
-data class RecipeV3(
+@Serializable
+data class RecipeV3 (
     /**
      * Credit to cookbook or publication source
      */
@@ -520,11 +576,13 @@ data class RecipeV3(
     /**
      * Identifiers for celebrations or holidays associated with the recipe
      */
+    @SerialName("celebrationIds")
     val celebrationIDS: List<String?>? = null,
 
     /**
      * Identifier for the content management system
      */
+    @SerialName("composerId")
     val composerID: String? = null,
 
     /**
@@ -535,6 +593,7 @@ data class RecipeV3(
     /**
      * Identifiers for cuisine types
      */
+    @SerialName("cuisineIds")
     val cuisineIDS: List<String?>? = null,
 
     /**
@@ -585,6 +644,7 @@ data class RecipeV3(
     /**
      * Identifiers for meal types (breakfast, lunch, dinner, etc.)
      */
+    @SerialName("mealTypeIds")
     val mealTypeIDS: List<String?>? = null,
 
     /**
@@ -595,11 +655,13 @@ data class RecipeV3(
     /**
      * Identifiers for dietary restrictions the recipe accommodates
      */
+    @SerialName("suitableForDietIds")
     val suitableForDietIDS: List<String?>? = null,
 
     /**
      * Identifiers for cooking techniques used in the recipe
      */
+    @SerialName("techniquesUsedIds")
     val techniquesUsedIDS: List<String?>? = null,
 
     /**
@@ -615,6 +677,7 @@ data class RecipeV3(
     /**
      * Identifiers for required utensils and appliances
      */
+    @SerialName("utensilsAndApplianceIds")
     val utensilsAndApplianceIDS: List<String?>? = null,
 
     /**
@@ -626,7 +689,8 @@ data class RecipeV3(
 /**
  * A section of ingredients with an optional section name
  */
-data class IngredientsTemplateElement(
+@Serializable
+data class IngredientsTemplateElement (
     /**
      * List of ingredients in this section
      */
@@ -641,7 +705,8 @@ data class IngredientsTemplateElement(
 /**
  * Individual ingredient item with amount, unit, and optional modifiers
  */
-data class IngredientsTemplateIngredientsList(
+@Serializable
+data class IngredientsTemplateIngredientsList (
     /**
      * Amount of the ingredient as a range or null
      */
@@ -650,6 +715,7 @@ data class IngredientsTemplateIngredientsList(
     /**
      * Unique identifier for the ingredient
      */
+    @SerialName("ingredientId")
     val ingredientID: String? = null,
 
     /**
@@ -681,7 +747,8 @@ data class IngredientsTemplateIngredientsList(
 /**
  * A single cooking instruction step with optional images
  */
-data class InstructionsTemplateElement(
+@Serializable
+data class InstructionsTemplateElement (
     /**
      * Detailed description of the cooking step
      */
@@ -701,7 +768,8 @@ data class InstructionsTemplateElement(
 /**
  * Information about how many servings the recipe makes
  */
-data class Serves(
+@Serializable
+data class Serves (
     /**
      * Number of servings as a range or null
      */
@@ -721,7 +789,8 @@ data class Serves(
 /**
  * Timing information for recipe preparation or cooking
  */
-data class Timing(
+@Serializable
+data class Timing (
     /**
      * Duration in minutes as a range or null
      */
