@@ -51,7 +51,7 @@ class ScaleRecipeTest {
                     )
                 )
             ),
-            instructions = listOf(InstructionElement(description = "pre-warm the oven to 180°C (160°C fan)"))
+            instructions = listOf(InstructionElement(description = "pre-warm the oven to 180C (160C fan)"))
         )
         val scaledRecipe = scaleRecipe(recipeTemplate, 2.0f, unit = IngredientUnit.Metric)
         assertEquals(

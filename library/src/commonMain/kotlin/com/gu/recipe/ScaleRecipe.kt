@@ -11,7 +11,27 @@ sealed interface IngredientUnit {
     object Metric : IngredientUnit
 }
 
-internal fun formatNumber(number: Float, decimals: Int, fraction: Boolean): String {
+internal fun formatFraction(number: Float): String {
+    val integerPart = number.toInt()
+    val fractionalPart = number - integerPart
+    val fractionString = when (fractionalPart) {
+        0.25f -> "¼"
+        0.5f -> "½"
+        0.75f -> "¾"
+        else -> null
+    }
+    return if (fractionString != null) {
+        if (integerPart > 0) {
+            "$integerPart$fractionString"
+        } else {
+            fractionString
+        }
+    } else {
+        number.toString()
+    }
+}
+
+internal fun formatAmount(number: Float, decimals: Int, fraction: Boolean): String {
     var multiplier = 1.0
     repeat(decimals) { multiplier *= 10 }
     val roundedNumber = round(number * multiplier) / multiplier
@@ -21,23 +41,7 @@ internal fun formatNumber(number: Float, decimals: Int, fraction: Boolean): Stri
     }
 
     if (fraction) {
-        val integerPart = roundedNumber.toInt()
-        val fractionalPart = (roundedNumber - integerPart).toFloat()
-        val fractionString = when (fractionalPart) {
-            0.25f -> "¼"
-            0.5f -> "½"
-            0.75f -> "¾"
-            else -> null
-        }
-        return if (fractionString != null) {
-            if (integerPart > 0) {
-                "$integerPart$fractionString"
-            } else {
-                fractionString
-            }
-        } else {
-            roundedNumber.toString()
-        }
+        return formatFraction(roundedNumber.toFloat())
     }
     return roundedNumber.toString()
 }
@@ -68,16 +72,24 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
                 }
 
                 if (scaledMax != null) {
-                    "${formatNumber(scaledMin, decimals, fraction)}-${formatNumber(scaledMax, decimals, fraction)}$unit"
+                    "${formatAmount(scaledMin, decimals, fraction)}-${formatAmount(scaledMax, decimals, fraction)}$unit"
                 } else {
-                    "${formatNumber(scaledMin, decimals, fraction)}$unit"
+                    "${formatAmount(scaledMin, decimals, fraction)}$unit"
                 }
             }
 
             is TemplateElement.OvenTemperaturePlaceholder -> {
-                val tempC = element.temperatureC
-                val tempFanC = element.temperatureFanC
-                "${tempC}°C${tempFanC?.let { " (${it}°C fan)" } ?: ""}"
+                var temp = "${element.temperatureC}C"
+                if (element.temperatureFanC != null) {
+                    temp += " (${element.temperatureFanC}C fan)"
+                }
+                if (element.temperatureF != null) {
+                    temp += "/${element.temperatureF}F"
+                }
+                if (element.gasMark != null) {
+                    temp += "/gas mark ${formatFraction(element.gasMark)}"
+                }
+                temp
             }
         }
     }

@@ -137,7 +137,7 @@ class ScaleTemplateTest {
             )
         )
         val result = scaleTemplate(template, 2f)
-        assertEquals("180°C (160°C fan)", result)
+        assertEquals("180C (160C fan)", result)
     }
 
     @Test
@@ -150,7 +150,7 @@ class ScaleTemplateTest {
             )
         )
         val result = scaleTemplate(template, 2f)
-        assertEquals("200°C", result)
+        assertEquals("200C", result)
     }
 
     @Test
@@ -202,7 +202,7 @@ class ScaleTemplateTest {
             )
         )
         val result = scaleTemplate(template, 2f)
-        assertEquals("Bake at 180°C (160°C fan) for 30-40 minutes.", result)
+        assertEquals("Bake at 180C (160C fan) for 30-40 minutes.", result)
     }
 
     @Test
