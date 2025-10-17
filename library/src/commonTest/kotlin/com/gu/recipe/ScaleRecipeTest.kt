@@ -18,6 +18,12 @@ class ScaleRecipeTest {
                     ingredientsList = listOf(
                         IngredientsTemplateIngredientsList(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour"""
+                        ),
+                        IngredientsTemplateIngredientsList(
+                            template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes"""
+                        ),
+                        IngredientsTemplateIngredientsList(
+                            template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt"""
                         )
                     )
                 )
@@ -35,11 +41,17 @@ class ScaleRecipeTest {
                     ingredientsList = listOf(
                         IngredientsListIngredientsList(
                             text = "200-240 g of flour"
+                        ),
+                        IngredientsListIngredientsList(
+                            text = "2.4 kg of potatoes"
+                        ),
+                        IngredientsListIngredientsList(
+                            text = "½ tbsp of salt"
                         )
                     )
                 )
             ),
-            instructions = listOf(InstructionElement(description = "pre-warm the oven to 180°C (160°C fan)"))
+            instructions = listOf(InstructionElement(description = "pre-warm the oven to 180C (160C fan)"))
         )
         val scaledRecipe = scaleRecipe(recipeTemplate, 2.0f, unit = IngredientUnit.Metric)
         assertEquals(
