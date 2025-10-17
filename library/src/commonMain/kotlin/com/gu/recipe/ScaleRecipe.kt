@@ -11,7 +11,7 @@ sealed interface IngredientUnit {
     object Metric : IngredientUnit
 }
 
-private fun formatNumber(number: Float, decimals: Int): String {
+internal fun formatNumber(number: Float, decimals: Int, fraction: Boolean): String {
     var multiplier = 1.0
     repeat(decimals) { multiplier *= 10 }
     val roundedNumber = round(number * multiplier) / multiplier
@@ -19,10 +19,30 @@ private fun formatNumber(number: Float, decimals: Int): String {
     if (roundedNumber % 1.0 == 0.0) {
         return roundedNumber.toInt().toString()
     }
+
+    if (fraction) {
+        val integerPart = roundedNumber.toInt()
+        val fractionalPart = (roundedNumber - integerPart).toFloat()
+        val fractionString = when (fractionalPart) {
+            0.25f -> "¼"
+            0.5f -> "½"
+            0.75f -> "¾"
+            else -> null
+        }
+        return if (fractionString != null) {
+            if (integerPart > 0) {
+                "$integerPart$fractionString"
+            } else {
+                fractionString
+            }
+        } else {
+            roundedNumber.toString()
+        }
+    }
     return roundedNumber.toString()
 }
 
-private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
+internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
     val scaledParts = template.elements.map { element ->
         when (element) {
             is TemplateElement.TemplateConst -> element.value
@@ -41,10 +61,16 @@ private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
                     else -> 2
                 }
 
+                val fraction = when (element.unit) {
+                    "tsp", "tbsp", "cup", "cups" -> true
+                    null -> true
+                    else -> false
+                }
+
                 if (scaledMax != null) {
-                    "${formatNumber(scaledMin, decimals)}-${formatNumber(scaledMax, decimals)}$unit"
+                    "${formatNumber(scaledMin, decimals, fraction)}-${formatNumber(scaledMax, decimals, fraction)}$unit"
                 } else {
-                    "${formatNumber(scaledMin, decimals)}$unit"
+                    "${formatNumber(scaledMin, decimals, fraction)}$unit"
                 }
             }
 

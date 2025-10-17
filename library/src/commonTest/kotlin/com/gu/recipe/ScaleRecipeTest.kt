@@ -21,6 +21,9 @@ class ScaleRecipeTest {
                         ),
                         IngredientsTemplateIngredientsList(
                             template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes"""
+                        ),
+                        IngredientsTemplateIngredientsList(
+                            template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt"""
                         )
                     )
                 )
@@ -41,6 +44,9 @@ class ScaleRecipeTest {
                         ),
                         IngredientsListIngredientsList(
                             text = "2.4 kg of potatoes"
+                        ),
+                        IngredientsListIngredientsList(
+                            text = "½ tbsp of salt"
                         )
                     )
                 )
