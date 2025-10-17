@@ -18,6 +18,9 @@ class ScaleRecipeTest {
                     ingredientsList = listOf(
                         IngredientsTemplateIngredientsList(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour"""
+                        ),
+                        IngredientsTemplateIngredientsList(
+                            template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes"""
                         )
                     )
                 )
@@ -35,6 +38,9 @@ class ScaleRecipeTest {
                     ingredientsList = listOf(
                         IngredientsListIngredientsList(
                             text = "200-240 g of flour"
+                        ),
+                        IngredientsListIngredientsList(
+                            text = "2.4 kg of potatoes"
                         )
                     )
                 )

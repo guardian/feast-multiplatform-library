@@ -4,10 +4,22 @@ import com.gu.recipe.generated.*
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
+import kotlin.math.round
 
 sealed interface IngredientUnit {
     object Imperial : IngredientUnit
     object Metric : IngredientUnit
+}
+
+private fun formatNumber(number: Float, decimals: Int): String {
+    var multiplier = 1.0
+    repeat(decimals) { multiplier *= 10 }
+    val roundedNumber = round(number * multiplier) / multiplier
+    // If the number is an integer, don't show decimal places
+    if (roundedNumber % 1.0 == 0.0) {
+        return roundedNumber.toInt().toString()
+    }
+    return roundedNumber.toString()
 }
 
 private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
@@ -22,12 +34,17 @@ private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
                 } else {
                     Pair(element.min, element.max)
                 }
-                val unit = element.unit ?: ""
-                // TODO, we'll probably need to decide if we want to round the values depending on the unit
+                val unit = if (element.unit != null) " ${element.unit}" else ""
+
+                val decimals = when(unit) {
+                    "g", "ml" -> 0
+                    else -> 2
+                }
+
                 if (scaledMax != null) {
-                    "${scaledMin.toInt()}-${scaledMax.toInt()} $unit"
+                    "${formatNumber(scaledMin, decimals)}-${formatNumber(scaledMax, decimals)}$unit"
                 } else {
-                    "${scaledMin.toInt()} $unit"
+                    "${formatNumber(scaledMin, decimals)}$unit"
                 }
             }
 
