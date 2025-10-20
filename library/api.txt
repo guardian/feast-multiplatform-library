@@ -12,10 +12,6 @@ package com.gu.recipe {
     field public static final com.gu.recipe.IngredientUnit.Metric INSTANCE;
   }
 
-  public final class ScaleRecipeJsContractKt {
-    method public static String scaleRecipe(String recipe, float factor, String unit);
-  }
-
   public final class ScaleRecipeKt {
     method public static com.gu.recipe.generated.RecipeV2 scaleRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
   }
@@ -24,8 +20,8 @@ package com.gu.recipe {
 
 package com.gu.recipe.generated {
 
-  public final class Image {
-    ctor public Image(optional String? caption, String cropID, optional String? imageType, optional String? mediaAPIURL, String mediaID, optional String? photographer, optional String? source, String url);
+  @kotlinx.serialization.Serializable public final class Image {
+    ctor public Image(optional String? caption, @kotlinx.serialization.SerialName("cropId") String cropID, optional String? imageType, optional @kotlinx.serialization.SerialName("mediaApiUrl") String? mediaAPIURL, @kotlinx.serialization.SerialName("mediaId") String mediaID, optional String? photographer, optional String? source, String url);
     method public String? component1();
     method public String component2();
     method public String? component3();
@@ -53,8 +49,8 @@ package com.gu.recipe.generated {
     property public final String url;
   }
 
-  public final class ImageClass {
-    ctor public ImageClass(optional String? caption, String cropID, optional String? imageType, optional String? mediaAPIURL, String mediaID, optional String? photographer, optional String? source, String url);
+  @kotlinx.serialization.Serializable public final class ImageClass {
+    ctor public ImageClass(optional String? caption, @kotlinx.serialization.SerialName("cropId") String cropID, optional String? imageType, optional @kotlinx.serialization.SerialName("mediaApiUrl") String? mediaAPIURL, @kotlinx.serialization.SerialName("mediaId") String mediaID, optional String? photographer, optional String? source, String url);
     method public String? component1();
     method public String component2();
     method public String? component3();
@@ -82,7 +78,7 @@ package com.gu.recipe.generated {
     property public final String url;
   }
 
-  public final class IngredientElement {
+  @kotlinx.serialization.Serializable public final class IngredientElement {
     ctor public IngredientElement(optional java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList, optional String? recipeSection);
     method public java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? component1();
     method public String? component2();
@@ -93,8 +89,8 @@ package com.gu.recipe.generated {
     property public final String? recipeSection;
   }
 
-  public final class IngredientItem {
-    ctor public IngredientItem(optional com.gu.recipe.generated.RangeClass? amount, optional String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit);
+  @kotlinx.serialization.Serializable public final class IngredientItem {
+    ctor public IngredientItem(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
     method public String? component3();
@@ -122,7 +118,7 @@ package com.gu.recipe.generated {
     property public final String? unit;
   }
 
-  public final class IngredientsList {
+  @kotlinx.serialization.Serializable public final class IngredientsList {
     ctor public IngredientsList(optional java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList, optional String? recipeSection);
     method public java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? component1();
     method public String? component2();
@@ -133,8 +129,8 @@ package com.gu.recipe.generated {
     property public final String? recipeSection;
   }
 
-  public final class IngredientsListIngredientsList {
-    ctor public IngredientsListIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit);
+  @kotlinx.serialization.Serializable public final class IngredientsListIngredientsList {
+    ctor public IngredientsListIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
     method public String? component3();
@@ -162,7 +158,7 @@ package com.gu.recipe.generated {
     property public final String? unit;
   }
 
-  public final class IngredientsTemplateElement {
+  @kotlinx.serialization.Serializable public final class IngredientsTemplateElement {
     ctor public IngredientsTemplateElement(optional java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? ingredientsList, optional String? recipeSection);
     method public java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? component1();
     method public String? component2();
@@ -173,8 +169,8 @@ package com.gu.recipe.generated {
     property public final String? recipeSection;
   }
 
-  public final class IngredientsTemplateIngredientsList {
-    ctor public IngredientsTemplateIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit, optional String? template);
+  @kotlinx.serialization.Serializable public final class IngredientsTemplateIngredientsList {
+    ctor public IngredientsTemplateIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit, optional String? template);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
     method public String? component3();
@@ -205,7 +201,7 @@ package com.gu.recipe.generated {
     property public final String? unit;
   }
 
-  public final class IngredientsTemplateList {
+  @kotlinx.serialization.Serializable public final class IngredientsTemplateList {
     ctor public IngredientsTemplateList(optional java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? ingredientsList, optional String? recipeSection);
     method public java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? component1();
     method public String? component2();
@@ -216,8 +212,8 @@ package com.gu.recipe.generated {
     property public final String? recipeSection;
   }
 
-  public final class IngredientsTemplateListIngredientsList {
-    ctor public IngredientsTemplateListIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit, optional String? template);
+  @kotlinx.serialization.Serializable public final class IngredientsTemplateListIngredientsList {
+    ctor public IngredientsTemplateListIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit, optional String? template);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
     method public String? component3();
@@ -248,7 +244,7 @@ package com.gu.recipe.generated {
     property public final String? unit;
   }
 
-  public final class Instruction {
+  @kotlinx.serialization.Serializable public final class Instruction {
     ctor public Instruction(String description, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
     method public String component1();
     method public java.util.List<java.lang.String>? component2();
@@ -262,7 +258,7 @@ package com.gu.recipe.generated {
     property public final Double? stepNumber;
   }
 
-  public final class InstructionElement {
+  @kotlinx.serialization.Serializable public final class InstructionElement {
     ctor public InstructionElement(String description, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
     method public String component1();
     method public java.util.List<java.lang.String>? component2();
@@ -276,7 +272,7 @@ package com.gu.recipe.generated {
     property public final Double? stepNumber;
   }
 
-  public final class InstructionTemplate {
+  @kotlinx.serialization.Serializable public final class InstructionTemplate {
     ctor public InstructionTemplate(String descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
     method public String component1();
     method public java.util.List<java.lang.String>? component2();
@@ -290,7 +286,7 @@ package com.gu.recipe.generated {
     property public final Double? stepNumber;
   }
 
-  public final class InstructionsTemplateElement {
+  @kotlinx.serialization.Serializable public final class InstructionsTemplateElement {
     ctor public InstructionsTemplateElement(String descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
     method public String component1();
     method public java.util.List<java.lang.String>? component2();
@@ -304,7 +300,7 @@ package com.gu.recipe.generated {
     property public final Double? stepNumber;
   }
 
-  public final class Range {
+  @kotlinx.serialization.Serializable public final class Range {
     ctor public Range(optional Double? max, optional Double? min);
     method public Double? component1();
     method public Double? component2();
@@ -315,7 +311,7 @@ package com.gu.recipe.generated {
     property public final Double? min;
   }
 
-  public final class RangeClass {
+  @kotlinx.serialization.Serializable public final class RangeClass {
     ctor public RangeClass(optional Double? max, optional Double? min);
     method public Double? component1();
     method public Double? component2();
@@ -326,8 +322,8 @@ package com.gu.recipe.generated {
     property public final Double? min;
   }
 
-  public final class RecipeV2 {
-    ctor public RecipeV2(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional java.util.List<java.lang.String?>? celebrationIDS, optional String? composerID, optional java.util.List<java.lang.String>? contributors, optional java.util.List<java.lang.String?>? cuisineIDS, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.ImageClass? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, optional java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, optional Boolean? isAppReady, optional java.util.List<java.lang.String?>? mealTypeIDS, optional java.util.List<com.gu.recipe.generated.ServeElement>? serves, optional java.util.List<java.lang.String?>? suitableForDietIDS, optional java.util.List<java.lang.String?>? techniquesUsedIDS, optional java.util.List<com.gu.recipe.generated.TimingElement>? timings, optional String? title, optional java.util.List<java.lang.String?>? utensilsAndApplianceIDS, optional String? webPublicationDate);
+  @kotlinx.serialization.Serializable public final class RecipeV2 {
+    ctor public RecipeV2(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional @kotlinx.serialization.SerialName("celebrationIds") java.util.List<java.lang.String?>? celebrationIDS, optional @kotlinx.serialization.SerialName("composerId") String? composerID, optional java.util.List<java.lang.String>? contributors, optional @kotlinx.serialization.SerialName("cuisineIds") java.util.List<java.lang.String?>? cuisineIDS, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.ImageClass? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, optional java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, optional Boolean? isAppReady, optional @kotlinx.serialization.SerialName("mealTypeIds") java.util.List<java.lang.String?>? mealTypeIDS, optional java.util.List<com.gu.recipe.generated.ServeElement>? serves, optional @kotlinx.serialization.SerialName("suitableForDietIds") java.util.List<java.lang.String?>? suitableForDietIDS, optional @kotlinx.serialization.SerialName("techniquesUsedIds") java.util.List<java.lang.String?>? techniquesUsedIDS, optional java.util.List<com.gu.recipe.generated.TimingElement>? timings, optional String? title, optional @kotlinx.serialization.SerialName("utensilsAndApplianceIds") java.util.List<java.lang.String?>? utensilsAndApplianceIDS, optional String? webPublicationDate);
     method public String? component1();
     method public com.gu.recipe.generated.ImageClass? component10();
     method public String component11();
@@ -397,8 +393,8 @@ package com.gu.recipe.generated {
     property public final String? webPublicationDate;
   }
 
-  public final class RecipeV3 {
-    ctor public RecipeV3(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional java.util.List<java.lang.String?>? celebrationIDS, optional String? composerID, optional java.util.List<java.lang.String>? contributors, optional java.util.List<java.lang.String?>? cuisineIDS, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.ImageClass? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, optional java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? ingredientsTemplate, optional java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, optional java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? instructionsTemplate, optional Boolean? isAppReady, optional java.util.List<java.lang.String?>? mealTypeIDS, optional java.util.List<com.gu.recipe.generated.ServeElement>? serves, optional java.util.List<java.lang.String?>? suitableForDietIDS, optional java.util.List<java.lang.String?>? techniquesUsedIDS, optional java.util.List<com.gu.recipe.generated.TimingElement>? timings, optional String? title, optional java.util.List<java.lang.String?>? utensilsAndApplianceIDS, optional String? webPublicationDate);
+  @kotlinx.serialization.Serializable public final class RecipeV3 {
+    ctor public RecipeV3(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional @kotlinx.serialization.SerialName("celebrationIds") java.util.List<java.lang.String?>? celebrationIDS, optional @kotlinx.serialization.SerialName("composerId") String? composerID, optional java.util.List<java.lang.String>? contributors, optional @kotlinx.serialization.SerialName("cuisineIds") java.util.List<java.lang.String?>? cuisineIDS, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.ImageClass? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, optional java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? ingredientsTemplate, optional java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, optional java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? instructionsTemplate, optional Boolean? isAppReady, optional @kotlinx.serialization.SerialName("mealTypeIds") java.util.List<java.lang.String?>? mealTypeIDS, optional java.util.List<com.gu.recipe.generated.ServeElement>? serves, optional @kotlinx.serialization.SerialName("suitableForDietIds") java.util.List<java.lang.String?>? suitableForDietIDS, optional @kotlinx.serialization.SerialName("techniquesUsedIds") java.util.List<java.lang.String?>? techniquesUsedIDS, optional java.util.List<com.gu.recipe.generated.TimingElement>? timings, optional String? title, optional @kotlinx.serialization.SerialName("utensilsAndApplianceIds") java.util.List<java.lang.String?>? utensilsAndApplianceIDS, optional String? webPublicationDate);
     method public String? component1();
     method public com.gu.recipe.generated.ImageClass? component10();
     method public String component11();
@@ -474,7 +470,7 @@ package com.gu.recipe.generated {
     property public final String? webPublicationDate;
   }
 
-  public final class ServeElement {
+  @kotlinx.serialization.Serializable public final class ServeElement {
     ctor public ServeElement(optional com.gu.recipe.generated.RangeClass? amount, optional String? text, String unit);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
@@ -488,7 +484,7 @@ package com.gu.recipe.generated {
     property public final String unit;
   }
 
-  public final class Serves {
+  @kotlinx.serialization.Serializable public final class Serves {
     ctor public Serves(optional com.gu.recipe.generated.RangeClass? amount, optional String? text, String unit);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
@@ -502,7 +498,7 @@ package com.gu.recipe.generated {
     property public final String unit;
   }
 
-  public final class Timing {
+  @kotlinx.serialization.Serializable public final class Timing {
     ctor public Timing(optional com.gu.recipe.generated.RangeClass? durationInMins, optional String? qualifier, optional String? text);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
@@ -516,7 +512,7 @@ package com.gu.recipe.generated {
     property public final String? text;
   }
 
-  public final class TimingElement {
+  @kotlinx.serialization.Serializable public final class TimingElement {
     ctor public TimingElement(optional com.gu.recipe.generated.RangeClass? durationInMins, optional String? qualifier, optional String? text);
     method public com.gu.recipe.generated.RangeClass? component1();
     method public String? component2();
@@ -528,6 +524,14 @@ package com.gu.recipe.generated {
     property public final com.gu.recipe.generated.RangeClass? durationInMins;
     property public final String? qualifier;
     property public final String? text;
+  }
+
+}
+
+package com.gu.recipe.js {
+
+  public final class ScaleRecipeJsContractKt {
+    method public static String scaleRecipe(String recipe, float factor, String unit);
   }
 
 }
