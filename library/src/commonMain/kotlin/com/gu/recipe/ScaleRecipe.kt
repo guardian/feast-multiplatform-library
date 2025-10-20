@@ -4,13 +4,49 @@ import com.gu.recipe.generated.*
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
+import kotlin.math.round
 
 sealed interface IngredientUnit {
     object Imperial : IngredientUnit
     object Metric : IngredientUnit
 }
 
-private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
+internal fun formatFraction(number: Float): String {
+    val integerPart = number.toInt()
+    val fractionalPart = number - integerPart
+    val fractionString = when (fractionalPart) {
+        0.25f -> "¼"
+        0.5f -> "½"
+        0.75f -> "¾"
+        else -> null
+    }
+    return if (fractionString != null) {
+        if (integerPart > 0) {
+            "$integerPart$fractionString"
+        } else {
+            fractionString
+        }
+    } else {
+        number.toString()
+    }
+}
+
+internal fun formatAmount(number: Float, decimals: Int, fraction: Boolean): String {
+    var multiplier = 1.0
+    repeat(decimals) { multiplier *= 10 }
+    val roundedNumber = round(number * multiplier) / multiplier
+    // If the number is an integer, don't show decimal places
+    if (roundedNumber % 1.0 == 0.0) {
+        return roundedNumber.toInt().toString()
+    }
+
+    if (fraction) {
+        return formatFraction(roundedNumber.toFloat())
+    }
+    return roundedNumber.toString()
+}
+
+internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
     val scaledParts = template.elements.map { element ->
         when (element) {
             is TemplateElement.TemplateConst -> element.value
@@ -22,19 +58,38 @@ private fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
                 } else {
                     Pair(element.min, element.max)
                 }
-                val unit = element.unit ?: ""
-                // TODO, we'll probably need to decide if we want to round the values depending on the unit
+                val unit = if (element.unit != null) " ${element.unit}" else ""
+
+                val decimals = when(unit) {
+                    "g", "ml" -> 0
+                    else -> 2
+                }
+
+                val fraction = when (element.unit) {
+                    "tsp", "tbsp", "cup", "cups" -> true
+                    null -> true
+                    else -> false
+                }
+
                 if (scaledMax != null) {
-                    "${scaledMin.toInt()}-${scaledMax.toInt()} $unit"
+                    "${formatAmount(scaledMin, decimals, fraction)}-${formatAmount(scaledMax, decimals, fraction)}$unit"
                 } else {
-                    "${scaledMin.toInt()} $unit"
+                    "${formatAmount(scaledMin, decimals, fraction)}$unit"
                 }
             }
 
             is TemplateElement.OvenTemperaturePlaceholder -> {
-                val tempC = element.temperatureC
-                val tempFanC = element.temperatureFanC
-                "${tempC}°C${tempFanC?.let { " (${it}°C fan)" } ?: ""}"
+                var temp = "${element.temperatureC}C"
+                if (element.temperatureFanC != null) {
+                    temp += " (${element.temperatureFanC}C fan)"
+                }
+                if (element.temperatureF != null) {
+                    temp += "/${element.temperatureF}F"
+                }
+                if (element.gasMark != null) {
+                    temp += "/gas mark ${formatFraction(element.gasMark)}"
+                }
+                temp
             }
         }
     }
