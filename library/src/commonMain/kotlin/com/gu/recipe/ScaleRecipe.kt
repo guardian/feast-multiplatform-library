@@ -15,6 +15,7 @@ internal fun formatFraction(number: Float): String {
     val integerPart = number.toInt()
     val fractionalPart = number - integerPart
     val fractionString = when (fractionalPart) {
+        in 0.12f..0.13f -> "⅛"
         0.25f -> "¼"
         0.5f -> "½"
         0.75f -> "¾"
