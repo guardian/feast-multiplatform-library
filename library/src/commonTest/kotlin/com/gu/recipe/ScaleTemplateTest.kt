@@ -279,5 +279,21 @@ class ScaleTemplateTest {
         val result = scaleTemplate(template, 2f)
         assertEquals("4 kg", result)
     }
+
+    @Test
+    fun `scale template should ignore max value if identical to min`() {
+        val template = ParsedTemplate(
+            listOf(
+                TemplateElement.QuantityPlaceholder(
+                    min = 2f,
+                    max = 2f,
+                    unit = "kg",
+                    scale = true
+                )
+            )
+        )
+        val result = scaleTemplate(template, 2f)
+        assertEquals("4 kg", result)
+    }
 }
 

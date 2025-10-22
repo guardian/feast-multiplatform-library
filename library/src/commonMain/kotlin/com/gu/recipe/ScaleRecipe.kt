@@ -15,6 +15,7 @@ internal fun formatFraction(number: Float): String {
     val integerPart = number.toInt()
     val fractionalPart = number - integerPart
     val fractionString = when (fractionalPart) {
+        in 0.12f..0.13f -> "⅛"
         0.25f -> "¼"
         0.5f -> "½"
         0.75f -> "¾"
@@ -53,7 +54,10 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
             is TemplateElement.QuantityPlaceholder -> {
                 val (scaledMin, scaledMax) = if (element.scale) {
                     val scaledMin = (element.min * factor)
-                    val scaledMax = element.max?.let { (it * factor) }
+                    val scaledMax = if (element.min != element.max) {
+                        element.max?.let { (it * factor) }
+                    } else null
+
                     Pair(scaledMin, scaledMax)
                 } else {
                     Pair(element.min, element.max)

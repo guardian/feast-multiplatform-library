@@ -5,6 +5,8 @@ import com.gu.recipe.generated.StringTemplate
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 
+private val tolerantJson = Json { ignoreUnknownKeys = true }
+
 fun parseTemplate(template: StringTemplate): ParsedTemplate {
     val pattern = Regex("""\{(?:[^{}"]|"(?:[^"\\\\]|\\\\.)*")*\}""")
     val parts = mutableListOf<TemplateElement>()
@@ -23,11 +25,11 @@ fun parseTemplate(template: StringTemplate): ParsedTemplate {
         try {
             val jsonObj = Json.parseToJsonElement(match.value).jsonObject
             if (jsonObj.keys.contains("min")) {
-                Json.decodeFromJsonElement<TemplateElement.QuantityPlaceholder>(jsonObj).let {
+                tolerantJson.decodeFromJsonElement<TemplateElement.QuantityPlaceholder>(jsonObj).let {
                     parts.add(it)
                 }
             } else {
-                Json.decodeFromJsonElement<TemplateElement.OvenTemperaturePlaceholder>(jsonObj).let {
+                tolerantJson.decodeFromJsonElement<TemplateElement.OvenTemperaturePlaceholder>(jsonObj).let {
                     parts.add(it)
                 }
             }
