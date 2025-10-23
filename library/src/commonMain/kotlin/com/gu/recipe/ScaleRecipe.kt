@@ -52,15 +52,14 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
         when (element) {
             is TemplateElement.TemplateConst -> element.value
             is TemplateElement.QuantityPlaceholder -> {
+                val max = if (element.min != element.max) element.max else null
                 val (scaledMin, scaledMax) = if (element.scale) {
                     val scaledMin = (element.min * factor)
-                    val scaledMax = if (element.min != element.max) {
-                        element.max?.let { (it * factor) }
-                    } else null
+                    val scaledMax = max?.let { (it * factor) }
 
                     Pair(scaledMin, scaledMax)
                 } else {
-                    Pair(element.min, element.max)
+                    Pair(element.min, max)
                 }
                 val unit = if (element.unit != null) " ${element.unit}" else ""
 
