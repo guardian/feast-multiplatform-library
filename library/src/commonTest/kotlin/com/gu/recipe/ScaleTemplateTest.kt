@@ -289,11 +289,18 @@ class ScaleTemplateTest {
                     max = 2f,
                     unit = "kg",
                     scale = true
-                )
+                ),
+                TemplateElement.TemplateConst(" "),
+                TemplateElement.QuantityPlaceholder(
+                    min = 2f,
+                    max = 2f,
+                    unit = "kg",
+                    scale = false
+                ),
             )
         )
         val result = scaleTemplate(template, 2f)
-        assertEquals("4 kg", result)
+        assertEquals("4 kg 2 kg", result)
     }
 }
 
