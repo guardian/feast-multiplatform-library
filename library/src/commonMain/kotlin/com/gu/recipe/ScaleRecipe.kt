@@ -82,9 +82,16 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
             }
 
             is TemplateElement.OvenTemperaturePlaceholder -> {
-                var temp = "${element.temperatureC}C"
+                var temp = ""
+                if (element.temperatureC != null) {
+                    temp += "${element.temperatureC}C"
+                }
                 if (element.temperatureFanC != null) {
-                    temp += " (${element.temperatureFanC}C fan)"
+                    temp += if (element.temperatureC == null) {
+                        "${element.temperatureFanC}C fan"
+                    } else {
+                        " (${element.temperatureFanC}C fan)"
+                    }
                 }
                 if (element.temperatureF != null) {
                     temp += "/${element.temperatureF}F"

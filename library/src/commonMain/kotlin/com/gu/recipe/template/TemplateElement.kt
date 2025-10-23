@@ -17,7 +17,7 @@ sealed interface TemplateElement {
 
     @Serializable
     data class OvenTemperaturePlaceholder(
-        val temperatureC: Int,
+        val temperatureC: Int? = null,
         val temperatureFanC: Int? = null,
         val temperatureF: Int? = null,
         val gasMark: Float? = null,
