@@ -27,7 +27,7 @@ class ScaleRecipeTest {
                         ),
                         IngredientsTemplateIngredientsList(
                             template = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes"""
-                        )
+                        ),
                     )
                 )
             ),
@@ -56,13 +56,13 @@ class ScaleRecipeTest {
                         ),
                         IngredientsListIngredientsList(
                             text = "2 400 g tin chopped tomatoes"
-                        )
+                        ),
                     )
                 )
             ),
             instructions = listOf(
                 InstructionElement(description = "pre-warm the oven to 180C (160C fan)"),
-                InstructionElement(description = "pre-warm the oven to 160C fan/325F")
+                InstructionElement(description = "pre-warm the oven to 160C fan/325F"),
             )
         )
         val scaledRecipe = scaleRecipe(recipeTemplate, 2.0f, unit = IngredientUnit.Metric)
