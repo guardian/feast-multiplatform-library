@@ -24,6 +24,9 @@ class ScaleRecipeTest {
                         ),
                         IngredientsTemplateIngredientsList(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt"""
+                        ),
+                        IngredientsTemplateIngredientsList(
+                            template = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes"""
                         )
                     )
                 )
@@ -50,6 +53,9 @@ class ScaleRecipeTest {
                         ),
                         IngredientsListIngredientsList(
                             text = "½ tbsp of salt"
+                        ),
+                        IngredientsListIngredientsList(
+                            text = "2 400 g tin chopped tomatoes"
                         )
                     )
                 )

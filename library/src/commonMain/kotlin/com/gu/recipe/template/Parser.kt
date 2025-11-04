@@ -16,7 +16,7 @@ fun parseTemplate(template: StringTemplate): ParsedTemplate {
         // Add text before JSON
         if (match.range.first > lastEnd) {
             val textPart = template.substring(lastEnd, match.range.first)
-            if (textPart.isNotBlank()) {
+            if (textPart.isNotEmpty()) {
                 parts.add(TemplateElement.TemplateConst(textPart))
             }
         }
