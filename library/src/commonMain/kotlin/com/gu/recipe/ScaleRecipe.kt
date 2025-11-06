@@ -84,24 +84,19 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
             }
 
             is TemplateElement.OvenTemperaturePlaceholder -> {
-                var temp = ""
-                if (element.temperatureC != null) {
-                    temp += "${element.temperatureC}C"
-                }
-                if (element.temperatureFanC != null) {
-                    temp += if (element.temperatureC == null) {
+                val fanTempC = element.temperatureFanC?. let {
+                    if (element.temperatureC == null) {
                         "${element.temperatureFanC}C fan"
                     } else {
                         " (${element.temperatureFanC}C fan)"
                     }
                 }
-                if (element.temperatureF != null) {
-                    temp += "/${element.temperatureF}F"
-                }
-                if (element.gasMark != null) {
-                    temp += "/gas mark ${formatFraction(element.gasMark)}"
-                }
-                temp
+                listOfNotNull(
+                    element.temperatureC?.let { "${element.temperatureC}C" },
+                    fanTempC,
+                    element.temperatureF?.let { "/${it}F" },
+                    element.gasMark?.let { "/gas mark ${formatFraction(it)}" }
+                ).joinToString("")
             }
         }
     }
