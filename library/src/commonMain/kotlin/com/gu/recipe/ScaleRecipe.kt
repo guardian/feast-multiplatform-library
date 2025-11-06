@@ -16,6 +16,8 @@ internal fun formatFraction(number: Float): String {
     val fractionalPart = number - integerPart
     val fractionString = when (fractionalPart) {
         in 0.12f..0.13f -> "⅛"
+        in 0.33f..0.34f -> "⅓"
+        in 0.66f..0.67f -> "⅔"
         0.25f -> "¼"
         0.5f -> "½"
         0.75f -> "¾"
@@ -52,15 +54,14 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
         when (element) {
             is TemplateElement.TemplateConst -> element.value
             is TemplateElement.QuantityPlaceholder -> {
+                val max = if (element.min != element.max) element.max else null
                 val (scaledMin, scaledMax) = if (element.scale) {
                     val scaledMin = (element.min * factor)
-                    val scaledMax = if (element.min != element.max) {
-                        element.max?.let { (it * factor) }
-                    } else null
+                    val scaledMax = max?.let { (it * factor) }
 
                     Pair(scaledMin, scaledMax)
                 } else {
-                    Pair(element.min, element.max)
+                    Pair(element.min, max)
                 }
                 val unit = if (element.unit != null) " ${element.unit}" else ""
 
@@ -83,17 +84,19 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
             }
 
             is TemplateElement.OvenTemperaturePlaceholder -> {
-                var temp = "${element.temperatureC}C"
-                if (element.temperatureFanC != null) {
-                    temp += " (${element.temperatureFanC}C fan)"
+                val fanTempC = element.temperatureFanC?. let {
+                    if (element.temperatureC == null) {
+                        "${element.temperatureFanC}C fan"
+                    } else {
+                        " (${element.temperatureFanC}C fan)"
+                    }
                 }
-                if (element.temperatureF != null) {
-                    temp += "/${element.temperatureF}F"
-                }
-                if (element.gasMark != null) {
-                    temp += "/gas mark ${formatFraction(element.gasMark)}"
-                }
-                temp
+                listOfNotNull(
+                    element.temperatureC?.let { "${element.temperatureC}C" },
+                    fanTempC,
+                    element.temperatureF?.let { "/${it}F" },
+                    element.gasMark?.let { "/gas mark ${formatFraction(it)}" }
+                ).joinToString("")
             }
         }
     }
