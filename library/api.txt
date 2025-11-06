@@ -554,18 +554,18 @@ package com.gu.recipe.template {
   }
 
   @kotlinx.serialization.Serializable public static final class TemplateElement.OvenTemperaturePlaceholder implements com.gu.recipe.template.TemplateElement {
-    ctor public TemplateElement.OvenTemperaturePlaceholder(int temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
-    method public int component1();
+    ctor public TemplateElement.OvenTemperaturePlaceholder(optional Integer? temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
+    method public Integer? component1();
     method public Integer? component2();
     method public Integer? component3();
     method public Float? component4();
-    method public com.gu.recipe.template.TemplateElement.OvenTemperaturePlaceholder copy(int temperatureC, Integer? temperatureFanC, Integer? temperatureF, Float? gasMark);
+    method public com.gu.recipe.template.TemplateElement.OvenTemperaturePlaceholder copy(Integer? temperatureC, Integer? temperatureFanC, Integer? temperatureF, Float? gasMark);
     method public Float? getGasMark();
-    method public int getTemperatureC();
+    method public Integer? getTemperatureC();
     method public Integer? getTemperatureF();
     method public Integer? getTemperatureFanC();
     property public final Float? gasMark;
-    property public final int temperatureC;
+    property public final Integer? temperatureC;
     property public final Integer? temperatureF;
     property public final Integer? temperatureFanC;
   }
