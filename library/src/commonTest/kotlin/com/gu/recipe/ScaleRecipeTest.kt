@@ -4,7 +4,7 @@ import com.gu.recipe.ClientSideRecipe
 import com.gu.recipe.IngredientUnit
 import com.gu.recipe.ServerSideRecipe
 import com.gu.recipe.generated.*
-import com.gu.recipe.scaleRecipe
+import com.gu.recipe.scaleAndConvertUnitRecipe
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -65,7 +65,7 @@ class ScaleRecipeTest {
                 InstructionElement(description = "pre-warm the oven to 160C fan/325F"),
             )
         )
-        val scaledRecipe = scaleRecipe(recipeTemplate, 2.0f, unit = IngredientUnit.Metric)
+        val scaledRecipe = scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, unit = IngredientUnit.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe
