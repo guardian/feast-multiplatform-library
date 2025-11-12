@@ -15,6 +15,6 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String): String {
         "Metric" -> IngredientUnit.Metric
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
-    val scaledRecipe = com.gu.recipe.scaleRecipe(parsedRecipe, factor, ingredientUnit)
+    val scaledRecipe = com.gu.recipe.scaleAndConvertUnitRecipe(parsedRecipe, factor, ingredientUnit)
     return Json.encodeToString(scaledRecipe)
 }

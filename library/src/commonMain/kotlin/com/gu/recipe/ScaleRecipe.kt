@@ -65,7 +65,7 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
                 }
                 val unit = if (element.unit != null) " ${element.unit}" else ""
 
-                val decimals = when(unit) {
+                val decimals = when (unit) {
                     "g", "ml" -> 0
                     else -> 2
                 }
@@ -84,7 +84,7 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
             }
 
             is TemplateElement.OvenTemperaturePlaceholder -> {
-                val fanTempC = element.temperatureFanC?. let {
+                val fanTempC = element.temperatureFanC?.let {
                     if (element.temperatureC == null) {
                         "${element.temperatureFanC}C fan"
                     } else {
@@ -107,7 +107,16 @@ internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
 typealias ClientSideRecipe = RecipeV2
 typealias ServerSideRecipe = RecipeV3
 
-fun scaleRecipe(recipe: ServerSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
+/**
+ * scaleAndConvertUnitRecipe used to convert units and scale recipe
+ *
+ * @param recipe The recipe as provided by the server (RecipeV3)
+ * @param factor The factor applied to change the proportions of the recipe.
+ *  For instance 0.5 halves the recipe and 2 doubles it.
+ *  To calculate the factor, take the number of desired servings and divide it by the original servings.
+ * @param unit The target unit system for ingredient measurements (e.g., Metric or Imperial)
+*/
+fun scaleAndConvertUnitRecipe(recipe: ServerSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
     val scaledIngredients = recipe.ingredientsTemplate?.map { ingredientSection ->
         IngredientElement(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
