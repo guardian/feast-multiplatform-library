@@ -111,10 +111,10 @@ typealias ServerSideRecipe = RecipeV3
  * scaleAndConvertUnitRecipe used to convert units and scale recipe
  *
  * @param recipe The recipe as provided by the server (RecipeV3)
- * @param factor
- *  The factor applied to change the proportions of the recipe. For instance 0.5 halves the recipe and 2 doubles it.
+ * @param factor The factor applied to change the proportions of the recipe.
+ *  For instance 0.5 halves the recipe and 2 doubles it.
  *  To calculate the factor, take the number of desired servings and divide it by the original servings.
- * @param unit unit to which you want to change
+ * @param unit The target unit system for ingredient measurements (e.g., Metric or Imperial)
 */
 fun scaleAndConvertUnitRecipe(recipe: ServerSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
     val scaledIngredients = recipe.ingredientsTemplate?.map { ingredientSection ->
