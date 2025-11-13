@@ -13,14 +13,14 @@ class TemplateParserTest {
 
         assertEquals(
             listOf(
-                TemplateElement.TemplateConst("Bake at "),
-                TemplateElement.OvenTemperaturePlaceholder(
+                TemplateConst("Bake at "),
+                OvenTemperaturePlaceholder(
                     temperatureC = 180,
                     temperatureFanC = 160
                 ),
-                TemplateElement.TemplateConst(" for "),
-                TemplateElement.QuantityPlaceholder(min = 30f, max = 40f, unit = "minutes"),
-                TemplateElement.TemplateConst(".")
+                TemplateConst(" for "),
+                QuantityPlaceholder(min = 30f, max = 40f, unit = "minutes"),
+                TemplateConst(".")
             ),
             parsed.elements
         )
@@ -33,10 +33,10 @@ class TemplateParserTest {
 
         assertEquals(
             listOf(
-                TemplateElement.QuantityPlaceholder(min = 1f, scale = true),
-                TemplateElement.TemplateConst(" "),
-                TemplateElement.QuantityPlaceholder(min = 400f, scale = false, unit = "g"),
-                TemplateElement.TemplateConst(" tin chopped tomatoes")
+                QuantityPlaceholder(min = 1f, scale = true),
+                TemplateConst(" "),
+                QuantityPlaceholder(min = 400f, scale = false, unit = "g"),
+                TemplateConst(" tin chopped tomatoes")
             ),
             parsed.elements
         )
@@ -49,14 +49,14 @@ class TemplateParserTest {
 
         assertEquals(
             listOf(
-                TemplateElement.TemplateConst("Bake at "),
-                TemplateElement.OvenTemperaturePlaceholder(
+                TemplateConst("Bake at "),
+                OvenTemperaturePlaceholder(
                     temperatureC = 180,
                     temperatureFanC = 160
                 ),
-                TemplateElement.TemplateConst(" for "),
-                TemplateElement.QuantityPlaceholder(min = 30f, max = 40f, unit = "minutes"),
-                TemplateElement.TemplateConst(".")
+                TemplateConst(" for "),
+                QuantityPlaceholder(min = 30f, max = 40f, unit = "minutes"),
+                TemplateConst(".")
             ),
             parsed.elements
         )
