@@ -1,7 +1,10 @@
 package com.gu.recipe
 
 import com.gu.recipe.generated.*
+import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
+import com.gu.recipe.template.QuantityPlaceholder
+import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
 import kotlin.math.round
@@ -49,56 +52,60 @@ internal fun formatAmount(number: Float, decimals: Int, fraction: Boolean): Stri
     return roundedNumber.toString()
 }
 
-internal fun scaleTemplate(template: ParsedTemplate, factor: Float): String {
-    val scaledParts = template.elements.map { element ->
-        when (element) {
-            is TemplateElement.TemplateConst -> element.value
-            is TemplateElement.QuantityPlaceholder -> {
-                val max = if (element.min != element.max) element.max else null
-                val (scaledMin, scaledMax) = if (element.scale) {
-                    val scaledMin = (element.min * factor)
-                    val scaledMax = max?.let { (it * factor) }
+internal fun renderTemplateElement(element: TemplateElement, factor: Float): String {
+    return when (element) {
+        is TemplateConst -> element.value
+        is QuantityPlaceholder -> {
+            val max = if (element.min != element.max) element.max else null
+            val (scaledMin, scaledMax) = if (element.scale) {
+                val scaledMin = (element.min * factor)
+                val scaledMax = max?.let { (it * factor) }
 
-                    Pair(scaledMin, scaledMax)
-                } else {
-                    Pair(element.min, max)
-                }
-                val unit = if (element.unit != null) " ${element.unit}" else ""
+                Pair(scaledMin, scaledMax)
+            } else {
+                Pair(element.min, max)
+            }
+            val unit = if (element.unit != null) " ${element.unit}" else ""
 
-                val decimals = when (unit) {
-                    "g", "ml" -> 0
-                    else -> 2
-                }
-
-                val fraction = when (element.unit) {
-                    "tsp", "tbsp", "cup", "cups" -> true
-                    null -> true
-                    else -> false
-                }
-
-                if (scaledMax != null) {
-                    "${formatAmount(scaledMin, decimals, fraction)}-${formatAmount(scaledMax, decimals, fraction)}$unit"
-                } else {
-                    "${formatAmount(scaledMin, decimals, fraction)}$unit"
-                }
+            val decimals = when (unit) {
+                "g", "ml" -> 0
+                else -> 2
             }
 
-            is TemplateElement.OvenTemperaturePlaceholder -> {
-                val fanTempC = element.temperatureFanC?.let {
-                    if (element.temperatureC == null) {
-                        "${element.temperatureFanC}C fan"
-                    } else {
-                        " (${element.temperatureFanC}C fan)"
-                    }
-                }
-                listOfNotNull(
-                    element.temperatureC?.let { "${element.temperatureC}C" },
-                    fanTempC,
-                    element.temperatureF?.let { "/${it}F" },
-                    element.gasMark?.let { "/gas mark ${formatFraction(it)}" }
-                ).joinToString("")
+            val fraction = when (element.unit) {
+                "tsp", "tbsp", "cup", "cups" -> true
+                null -> true
+                else -> false
+            }
+
+            if (scaledMax != null) {
+                "${formatAmount(scaledMin, decimals, fraction)}-${formatAmount(scaledMax, decimals, fraction)}$unit"
+            } else {
+                "${formatAmount(scaledMin, decimals, fraction)}$unit"
             }
         }
+
+        is OvenTemperaturePlaceholder -> {
+            val fanTempC = element.temperatureFanC?.let {
+                if (element.temperatureC == null) {
+                    "${element.temperatureFanC}C fan"
+                } else {
+                    " (${element.temperatureFanC}C fan)"
+                }
+            }
+            listOfNotNull(
+                element.temperatureC?.let { "${element.temperatureC}C" },
+                fanTempC,
+                element.temperatureF?.let { "/${it}F" },
+                element.gasMark?.let { "/gas mark ${formatFraction(it)}" }
+            ).joinToString("")
+        }
+    }
+}
+
+internal fun renderTemplate(template: ParsedTemplate, factor: Float): String {
+    val scaledParts = template.elements.map { element ->
+        renderTemplateElement(element, factor)
     }
 
     return scaledParts.joinToString("")
@@ -121,7 +128,7 @@ fun scaleAndConvertUnitRecipe(recipe: ServerSideRecipe, factor: Float, unit: Ing
         IngredientElement(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                 val scaledText = templateIngredient.template?.let { template ->
-                    scaleTemplate(parseTemplate(template), factor)
+                    renderTemplate(parseTemplate(template), factor)
                 } ?: templateIngredient.text
 
                 IngredientsListIngredientsList(
@@ -139,7 +146,7 @@ fun scaleAndConvertUnitRecipe(recipe: ServerSideRecipe, factor: Float, unit: Ing
         )
     }
     val scaledInstructions = recipe.instructionsTemplate?.map { it ->
-        val description = scaleTemplate(parseTemplate(it.descriptionTemplate), factor)
+        val description = renderTemplate(parseTemplate(it.descriptionTemplate), factor)
         InstructionElement(
             description = description,
             images = it.images,

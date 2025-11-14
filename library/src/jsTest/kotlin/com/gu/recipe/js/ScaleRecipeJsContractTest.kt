@@ -1,5 +1,6 @@
 package com.gu.recipe.js
 
+import com.gu.recipe.template.TemplateElement
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -11,5 +12,30 @@ class ScaleRecipeJsContractTest {
 
         val scaledJson = scaleRecipe(recipeJson, 1.0f, "Metric")
         assertEquals(scaledJson, expectedJson)
+    }
+
+    @Test
+    fun `ensure the js glue can parse a template`() {
+        val templateString = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes"""
+        val expectedParsedTemplate = listOf<TemplateElement>(
+            com.gu.recipe.template.QuantityPlaceholder(
+                min = 1f,
+                scale = true
+            ),
+            com.gu.recipe.template.TemplateConst(
+                value = " "
+            ),
+            com.gu.recipe.template.QuantityPlaceholder(
+                min = 400f,
+                unit = "g",
+                scale = false
+            ),
+            com.gu.recipe.template.TemplateConst(
+                value = " tin chopped tomatoes"
+            )
+        )
+        val parsedTemplate = parseTemplate(templateString)
+
+        assertEquals(parsedTemplate, expectedParsedTemplate)
     }
 }
