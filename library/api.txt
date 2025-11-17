@@ -13,7 +13,7 @@ package com.gu.recipe {
   }
 
   public final class ScaleRecipeKt {
-    method public static com.gu.recipe.generated.RecipeV2 scaleRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
+    method public static com.gu.recipe.generated.RecipeV2 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
   }
 
 }
@@ -531,12 +531,31 @@ package com.gu.recipe.generated {
 package com.gu.recipe.js {
 
   public final class ScaleRecipeJsContractKt {
+    method public static java.util.List<com.gu.recipe.template.TemplateElement> parseTemplate(String templateString);
+    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements);
     method public static String scaleRecipe(String recipe, float factor, String unit);
   }
 
 }
 
 package com.gu.recipe.template {
+
+  @kotlinx.serialization.Serializable public final class OvenTemperaturePlaceholder implements com.gu.recipe.template.TemplateElement {
+    ctor public OvenTemperaturePlaceholder(optional Integer? temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
+    method public Integer? component1();
+    method public Integer? component2();
+    method public Integer? component3();
+    method public Float? component4();
+    method public com.gu.recipe.template.OvenTemperaturePlaceholder copy(Integer? temperatureC, Integer? temperatureFanC, Integer? temperatureF, Float? gasMark);
+    method public Float? getGasMark();
+    method public Integer? getTemperatureC();
+    method public Integer? getTemperatureF();
+    method public Integer? getTemperatureFanC();
+    property public final Float? gasMark;
+    property public final Integer? temperatureC;
+    property public final Integer? temperatureF;
+    property public final Integer? temperatureFanC;
+  }
 
   public final class ParsedTemplate {
     ctor public ParsedTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> elements);
@@ -550,33 +569,13 @@ package com.gu.recipe.template {
     method public static com.gu.recipe.template.ParsedTemplate parseTemplate(String template);
   }
 
-  public sealed interface TemplateElement {
-  }
-
-  @kotlinx.serialization.Serializable public static final class TemplateElement.OvenTemperaturePlaceholder implements com.gu.recipe.template.TemplateElement {
-    ctor public TemplateElement.OvenTemperaturePlaceholder(optional Integer? temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
-    method public Integer? component1();
-    method public Integer? component2();
-    method public Integer? component3();
-    method public Float? component4();
-    method public com.gu.recipe.template.TemplateElement.OvenTemperaturePlaceholder copy(Integer? temperatureC, Integer? temperatureFanC, Integer? temperatureF, Float? gasMark);
-    method public Float? getGasMark();
-    method public Integer? getTemperatureC();
-    method public Integer? getTemperatureF();
-    method public Integer? getTemperatureFanC();
-    property public final Float? gasMark;
-    property public final Integer? temperatureC;
-    property public final Integer? temperatureF;
-    property public final Integer? temperatureFanC;
-  }
-
-  @kotlinx.serialization.Serializable public static final class TemplateElement.QuantityPlaceholder implements com.gu.recipe.template.TemplateElement {
-    ctor public TemplateElement.QuantityPlaceholder(float min, optional Float? max, optional String? unit, optional boolean scale);
+  @kotlinx.serialization.Serializable public final class QuantityPlaceholder implements com.gu.recipe.template.TemplateElement {
+    ctor public QuantityPlaceholder(float min, optional Float? max, optional String? unit, optional boolean scale);
     method public float component1();
     method public Float? component2();
     method public String? component3();
     method public boolean component4();
-    method public com.gu.recipe.template.TemplateElement.QuantityPlaceholder copy(float min, Float? max, String? unit, boolean scale);
+    method public com.gu.recipe.template.QuantityPlaceholder copy(float min, Float? max, String? unit, boolean scale);
     method public Float? getMax();
     method public float getMin();
     method public boolean getScale();
@@ -587,12 +586,15 @@ package com.gu.recipe.template {
     property public final String? unit;
   }
 
-  public static final class TemplateElement.TemplateConst implements com.gu.recipe.template.TemplateElement {
-    ctor public TemplateElement.TemplateConst(String value);
+  public final class TemplateConst implements com.gu.recipe.template.TemplateElement {
+    ctor public TemplateConst(String value);
     method public String component1();
-    method public com.gu.recipe.template.TemplateElement.TemplateConst copy(String value);
+    method public com.gu.recipe.template.TemplateConst copy(String value);
     method public String getValue();
     property public final String value;
+  }
+
+  public sealed interface TemplateElement {
   }
 
 }
