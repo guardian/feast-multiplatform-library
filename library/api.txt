@@ -13,7 +13,7 @@ package com.gu.recipe {
   }
 
   public final class ScaleRecipeKt {
-    method public static com.gu.recipe.generated.RecipeV2 scaleRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
+    method public static com.gu.recipe.generated.RecipeV2 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
   }
 
 }
