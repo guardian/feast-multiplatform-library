@@ -2,6 +2,8 @@ package com.gu.recipe.js
 
 import com.gu.recipe.IngredientUnit
 import com.gu.recipe.ServerSideRecipe
+import com.gu.recipe.template.ParsedTemplate
+import com.gu.recipe.template.TemplateElement
 import kotlinx.serialization.json.Json
 
 private val tolerantJson = Json { ignoreUnknownKeys = true }
@@ -17,4 +19,20 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String): String {
     }
     val scaledRecipe = com.gu.recipe.scaleAndConvertUnitRecipe(parsedRecipe, factor, ingredientUnit)
     return Json.encodeToString(scaledRecipe)
+}
+
+
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun parseTemplate(templateString: String): List<TemplateElement> {
+    val parsedTemplate = com.gu.recipe.template.parseTemplate(templateString)
+    return parsedTemplate.elements
+}
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun renderTemplate(templateElements: List<TemplateElement>): String {
+    val template = ParsedTemplate(templateElements)
+    return com.gu.recipe.renderTemplate(template, 1.0f)
 }

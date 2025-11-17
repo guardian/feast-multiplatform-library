@@ -17,7 +17,7 @@ fun parseTemplate(template: StringTemplate): ParsedTemplate {
         if (match.range.first > lastEnd) {
             val textPart = template.substring(lastEnd, match.range.first)
             if (textPart.isNotEmpty()) {
-                parts.add(TemplateElement.TemplateConst(textPart))
+                parts.add(TemplateConst(textPart))
             }
         }
 
@@ -25,17 +25,17 @@ fun parseTemplate(template: StringTemplate): ParsedTemplate {
         try {
             val jsonObj = Json.parseToJsonElement(match.value).jsonObject
             if (jsonObj.keys.contains("min")) {
-                tolerantJson.decodeFromJsonElement<TemplateElement.QuantityPlaceholder>(jsonObj).let {
+                tolerantJson.decodeFromJsonElement<QuantityPlaceholder>(jsonObj).let {
                     parts.add(it)
                 }
             } else {
-                tolerantJson.decodeFromJsonElement<TemplateElement.OvenTemperaturePlaceholder>(jsonObj).let {
+                tolerantJson.decodeFromJsonElement<OvenTemperaturePlaceholder>(jsonObj).let {
                     parts.add(it)
                 }
             }
         } catch (e: Exception) {
             print("Failed to parse JSON: ${match.value}, error: ${e.message}")
-            parts.add(TemplateElement.TemplateConst(match.value))
+            parts.add(TemplateConst(match.value))
         }
 
         lastEnd = match.range.last + 1
@@ -45,7 +45,7 @@ fun parseTemplate(template: StringTemplate): ParsedTemplate {
     if (lastEnd < template.length) {
         val remaining = template.substring(lastEnd)
         if (remaining.isNotBlank()) {
-            parts.add(TemplateElement.TemplateConst(remaining))
+            parts.add(TemplateConst(remaining))
         }
     }
 
