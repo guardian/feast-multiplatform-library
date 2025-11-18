@@ -1,7 +1,7 @@
 package com.gu.recipe.js
 
 import com.gu.recipe.IngredientUnit
-import com.gu.recipe.ServerSideRecipe
+import com.gu.recipe.generated.RecipeV3
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
 import kotlinx.serialization.json.Json
@@ -11,7 +11,7 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 fun scaleRecipe(recipe: String, factor: Float, unit: String): String {
-    val parsedRecipe = tolerantJson.decodeFromString<ServerSideRecipe>(recipe)
+    val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
     val ingredientUnit = when (unit) {
         "Imperial" -> IngredientUnit.Imperial
         "Metric" -> IngredientUnit.Metric
