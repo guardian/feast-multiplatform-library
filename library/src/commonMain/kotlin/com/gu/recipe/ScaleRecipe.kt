@@ -122,7 +122,7 @@ internal fun renderTemplate(template: ParsedTemplate, factor: Float): String {
 */
 fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, unit: IngredientUnit): RecipeV3 {
     val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
-        IngredientElement(
+        IngredientsList(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                 val scaledText = templateIngredient.template?.let { template ->
                     renderTemplate(parseTemplate(template), factor)

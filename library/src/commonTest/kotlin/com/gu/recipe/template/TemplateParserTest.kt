@@ -1,13 +1,12 @@
 package com.gu.recipe.template
 
-import com.gu.recipe.generated.StringTemplate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TemplateParserTest {
     @Test
     fun `parse template`() {
-        val template: StringTemplate =
+        val template =
             "Bake at {\"temperatureC\": 180, \"temperatureFanC\": 160} for {\"min\": 30, \"max\": 40, \"unit\": \"minutes\"}."
         val parsed = parseTemplate(template)
 
@@ -25,9 +24,10 @@ class TemplateParserTest {
             parsed.elements
         )
     }
+
     @Test
     fun `parse template with a single space`() {
-        val template: StringTemplate =
+        val template =
             "{\"min\":1, \"scale\":true} {\"min\":400, \"unit\":\"g\", \"scale\":false} tin chopped tomatoes"
         val parsed = parseTemplate(template)
 
@@ -41,9 +41,10 @@ class TemplateParserTest {
             parsed.elements
         )
     }
+
     @Test
     fun `parse a template - ignoring extra properties`() {
-        val template: StringTemplate =
+        val template =
             "Bake at {\"temperatureC\": 180, \"temperatureFanC\": 160, \"newProperty\": true} for {\"min\": 30, \"max\": 40, \"unit\": \"minutes\", \"newProperty\": true}."
         val parsed = parseTemplate(template)
 

@@ -12,29 +12,29 @@ class ScaleRecipeTest {
         val recipeTemplate = RecipeV3(
             id = "test-recipe",
             ingredients = listOf(
-                IngredientElement(
+                IngredientsList(
                     ingredientsList = listOf(
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour"""
                         ),
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes"""
                         ),
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt"""
                         ),
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes"""
                         ),
                     )
                 )
             ),
             instructions = listOf(
-                InstructionElement(
+                Instruction(
                     descriptionTemplate = """pre-warm the oven to {"temperatureC": 180, "temperatureFanC": 160}""",
                     description = "should be replaced"
                 ),
-                InstructionElement(
+                Instruction(
                     descriptionTemplate = """pre-warm the oven to {"temperatureFanC": 160, "temperatureF": 325}""",
                     description = "should be replaced too"
                 )
@@ -43,21 +43,21 @@ class ScaleRecipeTest {
         val expectedRecipe = RecipeV3(
             id = "test-recipe",
             ingredients = listOf(
-                IngredientElement(
+                IngredientsList(
                     ingredientsList = listOf(
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour""",
                             text = "200-240 g of flour"
                         ),
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes""",
                             text = "2.4 kg of potatoes"
                         ),
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt""",
                             text = "½ tbsp of salt"
                         ),
-                        IngredientsListElement(
+                        IngredientItem(
                             template = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",
                             text = "2 400 g tin chopped tomatoes"
                         ),
@@ -65,11 +65,11 @@ class ScaleRecipeTest {
                 )
             ),
             instructions = listOf(
-                InstructionElement(
+                Instruction(
                     descriptionTemplate = """pre-warm the oven to {"temperatureC": 180, "temperatureFanC": 160}""",
                     description = "pre-warm the oven to 180C (160C fan)"
                 ),
-                InstructionElement(
+                Instruction(
                     descriptionTemplate = """pre-warm the oven to {"temperatureFanC": 160, "temperatureF": 325}""",
                     description = "pre-warm the oven to 160C fan/325F"
                 )

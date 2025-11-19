@@ -1,13 +1,12 @@
 package com.gu.recipe.template
 
 import kotlinx.serialization.json.*
-import com.gu.recipe.generated.StringTemplate
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 
 private val tolerantJson = Json { ignoreUnknownKeys = true }
 
-fun parseTemplate(template: StringTemplate): ParsedTemplate {
+fun parseTemplate(template: String): ParsedTemplate {
     val pattern = Regex("""\{(?:[^{}"]|"(?:[^"\\\\]|\\\\.)*")*\}""")
     val parts = mutableListOf<TemplateElement>()
     var lastEnd = 0
