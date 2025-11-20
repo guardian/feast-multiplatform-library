@@ -13,15 +13,29 @@ package com.gu.recipe {
   }
 
   public final class ScaleRecipeKt {
-    method public static com.gu.recipe.generated.RecipeV2 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
+    method public static com.gu.recipe.generated.RecipeV3 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.IngredientUnit unit);
   }
 
 }
 
 package com.gu.recipe.generated {
 
+  @kotlinx.serialization.Serializable public final class CommerceCta {
+    ctor public CommerceCta(String sponsorName, String territory, String url);
+    method public String component1();
+    method public String component2();
+    method public String component3();
+    method public com.gu.recipe.generated.CommerceCta copy(String sponsorName, String territory, String url);
+    method public String getSponsorName();
+    method public String getTerritory();
+    method public String getUrl();
+    property public final String sponsorName;
+    property public final String territory;
+    property public final String url;
+  }
+
   @kotlinx.serialization.Serializable public final class Image {
-    ctor public Image(optional String? caption, @kotlinx.serialization.SerialName("cropId") String cropID, optional String? imageType, optional @kotlinx.serialization.SerialName("mediaApiUrl") String? mediaAPIURL, @kotlinx.serialization.SerialName("mediaId") String mediaID, optional String? photographer, optional String? source, String url);
+    ctor public Image(optional String? caption, String cropId, optional String? imageType, optional String? mediaApiUrl, String mediaId, optional String? photographer, optional String? source, String url);
     method public String? component1();
     method public String component2();
     method public String? component3();
@@ -30,68 +44,28 @@ package com.gu.recipe.generated {
     method public String? component6();
     method public String? component7();
     method public String component8();
-    method public com.gu.recipe.generated.Image copy(String? caption, String cropID, String? imageType, String? mediaAPIURL, String mediaID, String? photographer, String? source, String url);
+    method public com.gu.recipe.generated.Image copy(String? caption, String cropId, String? imageType, String? mediaApiUrl, String mediaId, String? photographer, String? source, String url);
     method public String? getCaption();
-    method public String getCropID();
+    method public String getCropId();
     method public String? getImageType();
-    method public String? getMediaAPIURL();
-    method public String getMediaID();
+    method public String? getMediaApiUrl();
+    method public String getMediaId();
     method public String? getPhotographer();
     method public String? getSource();
     method public String getUrl();
     property public final String? caption;
-    property public final String cropID;
+    property public final String cropId;
     property public final String? imageType;
-    property public final String? mediaAPIURL;
-    property public final String mediaID;
+    property public final String? mediaApiUrl;
+    property public final String mediaId;
     property public final String? photographer;
     property public final String? source;
     property public final String url;
-  }
-
-  @kotlinx.serialization.Serializable public final class ImageClass {
-    ctor public ImageClass(optional String? caption, @kotlinx.serialization.SerialName("cropId") String cropID, optional String? imageType, optional @kotlinx.serialization.SerialName("mediaApiUrl") String? mediaAPIURL, @kotlinx.serialization.SerialName("mediaId") String mediaID, optional String? photographer, optional String? source, String url);
-    method public String? component1();
-    method public String component2();
-    method public String? component3();
-    method public String? component4();
-    method public String component5();
-    method public String? component6();
-    method public String? component7();
-    method public String component8();
-    method public com.gu.recipe.generated.ImageClass copy(String? caption, String cropID, String? imageType, String? mediaAPIURL, String mediaID, String? photographer, String? source, String url);
-    method public String? getCaption();
-    method public String getCropID();
-    method public String? getImageType();
-    method public String? getMediaAPIURL();
-    method public String getMediaID();
-    method public String? getPhotographer();
-    method public String? getSource();
-    method public String getUrl();
-    property public final String? caption;
-    property public final String cropID;
-    property public final String? imageType;
-    property public final String? mediaAPIURL;
-    property public final String mediaID;
-    property public final String? photographer;
-    property public final String? source;
-    property public final String url;
-  }
-
-  @kotlinx.serialization.Serializable public final class IngredientElement {
-    ctor public IngredientElement(optional java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList, optional String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? component1();
-    method public String? component2();
-    method public com.gu.recipe.generated.IngredientElement copy(java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList, String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? getIngredientsList();
-    method public String? getRecipeSection();
-    property public final java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList;
-    property public final String? recipeSection;
   }
 
   @kotlinx.serialization.Serializable public final class IngredientItem {
-    ctor public IngredientItem(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit);
-    method public com.gu.recipe.generated.RangeClass? component1();
+    ctor public IngredientItem(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? unit);
+    method public com.gu.recipe.generated.Range? component1();
     method public String? component2();
     method public String? component3();
     method public Boolean? component4();
@@ -99,203 +73,52 @@ package com.gu.recipe.generated {
     method public String? component6();
     method public String? component7();
     method public String? component8();
-    method public com.gu.recipe.generated.IngredientItem copy(com.gu.recipe.generated.RangeClass? amount, String? ingredientID, String? name, Boolean? optional, String? prefix, String? suffix, String? text, String? unit);
-    method public com.gu.recipe.generated.RangeClass? getAmount();
-    method public String? getIngredientID();
+    method public String? component9();
+    method public com.gu.recipe.generated.IngredientItem copy(com.gu.recipe.generated.Range? amount, String? ingredientId, String? name, Boolean? optional, String? prefix, String? suffix, String? template, String? text, String? unit);
+    method public com.gu.recipe.generated.Range? getAmount();
+    method public String? getIngredientId();
     method public String? getName();
     method public Boolean? getOptional();
     method public String? getPrefix();
     method public String? getSuffix();
+    method public String? getTemplate();
     method public String? getText();
     method public String? getUnit();
-    property public final com.gu.recipe.generated.RangeClass? amount;
-    property public final String? ingredientID;
+    property public final com.gu.recipe.generated.Range? amount;
+    property public final String? ingredientId;
     property public final String? name;
     property public final Boolean? optional;
     property public final String? prefix;
     property public final String? suffix;
+    property public final String? template;
     property public final String? text;
     property public final String? unit;
   }
 
   @kotlinx.serialization.Serializable public final class IngredientsList {
-    ctor public IngredientsList(optional java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList, optional String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? component1();
+    ctor public IngredientsList(optional java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList, optional String? recipeSection);
+    method public java.util.List<com.gu.recipe.generated.IngredientItem>? component1();
     method public String? component2();
-    method public com.gu.recipe.generated.IngredientsList copy(java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList, String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? getIngredientsList();
+    method public com.gu.recipe.generated.IngredientsList copy(java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList, String? recipeSection);
+    method public java.util.List<com.gu.recipe.generated.IngredientItem>? getIngredientsList();
     method public String? getRecipeSection();
-    property public final java.util.List<com.gu.recipe.generated.IngredientsListIngredientsList>? ingredientsList;
+    property public final java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList;
     property public final String? recipeSection;
-  }
-
-  @kotlinx.serialization.Serializable public final class IngredientsListIngredientsList {
-    ctor public IngredientsListIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit);
-    method public com.gu.recipe.generated.RangeClass? component1();
-    method public String? component2();
-    method public String? component3();
-    method public Boolean? component4();
-    method public String? component5();
-    method public String? component6();
-    method public String? component7();
-    method public String? component8();
-    method public com.gu.recipe.generated.IngredientsListIngredientsList copy(com.gu.recipe.generated.RangeClass? amount, String? ingredientID, String? name, Boolean? optional, String? prefix, String? suffix, String? text, String? unit);
-    method public com.gu.recipe.generated.RangeClass? getAmount();
-    method public String? getIngredientID();
-    method public String? getName();
-    method public Boolean? getOptional();
-    method public String? getPrefix();
-    method public String? getSuffix();
-    method public String? getText();
-    method public String? getUnit();
-    property public final com.gu.recipe.generated.RangeClass? amount;
-    property public final String? ingredientID;
-    property public final String? name;
-    property public final Boolean? optional;
-    property public final String? prefix;
-    property public final String? suffix;
-    property public final String? text;
-    property public final String? unit;
-  }
-
-  @kotlinx.serialization.Serializable public final class IngredientsTemplateElement {
-    ctor public IngredientsTemplateElement(optional java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? ingredientsList, optional String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? component1();
-    method public String? component2();
-    method public com.gu.recipe.generated.IngredientsTemplateElement copy(java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? ingredientsList, String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? getIngredientsList();
-    method public String? getRecipeSection();
-    property public final java.util.List<com.gu.recipe.generated.IngredientsTemplateIngredientsList>? ingredientsList;
-    property public final String? recipeSection;
-  }
-
-  @kotlinx.serialization.Serializable public final class IngredientsTemplateIngredientsList {
-    ctor public IngredientsTemplateIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit, optional String? template);
-    method public com.gu.recipe.generated.RangeClass? component1();
-    method public String? component2();
-    method public String? component3();
-    method public Boolean? component4();
-    method public String? component5();
-    method public String? component6();
-    method public String? component7();
-    method public String? component8();
-    method public String? component9();
-    method public com.gu.recipe.generated.IngredientsTemplateIngredientsList copy(com.gu.recipe.generated.RangeClass? amount, String? ingredientID, String? name, Boolean? optional, String? prefix, String? suffix, String? text, String? unit, String? template);
-    method public com.gu.recipe.generated.RangeClass? getAmount();
-    method public String? getIngredientID();
-    method public String? getName();
-    method public Boolean? getOptional();
-    method public String? getPrefix();
-    method public String? getSuffix();
-    method public String? getTemplate();
-    method public String? getText();
-    method public String? getUnit();
-    property public final com.gu.recipe.generated.RangeClass? amount;
-    property public final String? ingredientID;
-    property public final String? name;
-    property public final Boolean? optional;
-    property public final String? prefix;
-    property public final String? suffix;
-    property public final String? template;
-    property public final String? text;
-    property public final String? unit;
-  }
-
-  @kotlinx.serialization.Serializable public final class IngredientsTemplateList {
-    ctor public IngredientsTemplateList(optional java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? ingredientsList, optional String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? component1();
-    method public String? component2();
-    method public com.gu.recipe.generated.IngredientsTemplateList copy(java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? ingredientsList, String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? getIngredientsList();
-    method public String? getRecipeSection();
-    property public final java.util.List<com.gu.recipe.generated.IngredientsTemplateListIngredientsList>? ingredientsList;
-    property public final String? recipeSection;
-  }
-
-  @kotlinx.serialization.Serializable public final class IngredientsTemplateListIngredientsList {
-    ctor public IngredientsTemplateListIngredientsList(optional com.gu.recipe.generated.RangeClass? amount, optional @kotlinx.serialization.SerialName("ingredientId") String? ingredientID, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? text, optional String? unit, optional String? template);
-    method public com.gu.recipe.generated.RangeClass? component1();
-    method public String? component2();
-    method public String? component3();
-    method public Boolean? component4();
-    method public String? component5();
-    method public String? component6();
-    method public String? component7();
-    method public String? component8();
-    method public String? component9();
-    method public com.gu.recipe.generated.IngredientsTemplateListIngredientsList copy(com.gu.recipe.generated.RangeClass? amount, String? ingredientID, String? name, Boolean? optional, String? prefix, String? suffix, String? text, String? unit, String? template);
-    method public com.gu.recipe.generated.RangeClass? getAmount();
-    method public String? getIngredientID();
-    method public String? getName();
-    method public Boolean? getOptional();
-    method public String? getPrefix();
-    method public String? getSuffix();
-    method public String? getTemplate();
-    method public String? getText();
-    method public String? getUnit();
-    property public final com.gu.recipe.generated.RangeClass? amount;
-    property public final String? ingredientID;
-    property public final String? name;
-    property public final Boolean? optional;
-    property public final String? prefix;
-    property public final String? suffix;
-    property public final String? template;
-    property public final String? text;
-    property public final String? unit;
   }
 
   @kotlinx.serialization.Serializable public final class Instruction {
-    ctor public Instruction(String description, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
+    ctor public Instruction(String description, optional String? descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
     method public String component1();
-    method public java.util.List<java.lang.String>? component2();
-    method public Double? component3();
-    method public com.gu.recipe.generated.Instruction copy(String description, java.util.List<java.lang.String>? images, Double? stepNumber);
+    method public String? component2();
+    method public java.util.List<java.lang.String>? component3();
+    method public Double? component4();
+    method public com.gu.recipe.generated.Instruction copy(String description, String? descriptionTemplate, java.util.List<java.lang.String>? images, Double? stepNumber);
     method public String getDescription();
+    method public String? getDescriptionTemplate();
     method public java.util.List<java.lang.String>? getImages();
     method public Double? getStepNumber();
     property public final String description;
-    property public final java.util.List<java.lang.String>? images;
-    property public final Double? stepNumber;
-  }
-
-  @kotlinx.serialization.Serializable public final class InstructionElement {
-    ctor public InstructionElement(String description, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
-    method public String component1();
-    method public java.util.List<java.lang.String>? component2();
-    method public Double? component3();
-    method public com.gu.recipe.generated.InstructionElement copy(String description, java.util.List<java.lang.String>? images, Double? stepNumber);
-    method public String getDescription();
-    method public java.util.List<java.lang.String>? getImages();
-    method public Double? getStepNumber();
-    property public final String description;
-    property public final java.util.List<java.lang.String>? images;
-    property public final Double? stepNumber;
-  }
-
-  @kotlinx.serialization.Serializable public final class InstructionTemplate {
-    ctor public InstructionTemplate(String descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
-    method public String component1();
-    method public java.util.List<java.lang.String>? component2();
-    method public Double? component3();
-    method public com.gu.recipe.generated.InstructionTemplate copy(String descriptionTemplate, java.util.List<java.lang.String>? images, Double? stepNumber);
-    method public String getDescriptionTemplate();
-    method public java.util.List<java.lang.String>? getImages();
-    method public Double? getStepNumber();
-    property public final String descriptionTemplate;
-    property public final java.util.List<java.lang.String>? images;
-    property public final Double? stepNumber;
-  }
-
-  @kotlinx.serialization.Serializable public final class InstructionsTemplateElement {
-    ctor public InstructionsTemplateElement(String descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
-    method public String component1();
-    method public java.util.List<java.lang.String>? component2();
-    method public Double? component3();
-    method public com.gu.recipe.generated.InstructionsTemplateElement copy(String descriptionTemplate, java.util.List<java.lang.String>? images, Double? stepNumber);
-    method public String getDescriptionTemplate();
-    method public java.util.List<java.lang.String>? getImages();
-    method public Double? getStepNumber();
-    property public final String descriptionTemplate;
+    property public final String? descriptionTemplate;
     property public final java.util.List<java.lang.String>? images;
     property public final Double? stepNumber;
   }
@@ -311,217 +134,104 @@ package com.gu.recipe.generated {
     property public final Double? min;
   }
 
-  @kotlinx.serialization.Serializable public final class RangeClass {
-    ctor public RangeClass(optional Double? max, optional Double? min);
-    method public Double? component1();
-    method public Double? component2();
-    method public com.gu.recipe.generated.RangeClass copy(Double? max, Double? min);
-    method public Double? getMax();
-    method public Double? getMin();
-    property public final Double? max;
-    property public final Double? min;
-  }
-
-  @kotlinx.serialization.Serializable public final class RecipeV2 {
-    ctor public RecipeV2(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional @kotlinx.serialization.SerialName("celebrationIds") java.util.List<java.lang.String?>? celebrationIDS, optional @kotlinx.serialization.SerialName("composerId") String? composerID, optional java.util.List<java.lang.String>? contributors, optional @kotlinx.serialization.SerialName("cuisineIds") java.util.List<java.lang.String?>? cuisineIDS, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.ImageClass? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, optional java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, optional Boolean? isAppReady, optional @kotlinx.serialization.SerialName("mealTypeIds") java.util.List<java.lang.String?>? mealTypeIDS, optional java.util.List<com.gu.recipe.generated.ServeElement>? serves, optional @kotlinx.serialization.SerialName("suitableForDietIds") java.util.List<java.lang.String?>? suitableForDietIDS, optional @kotlinx.serialization.SerialName("techniquesUsedIds") java.util.List<java.lang.String?>? techniquesUsedIDS, optional java.util.List<com.gu.recipe.generated.TimingElement>? timings, optional String? title, optional @kotlinx.serialization.SerialName("utensilsAndApplianceIds") java.util.List<java.lang.String?>? utensilsAndApplianceIDS, optional String? webPublicationDate);
-    method public String? component1();
-    method public com.gu.recipe.generated.ImageClass? component10();
-    method public String component11();
-    method public java.util.List<com.gu.recipe.generated.IngredientElement>? component12();
-    method public java.util.List<com.gu.recipe.generated.InstructionElement>? component13();
-    method public Boolean? component14();
-    method public java.util.List<java.lang.String?>? component15();
-    method public java.util.List<com.gu.recipe.generated.ServeElement>? component16();
-    method public java.util.List<java.lang.String?>? component17();
-    method public java.util.List<java.lang.String?>? component18();
-    method public java.util.List<com.gu.recipe.generated.TimingElement>? component19();
-    method public java.util.List<java.lang.String>? component2();
-    method public String? component20();
-    method public java.util.List<java.lang.String?>? component21();
-    method public String? component22();
-    method public String? component3();
-    method public java.util.List<java.lang.String?>? component4();
-    method public String? component5();
-    method public java.util.List<java.lang.String>? component6();
-    method public java.util.List<java.lang.String?>? component7();
-    method public String? component8();
-    method public String? component9();
-    method public com.gu.recipe.generated.RecipeV2 copy(String? bookCredit, java.util.List<java.lang.String>? byline, String? canonicalArticle, java.util.List<java.lang.String?>? celebrationIDS, String? composerID, java.util.List<java.lang.String>? contributors, java.util.List<java.lang.String?>? cuisineIDS, String? description, String? difficultyLevel, com.gu.recipe.generated.ImageClass? featuredImage, String id, java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, Boolean? isAppReady, java.util.List<java.lang.String?>? mealTypeIDS, java.util.List<com.gu.recipe.generated.ServeElement>? serves, java.util.List<java.lang.String?>? suitableForDietIDS, java.util.List<java.lang.String?>? techniquesUsedIDS, java.util.List<com.gu.recipe.generated.TimingElement>? timings, String? title, java.util.List<java.lang.String?>? utensilsAndApplianceIDS, String? webPublicationDate);
-    method public String? getBookCredit();
-    method public java.util.List<java.lang.String>? getByline();
-    method public String? getCanonicalArticle();
-    method public java.util.List<java.lang.String?>? getCelebrationIDS();
-    method public String? getComposerID();
-    method public java.util.List<java.lang.String>? getContributors();
-    method public java.util.List<java.lang.String?>? getCuisineIDS();
-    method public String? getDescription();
-    method public String? getDifficultyLevel();
-    method public com.gu.recipe.generated.ImageClass? getFeaturedImage();
-    method public String getId();
-    method public java.util.List<com.gu.recipe.generated.IngredientElement>? getIngredients();
-    method public java.util.List<com.gu.recipe.generated.InstructionElement>? getInstructions();
-    method public java.util.List<java.lang.String?>? getMealTypeIDS();
-    method public java.util.List<com.gu.recipe.generated.ServeElement>? getServes();
-    method public java.util.List<java.lang.String?>? getSuitableForDietIDS();
-    method public java.util.List<java.lang.String?>? getTechniquesUsedIDS();
-    method public java.util.List<com.gu.recipe.generated.TimingElement>? getTimings();
-    method public String? getTitle();
-    method public java.util.List<java.lang.String?>? getUtensilsAndApplianceIDS();
-    method public String? getWebPublicationDate();
-    method public Boolean? isAppReady();
-    property public final String? bookCredit;
-    property public final java.util.List<java.lang.String>? byline;
-    property public final String? canonicalArticle;
-    property public final java.util.List<java.lang.String?>? celebrationIDS;
-    property public final String? composerID;
-    property public final java.util.List<java.lang.String>? contributors;
-    property public final java.util.List<java.lang.String?>? cuisineIDS;
-    property public final String? description;
-    property public final String? difficultyLevel;
-    property public final com.gu.recipe.generated.ImageClass? featuredImage;
-    property public final String id;
-    property public final java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients;
-    property public final java.util.List<com.gu.recipe.generated.InstructionElement>? instructions;
-    property public final Boolean? isAppReady;
-    property public final java.util.List<java.lang.String?>? mealTypeIDS;
-    property public final java.util.List<com.gu.recipe.generated.ServeElement>? serves;
-    property public final java.util.List<java.lang.String?>? suitableForDietIDS;
-    property public final java.util.List<java.lang.String?>? techniquesUsedIDS;
-    property public final java.util.List<com.gu.recipe.generated.TimingElement>? timings;
-    property public final String? title;
-    property public final java.util.List<java.lang.String?>? utensilsAndApplianceIDS;
-    property public final String? webPublicationDate;
-  }
-
   @kotlinx.serialization.Serializable public final class RecipeV3 {
-    ctor public RecipeV3(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional @kotlinx.serialization.SerialName("celebrationIds") java.util.List<java.lang.String?>? celebrationIDS, optional @kotlinx.serialization.SerialName("composerId") String? composerID, optional java.util.List<java.lang.String>? contributors, optional @kotlinx.serialization.SerialName("cuisineIds") java.util.List<java.lang.String?>? cuisineIDS, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.ImageClass? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, optional java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? ingredientsTemplate, optional java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, optional java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? instructionsTemplate, optional Boolean? isAppReady, optional @kotlinx.serialization.SerialName("mealTypeIds") java.util.List<java.lang.String?>? mealTypeIDS, optional java.util.List<com.gu.recipe.generated.ServeElement>? serves, optional @kotlinx.serialization.SerialName("suitableForDietIds") java.util.List<java.lang.String?>? suitableForDietIDS, optional @kotlinx.serialization.SerialName("techniquesUsedIds") java.util.List<java.lang.String?>? techniquesUsedIDS, optional java.util.List<com.gu.recipe.generated.TimingElement>? timings, optional String? title, optional @kotlinx.serialization.SerialName("utensilsAndApplianceIds") java.util.List<java.lang.String?>? utensilsAndApplianceIDS, optional String? webPublicationDate);
+    ctor public RecipeV3(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional java.util.List<java.lang.String?>? celebrationIds, optional java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas, optional String? composerId, optional java.util.List<java.lang.String>? contributors, optional java.util.List<java.lang.String?>? cuisineIds, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.Image? featuredImage, String id, optional java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients, optional java.util.List<com.gu.recipe.generated.Instruction>? instructions, optional Boolean? isAppReady, optional java.util.List<java.lang.String?>? mealTypeIds, optional java.util.List<com.gu.recipe.generated.Serves>? serves, optional java.util.List<java.lang.String?>? suitableForDietIds, optional java.util.List<java.lang.String?>? techniquesUsedIds, optional java.util.List<com.gu.recipe.generated.Timing>? timings, optional String? title, optional java.util.List<java.lang.String?>? utensilsAndApplianceIds, optional String? webPublicationDate);
     method public String? component1();
-    method public com.gu.recipe.generated.ImageClass? component10();
-    method public String component11();
-    method public java.util.List<com.gu.recipe.generated.IngredientElement>? component12();
-    method public java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? component13();
-    method public java.util.List<com.gu.recipe.generated.InstructionElement>? component14();
-    method public java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? component15();
-    method public Boolean? component16();
-    method public java.util.List<java.lang.String?>? component17();
-    method public java.util.List<com.gu.recipe.generated.ServeElement>? component18();
+    method public String? component10();
+    method public com.gu.recipe.generated.Image? component11();
+    method public String component12();
+    method public java.util.List<com.gu.recipe.generated.IngredientsList>? component13();
+    method public java.util.List<com.gu.recipe.generated.Instruction>? component14();
+    method public Boolean? component15();
+    method public java.util.List<java.lang.String?>? component16();
+    method public java.util.List<com.gu.recipe.generated.Serves>? component17();
+    method public java.util.List<java.lang.String?>? component18();
     method public java.util.List<java.lang.String?>? component19();
     method public java.util.List<java.lang.String>? component2();
-    method public java.util.List<java.lang.String?>? component20();
-    method public java.util.List<com.gu.recipe.generated.TimingElement>? component21();
-    method public String? component22();
-    method public java.util.List<java.lang.String?>? component23();
-    method public String? component24();
+    method public java.util.List<com.gu.recipe.generated.Timing>? component20();
+    method public String? component21();
+    method public java.util.List<java.lang.String?>? component22();
+    method public String? component23();
     method public String? component3();
     method public java.util.List<java.lang.String?>? component4();
-    method public String? component5();
-    method public java.util.List<java.lang.String>? component6();
-    method public java.util.List<java.lang.String?>? component7();
-    method public String? component8();
+    method public java.util.List<com.gu.recipe.generated.CommerceCta>? component5();
+    method public String? component6();
+    method public java.util.List<java.lang.String>? component7();
+    method public java.util.List<java.lang.String?>? component8();
     method public String? component9();
-    method public com.gu.recipe.generated.RecipeV3 copy(String? bookCredit, java.util.List<java.lang.String>? byline, String? canonicalArticle, java.util.List<java.lang.String?>? celebrationIDS, String? composerID, java.util.List<java.lang.String>? contributors, java.util.List<java.lang.String?>? cuisineIDS, String? description, String? difficultyLevel, com.gu.recipe.generated.ImageClass? featuredImage, String id, java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients, java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? ingredientsTemplate, java.util.List<com.gu.recipe.generated.InstructionElement>? instructions, java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? instructionsTemplate, Boolean? isAppReady, java.util.List<java.lang.String?>? mealTypeIDS, java.util.List<com.gu.recipe.generated.ServeElement>? serves, java.util.List<java.lang.String?>? suitableForDietIDS, java.util.List<java.lang.String?>? techniquesUsedIDS, java.util.List<com.gu.recipe.generated.TimingElement>? timings, String? title, java.util.List<java.lang.String?>? utensilsAndApplianceIDS, String? webPublicationDate);
+    method public com.gu.recipe.generated.RecipeV3 copy(String? bookCredit, java.util.List<java.lang.String>? byline, String? canonicalArticle, java.util.List<java.lang.String?>? celebrationIds, java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas, String? composerId, java.util.List<java.lang.String>? contributors, java.util.List<java.lang.String?>? cuisineIds, String? description, String? difficultyLevel, com.gu.recipe.generated.Image? featuredImage, String id, java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients, java.util.List<com.gu.recipe.generated.Instruction>? instructions, Boolean? isAppReady, java.util.List<java.lang.String?>? mealTypeIds, java.util.List<com.gu.recipe.generated.Serves>? serves, java.util.List<java.lang.String?>? suitableForDietIds, java.util.List<java.lang.String?>? techniquesUsedIds, java.util.List<com.gu.recipe.generated.Timing>? timings, String? title, java.util.List<java.lang.String?>? utensilsAndApplianceIds, String? webPublicationDate);
     method public String? getBookCredit();
     method public java.util.List<java.lang.String>? getByline();
     method public String? getCanonicalArticle();
-    method public java.util.List<java.lang.String?>? getCelebrationIDS();
-    method public String? getComposerID();
+    method public java.util.List<java.lang.String?>? getCelebrationIds();
+    method public java.util.List<com.gu.recipe.generated.CommerceCta>? getCommerceCtas();
+    method public String? getComposerId();
     method public java.util.List<java.lang.String>? getContributors();
-    method public java.util.List<java.lang.String?>? getCuisineIDS();
+    method public java.util.List<java.lang.String?>? getCuisineIds();
     method public String? getDescription();
     method public String? getDifficultyLevel();
-    method public com.gu.recipe.generated.ImageClass? getFeaturedImage();
+    method public com.gu.recipe.generated.Image? getFeaturedImage();
     method public String getId();
-    method public java.util.List<com.gu.recipe.generated.IngredientElement>? getIngredients();
-    method public java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? getIngredientsTemplate();
-    method public java.util.List<com.gu.recipe.generated.InstructionElement>? getInstructions();
-    method public java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? getInstructionsTemplate();
-    method public java.util.List<java.lang.String?>? getMealTypeIDS();
-    method public java.util.List<com.gu.recipe.generated.ServeElement>? getServes();
-    method public java.util.List<java.lang.String?>? getSuitableForDietIDS();
-    method public java.util.List<java.lang.String?>? getTechniquesUsedIDS();
-    method public java.util.List<com.gu.recipe.generated.TimingElement>? getTimings();
+    method public java.util.List<com.gu.recipe.generated.IngredientsList>? getIngredients();
+    method public java.util.List<com.gu.recipe.generated.Instruction>? getInstructions();
+    method public java.util.List<java.lang.String?>? getMealTypeIds();
+    method public java.util.List<com.gu.recipe.generated.Serves>? getServes();
+    method public java.util.List<java.lang.String?>? getSuitableForDietIds();
+    method public java.util.List<java.lang.String?>? getTechniquesUsedIds();
+    method public java.util.List<com.gu.recipe.generated.Timing>? getTimings();
     method public String? getTitle();
-    method public java.util.List<java.lang.String?>? getUtensilsAndApplianceIDS();
+    method public java.util.List<java.lang.String?>? getUtensilsAndApplianceIds();
     method public String? getWebPublicationDate();
     method public Boolean? isAppReady();
     property public final String? bookCredit;
     property public final java.util.List<java.lang.String>? byline;
     property public final String? canonicalArticle;
-    property public final java.util.List<java.lang.String?>? celebrationIDS;
-    property public final String? composerID;
+    property public final java.util.List<java.lang.String?>? celebrationIds;
+    property public final java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas;
+    property public final String? composerId;
     property public final java.util.List<java.lang.String>? contributors;
-    property public final java.util.List<java.lang.String?>? cuisineIDS;
+    property public final java.util.List<java.lang.String?>? cuisineIds;
     property public final String? description;
     property public final String? difficultyLevel;
-    property public final com.gu.recipe.generated.ImageClass? featuredImage;
+    property public final com.gu.recipe.generated.Image? featuredImage;
     property public final String id;
-    property public final java.util.List<com.gu.recipe.generated.IngredientElement>? ingredients;
-    property public final java.util.List<com.gu.recipe.generated.IngredientsTemplateElement>? ingredientsTemplate;
-    property public final java.util.List<com.gu.recipe.generated.InstructionElement>? instructions;
-    property public final java.util.List<com.gu.recipe.generated.InstructionsTemplateElement>? instructionsTemplate;
+    property public final java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients;
+    property public final java.util.List<com.gu.recipe.generated.Instruction>? instructions;
     property public final Boolean? isAppReady;
-    property public final java.util.List<java.lang.String?>? mealTypeIDS;
-    property public final java.util.List<com.gu.recipe.generated.ServeElement>? serves;
-    property public final java.util.List<java.lang.String?>? suitableForDietIDS;
-    property public final java.util.List<java.lang.String?>? techniquesUsedIDS;
-    property public final java.util.List<com.gu.recipe.generated.TimingElement>? timings;
+    property public final java.util.List<java.lang.String?>? mealTypeIds;
+    property public final java.util.List<com.gu.recipe.generated.Serves>? serves;
+    property public final java.util.List<java.lang.String?>? suitableForDietIds;
+    property public final java.util.List<java.lang.String?>? techniquesUsedIds;
+    property public final java.util.List<com.gu.recipe.generated.Timing>? timings;
     property public final String? title;
-    property public final java.util.List<java.lang.String?>? utensilsAndApplianceIDS;
+    property public final java.util.List<java.lang.String?>? utensilsAndApplianceIds;
     property public final String? webPublicationDate;
-  }
-
-  @kotlinx.serialization.Serializable public final class ServeElement {
-    ctor public ServeElement(optional com.gu.recipe.generated.RangeClass? amount, optional String? text, String unit);
-    method public com.gu.recipe.generated.RangeClass? component1();
-    method public String? component2();
-    method public String component3();
-    method public com.gu.recipe.generated.ServeElement copy(com.gu.recipe.generated.RangeClass? amount, String? text, String unit);
-    method public com.gu.recipe.generated.RangeClass? getAmount();
-    method public String? getText();
-    method public String getUnit();
-    property public final com.gu.recipe.generated.RangeClass? amount;
-    property public final String? text;
-    property public final String unit;
   }
 
   @kotlinx.serialization.Serializable public final class Serves {
-    ctor public Serves(optional com.gu.recipe.generated.RangeClass? amount, optional String? text, String unit);
-    method public com.gu.recipe.generated.RangeClass? component1();
+    ctor public Serves(optional com.gu.recipe.generated.Range? amount, optional String? text, String unit);
+    method public com.gu.recipe.generated.Range? component1();
     method public String? component2();
     method public String component3();
-    method public com.gu.recipe.generated.Serves copy(com.gu.recipe.generated.RangeClass? amount, String? text, String unit);
-    method public com.gu.recipe.generated.RangeClass? getAmount();
+    method public com.gu.recipe.generated.Serves copy(com.gu.recipe.generated.Range? amount, String? text, String unit);
+    method public com.gu.recipe.generated.Range? getAmount();
     method public String? getText();
     method public String getUnit();
-    property public final com.gu.recipe.generated.RangeClass? amount;
+    property public final com.gu.recipe.generated.Range? amount;
     property public final String? text;
     property public final String unit;
   }
 
   @kotlinx.serialization.Serializable public final class Timing {
-    ctor public Timing(optional com.gu.recipe.generated.RangeClass? durationInMins, optional String? qualifier, optional String? text);
-    method public com.gu.recipe.generated.RangeClass? component1();
+    ctor public Timing(optional com.gu.recipe.generated.Range? durationInMins, optional String? qualifier, optional String? text);
+    method public com.gu.recipe.generated.Range? component1();
     method public String? component2();
     method public String? component3();
-    method public com.gu.recipe.generated.Timing copy(com.gu.recipe.generated.RangeClass? durationInMins, String? qualifier, String? text);
-    method public com.gu.recipe.generated.RangeClass? getDurationInMins();
+    method public com.gu.recipe.generated.Timing copy(com.gu.recipe.generated.Range? durationInMins, String? qualifier, String? text);
+    method public com.gu.recipe.generated.Range? getDurationInMins();
     method public String? getQualifier();
     method public String? getText();
-    property public final com.gu.recipe.generated.RangeClass? durationInMins;
-    property public final String? qualifier;
-    property public final String? text;
-  }
-
-  @kotlinx.serialization.Serializable public final class TimingElement {
-    ctor public TimingElement(optional com.gu.recipe.generated.RangeClass? durationInMins, optional String? qualifier, optional String? text);
-    method public com.gu.recipe.generated.RangeClass? component1();
-    method public String? component2();
-    method public String? component3();
-    method public com.gu.recipe.generated.TimingElement copy(com.gu.recipe.generated.RangeClass? durationInMins, String? qualifier, String? text);
-    method public com.gu.recipe.generated.RangeClass? getDurationInMins();
-    method public String? getQualifier();
-    method public String? getText();
-    property public final com.gu.recipe.generated.RangeClass? durationInMins;
+    property public final com.gu.recipe.generated.Range? durationInMins;
     property public final String? qualifier;
     property public final String? text;
   }
