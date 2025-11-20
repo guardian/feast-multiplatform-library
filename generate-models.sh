@@ -19,6 +19,8 @@ npx quicktype \
     --src-lang schema \
     --lang kotlin \
     --framework kotlinx \
+    --acronym-style original \
     --package com.gu.recipe.generated \
     --out ${TARGET_DIR}/RecipeModels.kt \
-    ${BUILD_DIR}/*.json
+    -t RecipeV3 \
+    ${BUILD_DIR}/recipe-v3.json

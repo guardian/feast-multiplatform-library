@@ -111,9 +111,6 @@ internal fun renderTemplate(template: ParsedTemplate, factor: Float): String {
     return scaledParts.joinToString("")
 }
 
-typealias ClientSideRecipe = RecipeV2
-typealias ServerSideRecipe = RecipeV3
-
 /**
  * scaleAndConvertUnitRecipe used to convert units and scale recipe
  *
@@ -123,59 +120,23 @@ typealias ServerSideRecipe = RecipeV3
  *  To calculate the factor, take the number of desired servings and divide it by the original servings.
  * @param unit The target unit system for ingredient measurements (e.g., Metric or Imperial)
 */
-fun scaleAndConvertUnitRecipe(recipe: ServerSideRecipe, factor: Float, unit: IngredientUnit): ClientSideRecipe {
-    val scaledIngredients = recipe.ingredientsTemplate?.map { ingredientSection ->
-        IngredientElement(
+fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, unit: IngredientUnit): RecipeV3 {
+    val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
+        IngredientsList(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                 val scaledText = templateIngredient.template?.let { template ->
                     renderTemplate(parseTemplate(template), factor)
                 } ?: templateIngredient.text
 
-                IngredientsListIngredientsList(
-                    amount = templateIngredient.amount,
-                    ingredientID = templateIngredient.ingredientID,
-                    name = templateIngredient.name,
-                    optional = templateIngredient.optional,
-                    prefix = templateIngredient.prefix,
-                    suffix = templateIngredient.suffix,
-                    text = scaledText,
-                    unit = templateIngredient.unit
-                )
+                templateIngredient.copy(text = scaledText)
             },
             recipeSection = ingredientSection.recipeSection
         )
     }
-    val scaledInstructions = recipe.instructionsTemplate?.map { it ->
-        val description = renderTemplate(parseTemplate(it.descriptionTemplate), factor)
-        InstructionElement(
-            description = description,
-            images = it.images,
-            stepNumber = it.stepNumber,
-        )
+    val scaledInstructions = recipe.instructions?.map { instruction ->
+        val description = instruction.descriptionTemplate?.let { template -> renderTemplate(parseTemplate(template), factor)}
+        instruction.copy(description = description?: instruction.description)
     }
 
-    return ClientSideRecipe(
-        bookCredit = recipe.bookCredit,
-        byline = recipe.byline,
-        canonicalArticle = recipe.canonicalArticle,
-        celebrationIDS = recipe.celebrationIDS,
-        composerID = recipe.composerID,
-        contributors = recipe.contributors,
-        cuisineIDS = recipe.cuisineIDS,
-        description = recipe.description,
-        difficultyLevel = recipe.difficultyLevel,
-        featuredImage = recipe.featuredImage,
-        id = recipe.id,
-        ingredients = scaledIngredients,
-        instructions = scaledInstructions,
-        isAppReady = recipe.isAppReady,
-        mealTypeIDS = recipe.mealTypeIDS,
-        serves = recipe.serves,
-        suitableForDietIDS = recipe.suitableForDietIDS,
-        techniquesUsedIDS = recipe.techniquesUsedIDS,
-        timings = recipe.timings,
-        title = recipe.title,
-        utensilsAndApplianceIDS = recipe.utensilsAndApplianceIDS,
-        webPublicationDate = recipe.webPublicationDate,
-    )
+    return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
 }
