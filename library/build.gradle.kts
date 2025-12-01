@@ -163,7 +163,9 @@ tasks.register("zipXCFramework", Zip::class) {
     dependsOn("assemble${Config.SPM_FRAMEWORK_NAME}XCFramework")
 
     val xcframeworkPath = layout.buildDirectory.dir("XCFrameworks/release/${Config.SPM_FRAMEWORK_NAME}.xcframework")
-    from(xcframeworkPath)
+    from(xcframeworkPath) {
+        into("${Config.SPM_FRAMEWORK_NAME}.xcframework")
+    }
     archiveFileName.set("${Config.SPM_FRAMEWORK_NAME}.xcframework.zip")
     destinationDirectory.set(layout.buildDirectory.dir("distributions"))
 
