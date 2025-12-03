@@ -111,6 +111,19 @@ internal fun renderTemplate(template: ParsedTemplate, factor: Float): String {
     return scaledParts.joinToString("")
 }
 
+internal fun wrapWithStrongTag(value: String): String {
+    val separators = charArrayOf(',', ';', '(')
+    val index = value.indexOfAny(separators)
+
+    if (index != -1) {
+        val before = value.substring(0, index)
+        val after = value.substring(index)
+        return """<strong>$before</strong>$after"""
+    } else {
+        return """<strong>$value</strong>"""
+    }
+}
+
 /**
  * scaleAndConvertUnitRecipe used to convert units and scale recipe
  *
@@ -125,7 +138,7 @@ fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, unit: IngredientU
         IngredientsList(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                 val scaledText = templateIngredient.template?.let { template ->
-                    renderTemplate(parseTemplate(template), factor)
+                    wrapWithStrongTag(renderTemplate(parseTemplate(template), factor))
                 } ?: templateIngredient.text
 
                 templateIngredient.copy(text = scaledText)
