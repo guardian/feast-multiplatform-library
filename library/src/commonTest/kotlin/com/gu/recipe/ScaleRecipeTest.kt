@@ -1,6 +1,6 @@
 package io.github.kotlin.fibonacci.com.gu.recipe
 
-import com.gu.recipe.IngredientUnit
+import com.gu.recipe.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.scaleAndConvertUnitRecipe
 import kotlin.test.Test
@@ -75,7 +75,7 @@ class ScaleRecipeTest {
                 )
             )
         )
-        val scaledRecipe = scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, unit = IngredientUnit.Metric)
+        val scaledRecipe = scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe
