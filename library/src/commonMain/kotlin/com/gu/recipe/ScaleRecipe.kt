@@ -11,47 +11,7 @@ import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.unit.UnitConversion
 import com.gu.recipe.unit.Units
 import kotlin.math.max
-import kotlin.math.round
 
-
-
-internal fun formatFraction(number: Float): String {
-    val integerPart = number.toInt()
-    val fractionalPart = number - integerPart
-    val fractionString = when (fractionalPart) {
-        in 0.12f..0.13f -> "⅛"
-        in 0.33f..0.34f -> "⅓"
-        in 0.66f..0.67f -> "⅔"
-        0.25f -> "¼"
-        0.5f -> "½"
-        0.75f -> "¾"
-        else -> null
-    }
-    return if (fractionString != null) {
-        if (integerPart > 0) {
-            "$integerPart$fractionString"
-        } else {
-            fractionString
-        }
-    } else {
-        number.toString()
-    }
-}
-
-internal fun formatAmount(number: Float, decimals: Int, fraction: Boolean): String {
-    var multiplier = 1.0
-    repeat(decimals) { multiplier *= 10 }
-    val roundedNumber = round(number * multiplier) / multiplier
-    // If the number is an integer, don't show decimal places
-    if (roundedNumber % 1.0 == 0.0) {
-        return roundedNumber.toInt().toString()
-    }
-
-    if (fraction) {
-        return formatFraction(roundedNumber.toFloat())
-    }
-    return roundedNumber.toString()
-}
 
 internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String {
     val fanTempC = element.temperatureFanC?.let {
@@ -65,11 +25,11 @@ internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String 
         element.temperatureC?.let { "${element.temperatureC}C" },
         fanTempC,
         element.temperatureF?.let { "/${it}F" },
-        element.gasMark?.let { "/gas mark ${formatFraction(it)}" }
+        element.gasMark?.let { "/gas mark ${FormatUtils.formatFraction(it)}" }
     ).joinToString("")
 }
 
-fun scaleAmount(amount: Amount, factor: Float, shouldScale: Boolean): Amount {
+internal fun scaleAmount(amount: Amount, factor: Float, shouldScale: Boolean): Amount {
     if (!shouldScale) {
         return amount
     }
@@ -109,11 +69,11 @@ internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuri
         }
     } else ""
 
-    return if (amount.max != null) {
-        "${formatAmount(amount.min, decimals, fraction)}-${formatAmount(amount.max, decimals, fraction)}$unitString"
-    } else {
-        "${formatAmount(amount.min, decimals, fraction)}$unitString"
-    }
+    return listOfNotNull(
+        FormatUtils.formatAmount(amount.min, decimals, fraction),
+        amount.max?.let { "-" + FormatUtils.formatAmount(it, decimals, fraction) },
+        unitString,
+    ).joinToString("")
 }
 
 internal fun renderTemplateElement(element: TemplateElement, factor: Float, measuringSystem: MeasuringSystem): String {

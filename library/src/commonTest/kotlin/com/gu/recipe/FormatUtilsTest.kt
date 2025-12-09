@@ -1,9 +1,10 @@
 package com.gu.recipe
 
+import com.gu.recipe.FormatUtils.formatAmount
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class FormatNumberTest {
+class FormatUtilsTest {
     @Test
     fun `integer value no decimals`() {
         assertEquals("5", formatAmount(5f, 2, false))
