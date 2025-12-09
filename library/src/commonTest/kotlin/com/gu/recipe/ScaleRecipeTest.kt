@@ -1,6 +1,6 @@
 package io.github.kotlin.fibonacci.com.gu.recipe
 
-import com.gu.recipe.MeasuringSystem
+import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.scaleAndConvertUnitRecipe
 import kotlin.test.Test

@@ -1,6 +1,6 @@
 package com.gu.recipe.js
 
-import com.gu.recipe.MeasuringSystem
+import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement

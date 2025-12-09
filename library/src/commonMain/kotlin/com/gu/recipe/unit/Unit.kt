@@ -1,4 +1,4 @@
-package com.gu.recipe
+package com.gu.recipe.unit
 
 sealed interface MeasuringSystem {
     object Imperial : MeasuringSystem

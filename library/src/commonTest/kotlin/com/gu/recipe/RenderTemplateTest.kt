@@ -4,6 +4,7 @@ import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
+import com.gu.recipe.unit.MeasuringSystem
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -324,6 +325,33 @@ class RenderTemplateTest {
         )
         val result = renderTemplate(template, 10f, MeasuringSystem.Metric)
         assertEquals("15 cups 10 lbs", result)
+    }
+
+    @Test
+    fun `convert units when asking for imperial values`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 1.5f,
+                    unit = "kg",
+                    scale = true
+                ),
+                TemplateConst(" "),
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "g",
+                    scale = true
+                ),
+                TemplateConst(" "),
+                QuantityPlaceholder(
+                    min = 1f,
+                    unit = null,
+                    scale = true
+                ),
+            )
+        )
+        val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
+        assertEquals("3.31 lbs 3.53 oz 1", result)
     }
 }
 

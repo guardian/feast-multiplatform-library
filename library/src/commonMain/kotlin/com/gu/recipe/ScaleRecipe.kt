@@ -7,6 +7,9 @@ import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
+import com.gu.recipe.unit.MeasuringSystem
+import com.gu.recipe.unit.UnitConversion
+import com.gu.recipe.unit.Units
 import kotlin.math.max
 import kotlin.math.round
 
@@ -66,52 +69,50 @@ internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String 
     ).joinToString("")
 }
 
+fun scaleAmount(amount: Amount, factor: Float, shouldScale: Boolean): Amount {
+    if (!shouldScale) {
+        return amount
+    }
+    return amount.copy(
+        min = amount.min * factor,
+        max = amount.max?.let { it * factor }
+    )
+}
+
 internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem): String {
-    val maxValue = if (element.min != element.max) element.max else null
+    var amount = Amount(
+        min = element.min,
+        max = if (element.min != element.max) element.max else null,
+        unit = element.unit?.let { Units.findUnit(it) }
+    )
 
-    val minMax: Pair<Float, Float?> = if (element.scale) {
-        val scaledMin = (element.min * factor)
-        val scaledMax = maxValue?.let { (it * factor) }
+    amount = scaleAmount(amount, factor, element.scale)
+    amount = UnitConversion.convertUnitSystem(amount, measuringSystem)
 
-        Pair(scaledMin, scaledMax)
-    } else {
-        Pair(element.min, maxValue)
-    }
-
-    var unit = element.unit?.let { Units.findUnit(it) }
-
-    // should we convert units?
-    if (measuringSystem == MeasuringSystem.Imperial &&
-        unit?.measuringSystem == MeasuringSystem.Metric &&
-        unit?.unitType == UnitType.WEIGHT
-    ) {
-        unit = Units.OUNCE
-    }
-
-    val decimals = when (unit) {
+    val decimals = when (amount.unit) {
         Units.GRAM, Units.MILLILITER, Units.MILLIMETER -> 0
         Units.CENTIMETER, Units.INCH -> 1
         else -> 2
     }
 
-    val fraction = when (unit) {
+    val fraction = when (amount.unit) {
         Units.TEASPOON, Units.TABLESPOON, Units.CUP -> true
         null -> true
         else -> false
     }
 
-    val unitString = if (unit != null) {
-        if (max(minMax.first, minMax.second ?: minMax.first) > 1) {
-            " ${unit.symbolPlural}"
+    val unitString = if (amount.unit != null) {
+        if (max(amount.min, amount.max ?: amount.min) > 1) {
+            " ${amount.unit.symbolPlural}"
         } else {
-            " ${unit.symbol}"
+            " ${amount.unit.symbol}"
         }
     } else ""
 
-    if (minMax.second != null) {
-        return "${formatAmount(minMax.first, decimals, fraction)}-${formatAmount(minMax.second?: 0f, decimals, fraction)}$unitString"
+    return if (amount.max != null) {
+        "${formatAmount(amount.min, decimals, fraction)}-${formatAmount(amount.max, decimals, fraction)}$unitString"
     } else {
-        return "${formatAmount(minMax.first, decimals, fraction)}$unitString"
+        "${formatAmount(amount.min, decimals, fraction)}$unitString"
     }
 }
 
@@ -124,11 +125,11 @@ internal fun renderTemplateElement(element: TemplateElement, factor: Float, meas
 }
 
 internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSystem: MeasuringSystem): String {
-    val scaledParts = template.elements.map { element ->
+    val renderedParts = template.elements.map { element ->
         renderTemplateElement(element, factor, measuringSystem)
     }
 
-    return scaledParts.joinToString("")
+    return renderedParts.joinToString("")
 }
 
 /**
