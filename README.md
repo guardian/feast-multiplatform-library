@@ -24,3 +24,4 @@ To avoid any error and make evolving these models easier, we generate the kotlin
 see `./generate-models.sh` for the script that does this.
 
 The generated file is commit to github, making the build deterministic.
+
