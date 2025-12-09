@@ -61,6 +61,7 @@ kotlin {
             customField("description", Config.PACKAGE_DESCRIPTION)
             customField("keywords", listOf("kotlin", "multiplatform"))
             customField("license", "Apache-2.0")
+            customField("repository", mapOf("url" to "https://github.com/guardian/feast-multiplatform-library"))
         }
     }
 
