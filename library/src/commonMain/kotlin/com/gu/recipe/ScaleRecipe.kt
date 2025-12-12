@@ -25,7 +25,7 @@ internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String 
         element.temperatureC?.let { "${element.temperatureC}C" },
         fanTempC,
         element.temperatureF?.let { "/${it}F" },
-        element.gasMark?.let { "/gas mark ${FormatUtils.formatFraction(it)}" }
+        element.gasMark?.let { "/gas mark ${FormatUtils.formatToNearestFraction(it)}" }
     ).joinToString("")
 }
 
@@ -43,7 +43,8 @@ internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuri
     var amount = Amount(
         min = element.min,
         max = if (element.min != element.max) element.max else null,
-        unit = element.unit?.let { Units.findUnit(it) }
+        unit = element.unit?.let { Units.findUnit(it) },
+        usCust = element.usCust,
     )
 
     amount = scaleAmount(amount, factor, element.scale)

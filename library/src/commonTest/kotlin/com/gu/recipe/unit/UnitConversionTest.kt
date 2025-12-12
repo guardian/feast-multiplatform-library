@@ -43,5 +43,14 @@ class UnitConversionTest {
         assertEquals(expectedMax, result.max)
         assertEquals(Units.POUND, result.unit)
     }
+
+    @Test
+    fun `converts ml to cups when target is Imperial`() {
+        val amount = Amount(min = 100f, unit = Units.MILLILITER, usCust = true)
+        val result = UnitConversion.convertUnitSystem(amount, MeasuringSystem.Imperial)
+
+        assertEquals(0.41666666f, result.min)
+        assertEquals(Units.CUP, result.unit)
+    }
 }
 
