@@ -4,6 +4,7 @@ import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
+import com.gu.recipe.unit.MeasuringSystem
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,7 +20,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("200 g", result)
     }
 
@@ -35,7 +36,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("200-300 g", result)
     }
 
@@ -50,7 +51,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("1 tbsp", result)
     }
 
@@ -65,7 +66,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("½ tsp", result)
     }
 
@@ -80,8 +81,8 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 0.5f)
-        assertEquals("¾ cups", result)
+        val result = renderTemplate(template, 0.5f, MeasuringSystem.Metric)
+        assertEquals("¾ cup", result)
     }
 
     @Test
@@ -94,8 +95,8 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 0.5f)
-        assertEquals("1", result)
+        val result = renderTemplate(template, 0.25f, MeasuringSystem.Metric)
+        assertEquals("½", result)
     }
 
     @Test
@@ -109,8 +110,8 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 1.5f)
-        assertEquals("375 ml", result)
+        val result = renderTemplate(template, 1.234567f, MeasuringSystem.Metric)
+        assertEquals("309 ml", result)
     }
 
     @Test
@@ -124,7 +125,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("100 g", result)
     }
 
@@ -138,7 +139,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("180C (160C fan)", result)
     }
 
@@ -151,7 +152,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("200C", result)
     }
 
@@ -162,7 +163,7 @@ class RenderTemplateTest {
                 TemplateConst("Add ")
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("Add ", result)
     }
 
@@ -180,7 +181,7 @@ class RenderTemplateTest {
                 TemplateConst(" of flour")
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("Add 200-240 g of flour", result)
     }
 
@@ -203,7 +204,7 @@ class RenderTemplateTest {
                 TemplateConst(".")
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("Bake at 180C (160C fan) for 30-40 minutes.", result)
     }
 
@@ -218,7 +219,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 0.5f)
+        val result = renderTemplate(template, 0.5f, MeasuringSystem.Metric)
         assertEquals("100 g", result)
     }
 
@@ -233,7 +234,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 1.5f)
+        val result = renderTemplate(template, 1.5f, MeasuringSystem.Metric)
         assertEquals("1.5 kg", result)
     }
 
@@ -247,7 +248,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 0.75f)
+        val result = renderTemplate(template, 0.75f, MeasuringSystem.Metric)
         assertEquals("¾", result)
     }
 
@@ -263,7 +264,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("1-2 tsp", result)
     }
 
@@ -278,7 +279,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("4 kg", result)
     }
 
@@ -301,8 +302,56 @@ class RenderTemplateTest {
                 ),
             )
         )
-        val result = renderTemplate(template, 2f)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("4 kg 2 kg", result)
+    }
+
+    @Test
+    fun `use plural for units that support it`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 1.5f,
+                    unit = "cups",
+                    scale = true
+                ),
+                TemplateConst(" "),
+                QuantityPlaceholder(
+                    min = 1f,
+                    unit = "lb",
+                    scale = true
+                ),
+            )
+        )
+        val result = renderTemplate(template, 10f, MeasuringSystem.Metric)
+        assertEquals("15 cups 10 lbs", result)
+    }
+
+    @Test
+    fun `convert units when asking for imperial values`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 1.5f,
+                    unit = "kg",
+                    scale = true
+                ),
+                TemplateConst(" "),
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "g",
+                    scale = true
+                ),
+                TemplateConst(" "),
+                QuantityPlaceholder(
+                    min = 1f,
+                    unit = null,
+                    scale = true
+                ),
+            )
+        )
+        val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
+        assertEquals("3.31 lbs 3.53 oz 1", result)
     }
 }
 

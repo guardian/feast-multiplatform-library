@@ -7,108 +7,89 @@ import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
-import kotlin.math.round
+import com.gu.recipe.unit.MeasuringSystem
+import com.gu.recipe.unit.UnitConversion
+import com.gu.recipe.unit.Units
+import kotlin.math.max
 
-sealed interface IngredientUnit {
-    object Imperial : IngredientUnit
-    object Metric : IngredientUnit
-}
 
-internal fun formatFraction(number: Float): String {
-    val integerPart = number.toInt()
-    val fractionalPart = number - integerPart
-    val fractionString = when (fractionalPart) {
-        in 0.12f..0.13f -> "⅛"
-        in 0.33f..0.34f -> "⅓"
-        in 0.66f..0.67f -> "⅔"
-        0.25f -> "¼"
-        0.5f -> "½"
-        0.75f -> "¾"
-        else -> null
-    }
-    return if (fractionString != null) {
-        if (integerPart > 0) {
-            "$integerPart$fractionString"
+internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String {
+    val fanTempC = element.temperatureFanC?.let {
+        if (element.temperatureC == null) {
+            "${element.temperatureFanC}C fan"
         } else {
-            fractionString
+            " (${element.temperatureFanC}C fan)"
         }
-    } else {
-        number.toString()
     }
+    return listOfNotNull(
+        element.temperatureC?.let { "${element.temperatureC}C" },
+        fanTempC,
+        element.temperatureF?.let { "/${it}F" },
+        element.gasMark?.let { "/gas mark ${FormatUtils.formatFraction(it)}" }
+    ).joinToString("")
 }
 
-internal fun formatAmount(number: Float, decimals: Int, fraction: Boolean): String {
-    var multiplier = 1.0
-    repeat(decimals) { multiplier *= 10 }
-    val roundedNumber = round(number * multiplier) / multiplier
-    // If the number is an integer, don't show decimal places
-    if (roundedNumber % 1.0 == 0.0) {
-        return roundedNumber.toInt().toString()
+internal fun scaleAmount(amount: Amount, factor: Float, shouldScale: Boolean): Amount {
+    if (!shouldScale) {
+        return amount
     }
-
-    if (fraction) {
-        return formatFraction(roundedNumber.toFloat())
-    }
-    return roundedNumber.toString()
+    return amount.copy(
+        min = amount.min * factor,
+        max = amount.max?.let { it * factor }
+    )
 }
 
-internal fun renderTemplateElement(element: TemplateElement, factor: Float): String {
+internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem): String {
+    var amount = Amount(
+        min = element.min,
+        max = if (element.min != element.max) element.max else null,
+        unit = element.unit?.let { Units.findUnit(it) }
+    )
+
+    amount = scaleAmount(amount, factor, element.scale)
+    amount = UnitConversion.convertUnitSystem(amount, measuringSystem)
+
+    val decimals = when (amount.unit) {
+        Units.GRAM, Units.MILLILITER, Units.MILLIMETER -> 0
+        Units.CENTIMETER, Units.INCH -> 1
+        else -> 2
+    }
+
+    val fraction = when (amount.unit) {
+        Units.TEASPOON, Units.TABLESPOON, Units.CUP -> true
+        null -> true
+        else -> false
+    }
+
+    val unitString = if (amount.unit != null) {
+        if (max(amount.min, amount.max ?: amount.min) > 1) {
+            " ${amount.unit.symbolPlural}"
+        } else {
+            " ${amount.unit.symbol}"
+        }
+    } else ""
+
+    return listOfNotNull(
+        FormatUtils.formatAmount(amount.min, decimals, fraction),
+        amount.max?.let { "-" + FormatUtils.formatAmount(it, decimals, fraction) },
+        unitString,
+    ).joinToString("")
+}
+
+internal fun renderTemplateElement(element: TemplateElement, factor: Float, measuringSystem: MeasuringSystem): String {
     return when (element) {
         is TemplateConst -> element.value
-        is QuantityPlaceholder -> {
-            val max = if (element.min != element.max) element.max else null
-            val (scaledMin, scaledMax) = if (element.scale) {
-                val scaledMin = (element.min * factor)
-                val scaledMax = max?.let { (it * factor) }
-
-                Pair(scaledMin, scaledMax)
-            } else {
-                Pair(element.min, max)
-            }
-            val unit = if (element.unit != null) " ${element.unit}" else ""
-
-            val decimals = when (unit) {
-                "g", "ml" -> 0
-                else -> 2
-            }
-
-            val fraction = when (element.unit) {
-                "tsp", "tbsp", "cup", "cups" -> true
-                null -> true
-                else -> false
-            }
-
-            if (scaledMax != null) {
-                "${formatAmount(scaledMin, decimals, fraction)}-${formatAmount(scaledMax, decimals, fraction)}$unit"
-            } else {
-                "${formatAmount(scaledMin, decimals, fraction)}$unit"
-            }
-        }
-
-        is OvenTemperaturePlaceholder -> {
-            val fanTempC = element.temperatureFanC?.let {
-                if (element.temperatureC == null) {
-                    "${element.temperatureFanC}C fan"
-                } else {
-                    " (${element.temperatureFanC}C fan)"
-                }
-            }
-            listOfNotNull(
-                element.temperatureC?.let { "${element.temperatureC}C" },
-                fanTempC,
-                element.temperatureF?.let { "/${it}F" },
-                element.gasMark?.let { "/gas mark ${formatFraction(it)}" }
-            ).joinToString("")
-        }
+        is QuantityPlaceholder -> renderQuantity(element, factor, measuringSystem)
+        is OvenTemperaturePlaceholder -> renderOvenTemperature(element)
     }
 }
 
-internal fun renderTemplate(template: ParsedTemplate, factor: Float): String {
-    val scaledParts = template.elements.map { element ->
-        renderTemplateElement(element, factor)
+internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSystem: MeasuringSystem): String {
+    val renderedParts = template.elements.map { element ->
+        renderTemplateElement(element, factor, measuringSystem)
     }
 
-    return scaledParts.joinToString("")
+    return renderedParts.joinToString("")
 }
 
 internal fun wrapWithStrongTag(value: String): String {
@@ -131,14 +112,14 @@ internal fun wrapWithStrongTag(value: String): String {
  * @param factor The factor applied to change the proportions of the recipe.
  *  For instance 0.5 halves the recipe and 2 doubles it.
  *  To calculate the factor, take the number of desired servings and divide it by the original servings.
- * @param unit The target unit system for ingredient measurements (e.g., Metric or Imperial)
-*/
-fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, unit: IngredientUnit): RecipeV3 {
+ * @param measuringSystem The target unit system for ingredient measurements (e.g., Metric or Imperial)
+ */
+fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
     val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
         IngredientsList(
             ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                 val scaledText = templateIngredient.template?.let { template ->
-                    wrapWithStrongTag(renderTemplate(parseTemplate(template), factor))
+                    wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem))
                 } ?: templateIngredient.text
 
                 templateIngredient.copy(text = scaledText)
@@ -147,8 +128,10 @@ fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, unit: IngredientU
         )
     }
     val scaledInstructions = recipe.instructions?.map { instruction ->
-        val description = instruction.descriptionTemplate?.let { template -> renderTemplate(parseTemplate(template), factor)}
-        instruction.copy(description = description?: instruction.description)
+        val description = instruction.descriptionTemplate?.let { template ->
+            renderTemplate(parseTemplate(template), factor, measuringSystem)
+        }
+        instruction.copy(description = description ?: instruction.description)
     }
 
     return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)

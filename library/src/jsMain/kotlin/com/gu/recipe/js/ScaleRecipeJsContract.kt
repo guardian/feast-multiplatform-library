@@ -1,6 +1,6 @@
 package com.gu.recipe.js
 
-import com.gu.recipe.IngredientUnit
+import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
@@ -12,12 +12,12 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
 @JsExport
 fun scaleRecipe(recipe: String, factor: Float, unit: String): String {
     val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
-    val ingredientUnit = when (unit) {
-        "Imperial" -> IngredientUnit.Imperial
-        "Metric" -> IngredientUnit.Metric
+    val measuringSystem = when (unit) {
+        "Imperial" -> MeasuringSystem.Imperial
+        "Metric" -> MeasuringSystem.Metric
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
-    val scaledRecipe = com.gu.recipe.scaleAndConvertUnitRecipe(parsedRecipe, factor, ingredientUnit)
+    val scaledRecipe = com.gu.recipe.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)
     return Json.encodeToString(scaledRecipe)
 }
 
@@ -34,5 +34,5 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 @JsExport
 fun renderTemplate(templateElements: List<TemplateElement>): String {
     val template = ParsedTemplate(templateElements)
-    return com.gu.recipe.renderTemplate(template, 1.0f)
+    return com.gu.recipe.renderTemplate(template, 1.0f, MeasuringSystem.Metric)
 }
