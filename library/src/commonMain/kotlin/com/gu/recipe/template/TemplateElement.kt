@@ -22,6 +22,8 @@ data class QuantityPlaceholder(
     val max: Float? = null,
     val unit: String? = null,
     val scale: Boolean = false,
+    val ingredient: String? = null,
+    val usCust: Boolean? = null, // US customary units flag, true should convert weights to cups / tsp / tbsp
 ) : TemplateElement
 
 @OptIn(ExperimentalJsExport::class)
