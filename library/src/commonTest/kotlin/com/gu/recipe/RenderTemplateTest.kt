@@ -353,5 +353,29 @@ class RenderTemplateTest {
         val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
         assertEquals("3.31 lbs 3.53 oz 1", result)
     }
+
+    @Test
+    fun `Round to nearest fraction when converting to cups`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of water, "),
+                QuantityPlaceholder(
+                    min = 120f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of oil"),
+            )
+        )
+        val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
+        assertEquals("⅜ cup of water, ½ cup of oil", result)
+    }
 }
 
