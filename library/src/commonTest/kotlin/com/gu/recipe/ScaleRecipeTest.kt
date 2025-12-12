@@ -3,6 +3,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.scaleAndConvertUnitRecipe
+import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -24,7 +25,7 @@ class ScaleRecipeTest {
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt"""
                         ),
                         IngredientItem(
-                            template = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes"""
+                            template = """{"min":1, "scale":true} x {"min":400, "unit":"g", "scale":false} tin chopped tomatoes"""
                         ),
                     )
                 )
@@ -47,19 +48,19 @@ class ScaleRecipeTest {
                     ingredientsList = listOf(
                         IngredientItem(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour""",
-                            text = "200-240 g of flour"
+                            text = "<strong>200-240 g of flour</strong>"
                         ),
                         IngredientItem(
                             template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes""",
-                            text = "2.4 kg of potatoes"
+                            text = "<strong>2.4 kg of potatoes</strong>"
                         ),
                         IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt""",
-                            text = "½ tbsp of salt"
+                            text = "<strong>½ tbsp of salt</strong>"
                         ),
                         IngredientItem(
-                            template = """{"min":1, "scale":true} {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",
-                            text = "2 400 g tin chopped tomatoes"
+                            template = """{"min":1, "scale":true} x {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",
+                            text = "<strong>2 x 400 g tin chopped tomatoes</strong>"
                         ),
                     )
                 )
@@ -80,5 +81,11 @@ class ScaleRecipeTest {
             expectedRecipe,
             scaledRecipe
         )
+    }
+
+    @Test
+    fun `wrapWithStrongTag should wrap text before first punctuation`() {
+        assertEquals("<strong>1-2 of something</strong>", wrapWithStrongTag("1-2 of something"))
+        assertEquals("<strong>1-2 kg oranges</strong>, organic", wrapWithStrongTag("1-2 kg oranges, organic"))
     }
 }
