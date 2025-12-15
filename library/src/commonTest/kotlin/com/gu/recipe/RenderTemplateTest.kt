@@ -353,5 +353,16 @@ class RenderTemplateTest {
         val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
         assertEquals("3.31 lbs 3.53 oz 1", result)
     }
+
+    @Test
+    fun `replace simple punctuation with Guardian style punctuation`() {
+        val template = ParsedTemplate(
+            listOf(
+                TemplateConst("Use \"00\" flour and you'll get the best results."),
+            )
+        )
+        val result = renderTemplate(template, 1f, MeasuringSystem.Metric)
+        assertEquals("Use “00” flour and you’ll get the best results.", result)
+    }
 }
 
