@@ -49,6 +49,8 @@ internal object FormatUtils {
             "“${matchResult.groupValues[2]}”"
         }
 
-        return withQuotes.replace("'", "’")
+        return withQuotes
+            .replace("'", "’")
+            .replace(" - ", " – ")
     }
 }

@@ -358,11 +358,11 @@ class RenderTemplateTest {
     fun `replace simple punctuation with Guardian style punctuation`() {
         val template = ParsedTemplate(
             listOf(
-                TemplateConst("Use \"00\" flour and you'll get the best results."),
+                TemplateConst("Use \"00\" flour and you'll get - I think - the best results."),
             )
         )
         val result = renderTemplate(template, 1f, MeasuringSystem.Metric)
-        assertEquals("Use “00” flour and you’ll get the best results.", result)
+        assertEquals("Use “00” flour and you’ll get – I think – the best results.", result)
     }
 }
 
