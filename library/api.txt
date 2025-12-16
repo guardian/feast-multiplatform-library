@@ -2,17 +2,20 @@
 package com.gu.recipe {
 
   public final class Amount {
-    ctor public Amount(float min, optional Float? max, optional com.gu.recipe.unit.Unit? unit);
+    ctor public Amount(float min, optional Float? max, optional com.gu.recipe.unit.Unit? unit, optional Boolean? usCust);
     method public float component1();
     method public Float? component2();
     method public com.gu.recipe.unit.Unit? component3();
-    method public com.gu.recipe.Amount copy(float min, Float? max, com.gu.recipe.unit.Unit? unit);
+    method public Boolean? component4();
+    method public com.gu.recipe.Amount copy(float min, Float? max, com.gu.recipe.unit.Unit? unit, Boolean? usCust);
     method public Float? getMax();
     method public float getMin();
     method public com.gu.recipe.unit.Unit? getUnit();
+    method public Boolean? getUsCust();
     property public final Float? max;
     property public final float min;
     property public final com.gu.recipe.unit.Unit? unit;
+    property public final Boolean? usCust;
   }
 
   public final class ScaleRecipeKt {
@@ -283,20 +286,26 @@ package com.gu.recipe.template {
   }
 
   @kotlinx.serialization.Serializable public final class QuantityPlaceholder implements com.gu.recipe.template.TemplateElement {
-    ctor public QuantityPlaceholder(float min, optional Float? max, optional String? unit, optional boolean scale);
+    ctor public QuantityPlaceholder(float min, optional Float? max, optional String? unit, optional boolean scale, optional String? ingredient, optional Boolean? usCust);
     method public float component1();
     method public Float? component2();
     method public String? component3();
     method public boolean component4();
-    method public com.gu.recipe.template.QuantityPlaceholder copy(float min, Float? max, String? unit, boolean scale);
+    method public String? component5();
+    method public Boolean? component6();
+    method public com.gu.recipe.template.QuantityPlaceholder copy(float min, Float? max, String? unit, boolean scale, String? ingredient, Boolean? usCust);
+    method public String? getIngredient();
     method public Float? getMax();
     method public float getMin();
     method public boolean getScale();
     method public String? getUnit();
+    method public Boolean? getUsCust();
+    property public final String? ingredient;
     property public final Float? max;
     property public final float min;
     property public final boolean scale;
     property public final String? unit;
+    property public final Boolean? usCust;
   }
 
   public final class TemplateConst implements com.gu.recipe.template.TemplateElement {
@@ -350,8 +359,10 @@ package com.gu.recipe.unit {
 
   public final class UnitConversion {
     method public com.gu.recipe.Amount convertUnitSystem(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target);
+    method public float getML_IN_CUP();
     method public float getONCES_IN_GRAM();
     method public float getPOUNDS_IN_KILOGRAM();
+    property public final float ML_IN_CUP;
     property public final float ONCES_IN_GRAM;
     property public final float POUNDS_IN_KILOGRAM;
     field public static final com.gu.recipe.unit.UnitConversion INSTANCE;
