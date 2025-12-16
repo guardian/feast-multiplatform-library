@@ -355,6 +355,30 @@ class RenderTemplateTest {
     }
 
     @Test
+    fun `Round to nearest fraction when converting to cups`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of water, "),
+                QuantityPlaceholder(
+                    min = 120f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of oil"),
+            )
+        )
+        val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
+        assertEquals("⅜ cup of water, ½ cup of oil", result)
+    }
+
+    @Test
     fun `replace simple punctuation with Guardian style punctuation`() {
         val template = ParsedTemplate(
             listOf(
