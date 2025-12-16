@@ -1,5 +1,6 @@
 package com.gu.recipe
 
+import com.gu.recipe.FormatUtils.applySmartPunctuation
 import com.gu.recipe.generated.*
 import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
@@ -90,7 +91,7 @@ internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSy
         renderTemplateElement(element, factor, measuringSystem)
     }
 
-    return renderedParts.joinToString("")
+    return applySmartPunctuation(renderedParts.joinToString(""))
 }
 
 internal fun wrapWithStrongTag(value: String): String {

@@ -43,4 +43,17 @@ internal object FormatUtils {
             }
         }
     }
+
+    val captureMatchingQuotes = Regex("([\"])(.*?)([\"])")
+
+    fun applySmartPunctuation(text: String): String {
+        // capture opening quotes with their matching closing quote in order to replace each pair together with opening and closing fancy quotes
+        val withQuotes = captureMatchingQuotes.replace(text) { matchResult ->
+            "“${matchResult.groupValues[2]}”"
+        }
+
+        return withQuotes
+            .replace("'", "’")
+            .replace(" - ", " – ")
+    }
 }

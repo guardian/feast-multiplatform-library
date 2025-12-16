@@ -1,5 +1,6 @@
 package com.gu.recipe
 
+import com.gu.recipe.FormatUtils.applySmartPunctuation
 import com.gu.recipe.FormatUtils.formatAmount
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -58,5 +59,12 @@ class FormatUtilsTest {
         assertEquals("8", formatAmount(8.01f, 2, true))
         assertEquals("8", formatAmount(7.99f, 2, true))
     }
-}
 
+    @Test
+    fun `applySmartPunctuation replaces quotes and apostrophes`() {
+        assertEquals("“Hello”", applySmartPunctuation("\"Hello\""))
+        assertEquals("It’s", applySmartPunctuation("It's"))
+        assertEquals("“It’s”", applySmartPunctuation("\"It's\""))
+        assertEquals("Hello", applySmartPunctuation("Hello"))
+    }
+}
