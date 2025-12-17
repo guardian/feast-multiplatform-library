@@ -256,11 +256,7 @@ data class IngredientItem (
      * Unit of measurement for the ingredient
      */
     val unit: String? = null
-) {
-    fun textWithoutSuffix(): String? {
-        return text?.substringBefore(",")
-    }
-}
+)
 
 /**
  * A numeric range with minimum and maximum values

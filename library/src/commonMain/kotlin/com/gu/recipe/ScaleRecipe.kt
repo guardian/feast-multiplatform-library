@@ -138,3 +138,7 @@ fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: 
 
     return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
 }
+
+fun textWithoutSuffix(text: String?): String? {
+    return text?.substringBefore(",")
+}
