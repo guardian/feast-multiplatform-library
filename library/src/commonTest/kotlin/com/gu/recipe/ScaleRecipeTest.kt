@@ -88,4 +88,10 @@ class ScaleRecipeTest {
         assertEquals("<strong>1-2 of something</strong>", wrapWithStrongTag("1-2 of something"))
         assertEquals("<strong>1-2 kg oranges</strong>, organic", wrapWithStrongTag("1-2 kg oranges, organic"))
     }
+
+    @Test
+    fun `textWithoutSuffix returns first part of the ingredient`() {
+        val ingredient = IngredientItem(text = "1 potato, (100g) thinly chopped")
+        assertEquals("1 potato", ingredient.textWithoutSuffix())
+    }
 }
