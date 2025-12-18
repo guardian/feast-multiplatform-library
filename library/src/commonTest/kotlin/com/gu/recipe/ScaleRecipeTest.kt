@@ -3,6 +3,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.scaleAndConvertUnitRecipe
+import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -87,5 +88,11 @@ class ScaleRecipeTest {
     fun `wrapWithStrongTag should wrap text before first punctuation`() {
         assertEquals("<strong>1-2 of something</strong>", wrapWithStrongTag("1-2 of something"))
         assertEquals("<strong>1-2 kg oranges</strong>, organic", wrapWithStrongTag("1-2 kg oranges, organic"))
+    }
+
+    @Test
+    fun `textWithoutSuffix returns first part of the ingredient`() {
+        val ingredient = "1 potato, (100g) thinly chopped"
+        assertEquals("1 potato", ingredientWithoutSuffix(ingredient))
     }
 }
