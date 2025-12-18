@@ -19,6 +19,7 @@ package com.gu.recipe {
   }
 
   public final class ScaleRecipeKt {
+    method public static String ingredientWithoutSuffix(String renderedTemplate);
     method public static com.gu.recipe.generated.RecipeV3 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
   }
 
