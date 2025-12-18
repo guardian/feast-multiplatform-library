@@ -3,7 +3,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.scaleAndConvertUnitRecipe
-import com.gu.recipe.textWithoutSuffix
+import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -93,6 +93,6 @@ class ScaleRecipeTest {
     @Test
     fun `textWithoutSuffix returns first part of the ingredient`() {
         val ingredient = "1 potato, (100g) thinly chopped"
-        assertEquals("1 potato", textWithoutSuffix(ingredient))
+        assertEquals("1 potato", ingredientWithoutSuffix(ingredient))
     }
 }

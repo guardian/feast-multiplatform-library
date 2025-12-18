@@ -95,16 +95,9 @@ internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSy
 }
 
 internal fun wrapWithStrongTag(value: String): String {
-    val separators = charArrayOf(',', ';', '(')
-    val index = value.indexOfAny(separators)
-
-    if (index != -1) {
-        val before = value.substring(0, index)
-        val after = value.substring(index)
-        return """<strong>$before</strong>$after"""
-    } else {
-        return """<strong>$value</strong>"""
-    }
+    val before = ingredientWithoutSuffix(value)
+    val after = value.substring(before.length)
+    return """<strong>$before</strong>$after"""
 }
 
 /**
@@ -139,6 +132,6 @@ fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: 
     return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
 }
 
-fun textWithoutSuffix(text: String?): String? {
-    return text?.substringBefore(",")
+fun ingredientWithoutSuffix(renderedTemplate: String): String {
+    return renderedTemplate.substringBefore(",")
 }
