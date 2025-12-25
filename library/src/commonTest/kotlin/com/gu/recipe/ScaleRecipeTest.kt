@@ -88,6 +88,7 @@ class ScaleRecipeTest {
     fun `wrapWithStrongTag should wrap text before first punctuation`() {
         assertEquals("<strong>1-2 of something</strong>", wrapWithStrongTag("1-2 of something"))
         assertEquals("<strong>1-2 kg oranges</strong>, organic", wrapWithStrongTag("1-2 kg oranges, organic"))
+        assertEquals("<strong>150 g mayonnaise </strong>(homemade or shop-bought)", wrapWithStrongTag("150 g mayonnaise (homemade or shop-bought)"))
     }
 
     @Test
@@ -97,5 +98,8 @@ class ScaleRecipeTest {
 
         val ingredient2 = "150 g mayonnaise (homemade or shop-bought)"
         assertEquals("150 g mayonnaise", ingredientWithoutSuffix(ingredient2))
+
+        val ingredient3 = "150 g egg; (small)"
+        assertEquals("150 g egg", ingredientWithoutSuffix(ingredient3))
     }
 }

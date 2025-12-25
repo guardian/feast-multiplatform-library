@@ -99,11 +99,11 @@ private fun splitBeforeSuffix(value: String): Pair<String, String?> {
     val index = value.indexOfAny(separators)
 
     return if (index != -1) {
-        val before = value.take(index).trim()
-        val after = value.substring(index).trim()
+        val before = value.take(index)
+        val after = value.drop(index)
         before to after
     } else {
-        value to null
+        value.trim() to null
     }
 }
 
@@ -147,5 +147,5 @@ fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: 
 
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
     val (before, _) = splitBeforeSuffix(renderedTemplate)
-    return before
+    return before.trim()
 }
