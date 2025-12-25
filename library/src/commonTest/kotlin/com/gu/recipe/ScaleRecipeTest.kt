@@ -94,5 +94,8 @@ class ScaleRecipeTest {
     fun `textWithoutSuffix returns first part of the ingredient`() {
         val ingredient = "1 potato, (100g) thinly chopped"
         assertEquals("1 potato", ingredientWithoutSuffix(ingredient))
+
+        val ingredient2 = "150 g mayonnaise (homemade or shop-bought)"
+        assertEquals("150 g mayonnaise", ingredientWithoutSuffix(ingredient2))
     }
 }
