@@ -94,11 +94,24 @@ internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSy
     return applySmartPunctuation(renderedParts.joinToString(""))
 }
 
-internal fun wrapWithStrongTag(value: String): String {
-    val before = ingredientWithoutSuffix(value)
-    val after = value.substring(before.length)
-    return """<strong>$before</strong>$after"""
+private fun splitBeforeSuffix(value: String): Pair<String, String?> {
+    val separators = charArrayOf(',', ';', '(')
+    val index = value.indexOfAny(separators)
+
+    return if (index != -1) {
+        val before = value.take(index)
+        val after = value.drop(index)
+        before to after
+    } else {
+        value.trim() to null
+    }
 }
+
+internal fun wrapWithStrongTag(value: String): String {
+    val (before, after) = splitBeforeSuffix(value)
+    return "<strong>$before</strong>${after.orEmpty()}"
+}
+
 
 /**
  * scaleAndConvertUnitRecipe used to convert units and scale recipe
@@ -133,5 +146,6 @@ fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: 
 }
 
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
-    return renderedTemplate.substringBefore(",")
+    val (before, _) = splitBeforeSuffix(renderedTemplate)
+    return before.trim()
 }
