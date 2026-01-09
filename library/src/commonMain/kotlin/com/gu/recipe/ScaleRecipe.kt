@@ -52,8 +52,8 @@ internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuri
     amount = UnitConversion.convertUnitSystem(amount, measuringSystem)
 
     val decimals = when (amount.unit) {
-        Units.GRAM, Units.MILLILITER, Units.MILLIMETER -> 0
-        Units.CENTIMETER, Units.INCH -> 1
+        Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
+        Units.CENTIMETRE, Units.INCH -> 1
         else -> 2
     }
 

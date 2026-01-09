@@ -3,6 +3,8 @@ package com.gu.recipe.unit
 sealed interface MeasuringSystem {
     object Imperial : MeasuringSystem
     object Metric : MeasuringSystem
+
+    object USCustomary : MeasuringSystem // will try to convert to US customary units where possible, falling back to Imperial
 }
 enum class UnitType {
     WEIGHT,
