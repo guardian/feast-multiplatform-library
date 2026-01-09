@@ -56,18 +56,18 @@ object Units {
         measuringSystem = MeasuringSystem.Imperial,
     )
 
-    val MILLILITER = Unit(
-        singular = "milliliter",
-        plural = "milliliters",
+    val MILLILITRE = Unit(
+        singular = "millilitre",
+        plural = "millilitres",
         symbol = "ml",
         symbolPlural = "ml",
         unitType = UnitType.VOLUME,
         measuringSystem = MeasuringSystem.Metric,
     )
 
-    val LITER = Unit(
-        singular = "liter",
-        plural = "liters",
+    val LITRE = Unit(
+        singular = "litre",
+        plural = "litres",
         symbol = "l",
         symbolPlural = "l",
         unitType = UnitType.VOLUME,
@@ -110,18 +110,18 @@ object Units {
         measuringSystem = MeasuringSystem.Imperial,
     )
 
-    val MILLIMETER = Unit(
-        singular = "millimeter",
-        plural = "millimeters",
+    val MILLIMETRE = Unit(
+        singular = "millimetre",
+        plural = "millimetres",
         symbol = "mm",
         symbolPlural = "mm",
         unitType = UnitType.LENGTH,
         measuringSystem = MeasuringSystem.Metric,
     )
 
-    val CENTIMETER = Unit(
-        singular = "centimeter",
-        plural = "centimeters",
+    val CENTIMETRE = Unit(
+        singular = "centimetre",
+        plural = "centimetres",
         symbol = "cm",
         symbolPlural = "cm",
         unitType = UnitType.LENGTH,
@@ -151,14 +151,14 @@ object Units {
         KILOGRAM,
         OUNCE,
         POUND,
-        MILLILITER,
-        LITER,
+        MILLILITRE,
+        LITRE,
         FLUID_OUNCE,
         CUP,
         TEASPOON,
         TABLESPOON,
-        MILLIMETER,
-        CENTIMETER,
+        MILLIMETRE,
+        CENTIMETRE,
         INCH,
         PINT,
     )
