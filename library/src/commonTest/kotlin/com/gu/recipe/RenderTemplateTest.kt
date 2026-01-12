@@ -374,7 +374,7 @@ class RenderTemplateTest {
                 TemplateConst(" of oil"),
             )
         )
-        val result = renderTemplate(template, 1f, MeasuringSystem.Imperial)
+        val result = renderTemplate(template, 1f, MeasuringSystem.USCustomary)
         assertEquals("⅜ cup of water, ½ cup of oil", result)
     }
 

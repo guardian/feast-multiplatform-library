@@ -66,6 +66,15 @@ object Units {
         measuringSystem = MeasuringSystem.Metric,
     )
 
+    val CENTILITRE = Unit(
+        singular = "centilitre",
+        plural = "centilitres",
+        symbol = "cl",
+        symbolPlural = "cl",
+        unitType = UnitType.VOLUME,
+        measuringSystem = MeasuringSystem.Metric,
+    )
+
     val LITRE = Unit(
         singular = "litre",
         plural = "litres",
@@ -111,6 +120,33 @@ object Units {
         measuringSystem = MeasuringSystem.Imperial,
     )
 
+    val PINT = Unit(
+        singular = "pint",
+        plural = "pints",
+        symbol = "pt",
+        symbolPlural = "pts",
+        unitType = UnitType.VOLUME,
+        measuringSystem = MeasuringSystem.Imperial,
+    )
+
+    val QUART = Unit(
+        singular = "quart",
+        plural = "quarts",
+        symbol = "qt",
+        symbolPlural = "qts",
+        unitType = UnitType.VOLUME,
+        measuringSystem = MeasuringSystem.Imperial,
+    )
+
+    val GALLON = Unit(
+        singular = "gallon",
+        plural = "gallons",
+        symbol = "gal",
+        symbolPlural = "gals",
+        unitType = UnitType.VOLUME,
+        measuringSystem = MeasuringSystem.Imperial,
+    )
+
     val MILLIMETRE = Unit(
         singular = "millimetre",
         plural = "millimetres",
@@ -138,24 +174,6 @@ object Units {
         measuringSystem = MeasuringSystem.Imperial,
     )
 
-    val PINT = Unit(
-        singular = "pint",
-        plural = "pints",
-        symbol = "pt",
-        symbolPlural = "pts",
-        unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
-    )
-
-    val QUART = Unit(
-        singular = "quart",
-        plural = "quarts",
-        symbol = "qt",
-        symbolPlural = "qts",
-        unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
-    )
-
     val ALL_UNITS = listOf(
         GRAM,
         KILOGRAM,
@@ -172,6 +190,7 @@ object Units {
         INCH,
         PINT,
         QUART,
+        GALLON,
     )
 
     val UNIT_FROM_SYMBOL: Map<String, Unit> =

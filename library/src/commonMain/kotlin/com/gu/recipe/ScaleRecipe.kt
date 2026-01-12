@@ -9,7 +9,7 @@ import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
 import com.gu.recipe.unit.MeasuringSystem
-import com.gu.recipe.unit.UnitConversion
+import com.gu.recipe.unit.UnitConversions
 import com.gu.recipe.unit.Units
 import kotlin.math.max
 
@@ -49,7 +49,7 @@ internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuri
     )
 
     amount = scaleAmount(amount, factor, element.scale)
-    amount = UnitConversion.convertUnitSystem(amount, measuringSystem)
+    amount = UnitConversions.convertUnitSystem(amount, measuringSystem)
 
     val decimals = when (amount.unit) {
         Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
