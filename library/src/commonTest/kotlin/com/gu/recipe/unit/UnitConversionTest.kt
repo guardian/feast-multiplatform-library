@@ -126,5 +126,13 @@ class UnitConversionTest {
         assertEquals(null, result.max)
         assertEquals(Units.OUNCE, result.unit)
     }
+
+    @Test
+    fun `returns the number of quarts in a litre`() {
+        val amount = Amount(min = 1f, unit = Units.LITRE)
+        val result = UnitConversion.toImperial(amount)
+        val expected = Amount(min = 1.0526316f, unit = Units.QUART)
+        assertEquals(expected, result)
+    }
 }
 

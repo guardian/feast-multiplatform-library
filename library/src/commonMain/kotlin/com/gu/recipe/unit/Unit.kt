@@ -3,7 +3,6 @@ package com.gu.recipe.unit
 sealed interface MeasuringSystem {
     object Imperial : MeasuringSystem
     object Metric : MeasuringSystem
-
     object USCustomary : MeasuringSystem // will try to convert to US customary units where possible, falling back to Imperial
 }
 enum class UnitType {
@@ -148,6 +147,15 @@ object Units {
         measuringSystem = MeasuringSystem.Imperial,
     )
 
+    val QUART = Unit(
+        singular = "quart",
+        plural = "quarts",
+        symbol = "qt",
+        symbolPlural = "qts",
+        unitType = UnitType.VOLUME,
+        measuringSystem = MeasuringSystem.Imperial,
+    )
+
     val ALL_UNITS = listOf(
         GRAM,
         KILOGRAM,
@@ -163,6 +171,7 @@ object Units {
         CENTIMETRE,
         INCH,
         PINT,
+        QUART,
     )
 
     val UNIT_FROM_SYMBOL: Map<String, Unit> =

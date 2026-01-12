@@ -9,6 +9,7 @@ object UnitConversion {
     val ML_IN_CUP = 236.56f
 
     val CM_IN_INCH = 2.54f
+    val QUARTS_IN_LITRE = 0.95f
 
     fun toUSCustomary(amount: Amount): Amount {
         return when (amount.unit) {
@@ -52,6 +53,12 @@ object UnitConversion {
                 val minInches = amount.min / CM_IN_INCH / 10f
                 val maxInches = amount.max?.let { it / CM_IN_INCH / 10f }
                 Amount(minInches, maxInches, Units.INCH)
+            }
+
+            Units.LITRE -> {
+                val minQuarts = amount.min / QUARTS_IN_LITRE
+                val maxQuarts = amount.max?.let { it / QUARTS_IN_LITRE }
+                Amount(minQuarts, maxQuarts, Units.QUART)
             }
 
             else -> amount
