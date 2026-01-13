@@ -151,13 +151,22 @@ class UnitConversionTest {
         assertEquals(Units.GALLON, result.unit)
     }
 
-
     @Test
     fun `pick the most appropriate unit depending on the quantity cl to cup`() {
         val amount = Amount(min = 10f, unit = Units.CENTILITRE, usCust = true)
         val result = UnitConversions.convertUnitSystem(amount, MeasuringSystem.USCustomary)
 
         val expectedMin = 0.423f
+        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
+        assertEquals(Units.CUP, result.unit)
+    }
+
+    @Test
+    fun `should automatically convert unpractical amounts to most practical one`() {
+        val amount = Amount(min = 100f, unit = Units.TEASPOON, usCust = true)
+        val result = UnitConversions.convertUnitSystem(amount, MeasuringSystem.USCustomary)
+
+        val expectedMin = 2.0833f
         assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
         assertEquals(Units.CUP, result.unit)
     }

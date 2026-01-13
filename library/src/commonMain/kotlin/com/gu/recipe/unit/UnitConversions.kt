@@ -9,7 +9,13 @@ data class UnitConversion(
     val conversionRatio: Float,
     // above which amount (expressed in fromUnit) should we use this conversion. eg > 6 teaspoons -> tablespoons
     val threshold: Float,
-)
+) {
+    fun convert(amount: Amount): Amount {
+        val newMin = amount.min / conversionRatio
+        val newMax = amount.max?.let { it / conversionRatio }
+        return Amount(newMin, newMax, toUnit)
+    }
+}
 
 object UnitConversions {
     // Volume
@@ -38,7 +44,7 @@ object UnitConversions {
         fromUnit = Units.MILLILITRE,
         toUnit = Units.FLUID_OUNCE,
         conversionRatio = 6 * ML_TO_TEASPOON.conversionRatio,
-        threshold = 0f
+        threshold = 6 * ML_TO_TEASPOON.conversionRatio
     )
 
     val ML_TO_QUART = UnitConversion(
@@ -86,6 +92,15 @@ object UnitConversions {
         ML_TO_GALLON,
     )
 
+    val CUSTOMARY_TO_ML = US_CUSTOMARY_VOLUMES.map {
+        UnitConversion(
+            fromUnit = it.toUnit,
+            toUnit = it.fromUnit,
+            conversionRatio = 1f / it.conversionRatio,
+            threshold = 0f
+        )
+    }
+
     val IMPERIAL_VOLUMES = listOf(
         ML_TO_TEASPOON,
         ML_TO_TABLESPOON,
@@ -132,7 +147,16 @@ object UnitConversions {
                 Amount(millimetres, maxMillimetres, Units.MILLIMETRE)
             }
 
-            else -> amount
+            else -> {
+                if (amount.unit?.unitType == UnitType.VOLUME
+                    && (amount.unit.measuringSystem == MeasuringSystem.USCustomary
+                            || amount.unit.measuringSystem == MeasuringSystem.Imperial)) {
+                    val conversion = CUSTOMARY_TO_ML.firstOrNull { it.fromUnit == amount.unit }
+                    conversion?.convert(amount) ?: amount
+                } else {
+                    amount
+                }
+            }
         }
     }
 
@@ -146,13 +170,7 @@ object UnitConversions {
         val conversion = conversions.lastOrNull {
             it.fromUnit == amount.unit && amount.min >= it.threshold
         }
-        return if (conversion != null) {
-            val newMin = amount.min / conversion.conversionRatio
-            val newMax = amount.max?.let { it / conversion.conversionRatio }
-            Amount(newMin, newMax, conversion.toUnit)
-        } else {
-            amount
-        }
+        return conversion?.convert(amount) ?: amount
     }
 
     fun toUSCustomary(amount: Amount): Amount {
@@ -199,7 +217,6 @@ object UnitConversions {
 
     fun convertUnitSystem(amount: Amount, target: MeasuringSystem): Amount {
         if (amount.unit == null
-            || amount.unit.measuringSystem == target
             || target == MeasuringSystem.Metric
         ) {
             return amount
