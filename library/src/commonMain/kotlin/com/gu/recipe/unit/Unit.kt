@@ -17,7 +17,8 @@ data class Unit(
     val symbol: String,
     val symbolPlural: String,
     val unitType: UnitType?,
-    val measuringSystem: MeasuringSystem?,
+    val measuringSystems: Set<MeasuringSystem>,
+    val quantity: Float, // quantity this unit represents in the metric system: ml for volume, g for weight, mm for length
 )
 
 object Units {
@@ -27,7 +28,8 @@ object Units {
         symbol = "g",
         symbolPlural = "g",
         unitType = UnitType.WEIGHT,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 1f,
     )
 
     val KILOGRAM = Unit(
@@ -36,7 +38,8 @@ object Units {
         symbol = "kg",
         symbolPlural = "kg",
         unitType = UnitType.WEIGHT,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 1000f,
     )
 
     val OUNCE = Unit(
@@ -45,7 +48,8 @@ object Units {
         symbol = "oz",
         symbolPlural = "oz",
         unitType = UnitType.WEIGHT,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 28.3495f,
     )
 
     val POUND = Unit(
@@ -54,7 +58,8 @@ object Units {
         symbol = "lb",
         symbolPlural = "lbs",
         unitType = UnitType.WEIGHT,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 16 * OUNCE.quantity,
     )
 
     val MILLILITRE = Unit(
@@ -63,7 +68,8 @@ object Units {
         symbol = "ml",
         symbolPlural = "ml",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 1f,
     )
 
     val CENTILITRE = Unit(
@@ -72,7 +78,8 @@ object Units {
         symbol = "cl",
         symbolPlural = "cl",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 10f,
     )
 
     val LITRE = Unit(
@@ -81,7 +88,48 @@ object Units {
         symbol = "l",
         symbolPlural = "l",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 1000f,
+    )
+
+    val METRIC_TEASPOON = Unit(
+        singular = "teaspoon",
+        plural = "teaspoons",
+        symbol = "tsp",
+        symbolPlural = "tsp",
+        unitType = UnitType.VOLUME,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 5f
+    )
+
+    val METRIC_TABLESPOON = Unit(
+        singular = "tablespoon",
+        plural = "tablespoons",
+        symbol = "tbsp",
+        symbolPlural = "tbsp",
+        unitType = UnitType.VOLUME,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 15f
+    )
+
+    val US_TEASPOON = Unit(
+        singular = "teaspoon",
+        plural = "teaspoons",
+        symbol = "tsp",
+        symbolPlural = "tsp",
+        unitType = UnitType.VOLUME,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 4.9289f
+    )
+
+    val US_TABLESPOON = Unit(
+        singular = "tablespoon",
+        plural = "tablespoons",
+        symbol = "tbsp",
+        symbolPlural = "tbsp",
+        unitType = UnitType.VOLUME,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 3 * US_TEASPOON.quantity,
     )
 
     val FLUID_OUNCE = Unit(
@@ -90,61 +138,58 @@ object Units {
         symbol = "fl oz",
         symbolPlural = "fl oz",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial),
+        quantity = 6 * US_TEASPOON.quantity,
     )
 
-    val CUP = Unit(
+    val US_CUP = Unit(
         singular = "cup",
         plural = "cups",
         symbol = "cup",
         symbolPlural = "cups",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.USCustomary),
+        quantity = 48 * US_TEASPOON.quantity,
     )
 
-    val TEASPOON = Unit(
-        singular = "teaspoon",
-        plural = "teaspoons",
-        symbol = "tsp",
-        symbolPlural = "tsp",
+    val METRIC_CUP = Unit(
+        singular = "cup",
+        plural = "cups",
+        symbol = "cup",
+        symbolPlural = "cups",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 250f,
     )
 
-    val TABLESPOON = Unit(
-        singular = "tablespoon",
-        plural = "tablespoons",
-        symbol = "tbsp",
-        symbolPlural = "tbsp",
-        unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
-    )
-
-    val PINT = Unit(
+    val US_PINT = Unit(
         singular = "pint",
         plural = "pints",
         symbol = "pt",
         symbolPlural = "pts",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 2 * US_CUP.quantity,
     )
 
-    val QUART = Unit(
+    val US_QUART = Unit(
         singular = "quart",
         plural = "quarts",
         symbol = "qt",
         symbolPlural = "qts",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 2 * US_PINT.quantity,
     )
 
-    val GALLON = Unit(
+    val US_GALLON = Unit(
         singular = "gallon",
         plural = "gallons",
         symbol = "gal",
         symbolPlural = "gals",
         unitType = UnitType.VOLUME,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial, MeasuringSystem.USCustomary),
+        quantity = 4 * US_QUART.quantity,
     )
 
     val MILLIMETRE = Unit(
@@ -153,7 +198,8 @@ object Units {
         symbol = "mm",
         symbolPlural = "mm",
         unitType = UnitType.LENGTH,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 1f,
     )
 
     val CENTIMETRE = Unit(
@@ -162,7 +208,8 @@ object Units {
         symbol = "cm",
         symbolPlural = "cm",
         unitType = UnitType.LENGTH,
-        measuringSystem = MeasuringSystem.Metric,
+        measuringSystems = setOf(MeasuringSystem.Metric),
+        quantity = 10f,
     )
 
     val INCH = Unit(
@@ -171,7 +218,8 @@ object Units {
         symbol = "in",
         symbolPlural = "in",
         unitType = UnitType.LENGTH,
-        measuringSystem = MeasuringSystem.Imperial,
+        measuringSystems = setOf(MeasuringSystem.Imperial),
+        quantity = 25.4f,
     )
 
     val ALL_UNITS = listOf(
@@ -180,27 +228,59 @@ object Units {
         OUNCE,
         POUND,
         MILLILITRE,
+        CENTILITRE,
         LITRE,
+        METRIC_TEASPOON,
+        METRIC_TABLESPOON,
+        US_TEASPOON,
+        US_TABLESPOON,
         FLUID_OUNCE,
-        CUP,
-        TEASPOON,
-        TABLESPOON,
+        US_CUP,
+        METRIC_CUP,
+        US_PINT,
+        US_QUART,
+        US_GALLON,
         MILLIMETRE,
         CENTIMETRE,
         INCH,
-        PINT,
-        QUART,
-        GALLON,
     )
 
-    val UNIT_FROM_SYMBOL: Map<String, Unit> =
-        ALL_UNITS.associateBy { it.symbol} +
-                ALL_UNITS.associateBy { it.symbolPlural} +
-                ALL_UNITS.associateBy { it.singular} +
-                ALL_UNITS.associateBy { it.plural}
+    val METRIC_UNIT_FROM_SYMBOL: Map<String, Unit> =
+        ALL_UNITS.filter { it.measuringSystems.contains(MeasuringSystem.Metric) }
+            .let {
+                it.associateBy { it.symbol } +
+                        it.associateBy { it.symbolPlural } +
+                        it.associateBy { it.singular } +
+                        it.associateBy { it.plural }
+            }
 
-    fun findUnit(name: String): Unit {
-        val unit = UNIT_FROM_SYMBOL[name]
+    val IMPERIAL_UNIT_FROM_SYMBOL: Map<String, Unit> =
+        ALL_UNITS.filter { it.measuringSystems.contains(MeasuringSystem.Imperial) }
+            .let {
+                it.associateBy { it.symbol } +
+                        it.associateBy { it.symbolPlural } +
+                        it.associateBy { it.singular } +
+                        it.associateBy { it.plural }
+            }
+
+    val US_CUSTOMARY_UNIT_FROM_SYMBOL: Map<String, Unit> =
+        ALL_UNITS.filter { it.measuringSystems.contains(MeasuringSystem.USCustomary) }
+            .let {
+                it.associateBy { it.symbol } +
+                        it.associateBy { it.symbolPlural } +
+                        it.associateBy { it.singular } +
+                        it.associateBy { it.plural }
+            }
+
+    /**
+     * Find a unit coming from a recipe.
+     * Because we know it's coming from a recipe we bias it towards metric units first
+     */
+    fun findRecipeUnit(name: String): Unit {
+        val unit = METRIC_UNIT_FROM_SYMBOL[name]
+            ?: IMPERIAL_UNIT_FROM_SYMBOL[name]
+            ?: US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
+
         if (unit != null) {
             return unit
         } else {
@@ -210,7 +290,8 @@ object Units {
                 symbol = name,
                 symbolPlural = name,
                 unitType = null,
-                measuringSystem = null,
+                measuringSystems = setOf<MeasuringSystem>(),
+                quantity = 1f
             )
         }
     }

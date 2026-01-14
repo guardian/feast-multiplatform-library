@@ -30,26 +30,17 @@ internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String 
     ).joinToString("")
 }
 
-internal fun scaleAmount(amount: Amount, factor: Float, shouldScale: Boolean): Amount {
-    if (!shouldScale) {
-        return amount
-    }
-    return amount.copy(
-        min = amount.min * factor,
-        max = amount.max?.let { it * factor }
-    )
-}
-
 internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem): String {
     var amount = Amount(
         min = element.min,
         max = if (element.min != element.max) element.max else null,
-        unit = element.unit?.let { Units.findUnit(it) },
+        unit = element.unit?.let { Units.findRecipeUnit(it) },
         usCust = element.usCust,
     )
 
-    amount = scaleAmount(amount, factor, element.scale)
-    amount = UnitConversions.convertUnitSystem(amount, measuringSystem)
+    val factorToUse = if (!element.scale) 1f else factor
+
+    amount = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse)
 
     val decimals = when (amount.unit) {
         Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
@@ -58,7 +49,10 @@ internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuri
     }
 
     val fraction = when (amount.unit) {
-        Units.TEASPOON, Units.TABLESPOON, Units.CUP -> true
+        Units.US_TEASPOON, Units.METRIC_TEASPOON,
+        Units.US_TABLESPOON, Units.METRIC_TABLESPOON,
+        Units.METRIC_CUP, Units.US_CUP -> true
+
         null -> true
         else -> false
     }

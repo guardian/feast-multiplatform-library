@@ -66,7 +66,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Imperial)
         assertEquals("½ tsp", result)
     }
 
@@ -317,14 +317,14 @@ class RenderTemplateTest {
                 ),
                 TemplateConst(" "),
                 QuantityPlaceholder(
-                    min = 1f,
+                    min = 1.5f,
                     unit = "lb",
                     scale = true
                 ),
             )
         )
-        val result = renderTemplate(template, 10f, MeasuringSystem.Metric)
-        assertEquals("15 cups 10 lbs", result)
+        val result = renderTemplate(template, 1f, MeasuringSystem.Metric)
+        assertEquals("1½ cups 1.5 lbs", result)
     }
 
     @Test
