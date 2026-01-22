@@ -14,7 +14,7 @@ object UnitConversions {
         1000f to Units.KILOGRAM,
 
         0f to Units.MILLILITRE,
-        5f to Units.METRIC_TEASPOON,
+        2.5f to Units.METRIC_TEASPOON, // start using teaspoons at 1/2 tsp
         15f to Units.METRIC_TABLESPOON,
         125f to Units.METRIC_CUP, // start using cups at 1/2 cup
         1000f to Units.LITRE,

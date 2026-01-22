@@ -66,7 +66,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = renderTemplate(template, 2f, MeasuringSystem.Imperial)
+        val result = renderTemplate(template, 2f, MeasuringSystem.Metric)
         assertEquals("½ tsp", result)
     }
 
