@@ -2,19 +2,19 @@
 package com.gu.recipe {
 
   public final class Amount {
-    ctor public Amount(float min, optional Float? max, optional com.gu.recipe.unit.Unit? unit, optional Boolean? usCust);
+    ctor public Amount(float min, optional Float? max, optional com.gu.recipe.unit.MeasurementUnit? unit, optional Boolean? usCust);
     method public float component1();
     method public Float? component2();
-    method public com.gu.recipe.unit.Unit? component3();
+    method public com.gu.recipe.unit.MeasurementUnit? component3();
     method public Boolean? component4();
-    method public com.gu.recipe.Amount copy(float min, Float? max, com.gu.recipe.unit.Unit? unit, Boolean? usCust);
+    method public com.gu.recipe.Amount copy(float min, Float? max, com.gu.recipe.unit.MeasurementUnit? unit, Boolean? usCust);
     method public Float? getMax();
     method public float getMin();
-    method public com.gu.recipe.unit.Unit? getUnit();
+    method public com.gu.recipe.unit.MeasurementUnit? getUnit();
     method public Boolean? getUsCust();
     property public final Float? max;
     property public final float min;
-    property public final com.gu.recipe.unit.Unit? unit;
+    property public final com.gu.recipe.unit.MeasurementUnit? unit;
     property public final Boolean? usCust;
   }
 
@@ -324,6 +324,32 @@ package com.gu.recipe.template {
 
 package com.gu.recipe.unit {
 
+  public final class MeasurementUnit {
+    ctor public MeasurementUnit(String singular, String plural, String symbol, String symbolPlural, com.gu.recipe.unit.UnitType? unitType, java.util.Set<? extends com.gu.recipe.unit.MeasuringSystem> measuringSystems, float quantity);
+    method public String component1();
+    method public String component2();
+    method public String component3();
+    method public String component4();
+    method public com.gu.recipe.unit.UnitType? component5();
+    method public java.util.Set<com.gu.recipe.unit.MeasuringSystem> component6();
+    method public float component7();
+    method public com.gu.recipe.unit.MeasurementUnit copy(String singular, String plural, String symbol, String symbolPlural, com.gu.recipe.unit.UnitType? unitType, java.util.Set<? extends com.gu.recipe.unit.MeasuringSystem> measuringSystems, float quantity);
+    method public java.util.Set<com.gu.recipe.unit.MeasuringSystem> getMeasuringSystems();
+    method public String getPlural();
+    method public float getQuantity();
+    method public String getSingular();
+    method public String getSymbol();
+    method public String getSymbolPlural();
+    method public com.gu.recipe.unit.UnitType? getUnitType();
+    property public final java.util.Set<com.gu.recipe.unit.MeasuringSystem> measuringSystems;
+    property public final String plural;
+    property public final float quantity;
+    property public final String singular;
+    property public final String symbol;
+    property public final String symbolPlural;
+    property public final com.gu.recipe.unit.UnitType? unitType;
+  }
+
   public sealed interface MeasuringSystem {
   }
 
@@ -335,38 +361,24 @@ package com.gu.recipe.unit {
     field public static final com.gu.recipe.unit.MeasuringSystem.Metric INSTANCE;
   }
 
-  public final class Unit {
-    ctor public Unit(String singular, String plural, String symbol, String symbolPlural, com.gu.recipe.unit.UnitType? unitType, com.gu.recipe.unit.MeasuringSystem? measuringSystem);
-    method public String component1();
-    method public String component2();
-    method public String component3();
-    method public String component4();
-    method public com.gu.recipe.unit.UnitType? component5();
-    method public com.gu.recipe.unit.MeasuringSystem? component6();
-    method public com.gu.recipe.unit.Unit copy(String singular, String plural, String symbol, String symbolPlural, com.gu.recipe.unit.UnitType? unitType, com.gu.recipe.unit.MeasuringSystem? measuringSystem);
-    method public com.gu.recipe.unit.MeasuringSystem? getMeasuringSystem();
-    method public String getPlural();
-    method public String getSingular();
-    method public String getSymbol();
-    method public String getSymbolPlural();
-    method public com.gu.recipe.unit.UnitType? getUnitType();
-    property public final com.gu.recipe.unit.MeasuringSystem? measuringSystem;
-    property public final String plural;
-    property public final String singular;
-    property public final String symbol;
-    property public final String symbolPlural;
-    property public final com.gu.recipe.unit.UnitType? unitType;
+  public static final class MeasuringSystem.USCustomary implements com.gu.recipe.unit.MeasuringSystem {
+    field public static final com.gu.recipe.unit.MeasuringSystem.USCustomary INSTANCE;
   }
 
-  public final class UnitConversion {
-    method public com.gu.recipe.Amount convertUnitSystem(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target);
-    method public float getML_IN_CUP();
-    method public float getONCES_IN_GRAM();
-    method public float getPOUNDS_IN_KILOGRAM();
-    property public final float ML_IN_CUP;
-    property public final float ONCES_IN_GRAM;
-    property public final float POUNDS_IN_KILOGRAM;
-    field public static final com.gu.recipe.unit.UnitConversion INSTANCE;
+  public final class UnitConversions {
+    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor);
+    method public error.NonExistentClass getCONVENIENCE_UNITS();
+    method public error.NonExistentClass getIMPERIAL_CONVERSION_LADDER();
+    method public error.NonExistentClass getMETRIC_CONVENIENCE_LADDER();
+    method public error.NonExistentClass getMETRIC_CONVERSION_LADDER();
+    method public error.NonExistentClass getUS_CUSTOMARY_CONVERSION_LADDER();
+    method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
+    property public final error.NonExistentClass CONVENIENCE_UNITS;
+    property public final error.NonExistentClass IMPERIAL_CONVERSION_LADDER;
+    property public final error.NonExistentClass METRIC_CONVENIENCE_LADDER;
+    property public final error.NonExistentClass METRIC_CONVERSION_LADDER;
+    property public final error.NonExistentClass US_CUSTOMARY_CONVERSION_LADDER;
+    field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
   }
 
   public enum UnitType {
@@ -376,39 +388,55 @@ package com.gu.recipe.unit {
   }
 
   public final class Units {
-    method public com.gu.recipe.unit.Unit findUnit(String name);
+    method public com.gu.recipe.unit.MeasurementUnit findRecipeUnit(String name);
     method public error.NonExistentClass getALL_UNITS();
-    method public com.gu.recipe.unit.Unit getCENTIMETER();
-    method public com.gu.recipe.unit.Unit getCUP();
-    method public com.gu.recipe.unit.Unit getFLUID_OUNCE();
-    method public com.gu.recipe.unit.Unit getGRAM();
-    method public com.gu.recipe.unit.Unit getINCH();
-    method public com.gu.recipe.unit.Unit getKILOGRAM();
-    method public com.gu.recipe.unit.Unit getLITER();
-    method public com.gu.recipe.unit.Unit getMILLILITER();
-    method public com.gu.recipe.unit.Unit getMILLIMETER();
-    method public com.gu.recipe.unit.Unit getOUNCE();
-    method public com.gu.recipe.unit.Unit getPINT();
-    method public com.gu.recipe.unit.Unit getPOUND();
-    method public com.gu.recipe.unit.Unit getTABLESPOON();
-    method public com.gu.recipe.unit.Unit getTEASPOON();
-    method public java.util.Map<java.lang.String,com.gu.recipe.unit.Unit> getUNIT_FROM_SYMBOL();
+    method public com.gu.recipe.unit.MeasurementUnit getCENTILITRE();
+    method public com.gu.recipe.unit.MeasurementUnit getCENTIMETRE();
+    method public com.gu.recipe.unit.MeasurementUnit getFLUID_OUNCE();
+    method public com.gu.recipe.unit.MeasurementUnit getGRAM();
+    method public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getIMPERIAL_UNIT_FROM_SYMBOL();
+    method public com.gu.recipe.unit.MeasurementUnit getINCH();
+    method public com.gu.recipe.unit.MeasurementUnit getKILOGRAM();
+    method public com.gu.recipe.unit.MeasurementUnit getLITRE();
+    method public com.gu.recipe.unit.MeasurementUnit getMETRIC_CUP();
+    method public com.gu.recipe.unit.MeasurementUnit getMETRIC_TABLESPOON();
+    method public com.gu.recipe.unit.MeasurementUnit getMETRIC_TEASPOON();
+    method public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getMETRIC_UNIT_FROM_SYMBOL();
+    method public com.gu.recipe.unit.MeasurementUnit getMILLILITRE();
+    method public com.gu.recipe.unit.MeasurementUnit getMILLIMETRE();
+    method public com.gu.recipe.unit.MeasurementUnit getOUNCE();
+    method public com.gu.recipe.unit.MeasurementUnit getPOUND();
+    method public com.gu.recipe.unit.MeasurementUnit getUS_CUP();
+    method public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getUS_CUSTOMARY_UNIT_FROM_SYMBOL();
+    method public com.gu.recipe.unit.MeasurementUnit getUS_GALLON();
+    method public com.gu.recipe.unit.MeasurementUnit getUS_PINT();
+    method public com.gu.recipe.unit.MeasurementUnit getUS_QUART();
+    method public com.gu.recipe.unit.MeasurementUnit getUS_TABLESPOON();
+    method public com.gu.recipe.unit.MeasurementUnit getUS_TEASPOON();
     property public final error.NonExistentClass ALL_UNITS;
-    property public final com.gu.recipe.unit.Unit CENTIMETER;
-    property public final com.gu.recipe.unit.Unit CUP;
-    property public final com.gu.recipe.unit.Unit FLUID_OUNCE;
-    property public final com.gu.recipe.unit.Unit GRAM;
-    property public final com.gu.recipe.unit.Unit INCH;
-    property public final com.gu.recipe.unit.Unit KILOGRAM;
-    property public final com.gu.recipe.unit.Unit LITER;
-    property public final com.gu.recipe.unit.Unit MILLILITER;
-    property public final com.gu.recipe.unit.Unit MILLIMETER;
-    property public final com.gu.recipe.unit.Unit OUNCE;
-    property public final com.gu.recipe.unit.Unit PINT;
-    property public final com.gu.recipe.unit.Unit POUND;
-    property public final com.gu.recipe.unit.Unit TABLESPOON;
-    property public final com.gu.recipe.unit.Unit TEASPOON;
-    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.Unit> UNIT_FROM_SYMBOL;
+    property public final com.gu.recipe.unit.MeasurementUnit CENTILITRE;
+    property public final com.gu.recipe.unit.MeasurementUnit CENTIMETRE;
+    property public final com.gu.recipe.unit.MeasurementUnit FLUID_OUNCE;
+    property public final com.gu.recipe.unit.MeasurementUnit GRAM;
+    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> IMPERIAL_UNIT_FROM_SYMBOL;
+    property public final com.gu.recipe.unit.MeasurementUnit INCH;
+    property public final com.gu.recipe.unit.MeasurementUnit KILOGRAM;
+    property public final com.gu.recipe.unit.MeasurementUnit LITRE;
+    property public final com.gu.recipe.unit.MeasurementUnit METRIC_CUP;
+    property public final com.gu.recipe.unit.MeasurementUnit METRIC_TABLESPOON;
+    property public final com.gu.recipe.unit.MeasurementUnit METRIC_TEASPOON;
+    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> METRIC_UNIT_FROM_SYMBOL;
+    property public final com.gu.recipe.unit.MeasurementUnit MILLILITRE;
+    property public final com.gu.recipe.unit.MeasurementUnit MILLIMETRE;
+    property public final com.gu.recipe.unit.MeasurementUnit OUNCE;
+    property public final com.gu.recipe.unit.MeasurementUnit POUND;
+    property public final com.gu.recipe.unit.MeasurementUnit US_CUP;
+    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> US_CUSTOMARY_UNIT_FROM_SYMBOL;
+    property public final com.gu.recipe.unit.MeasurementUnit US_GALLON;
+    property public final com.gu.recipe.unit.MeasurementUnit US_PINT;
+    property public final com.gu.recipe.unit.MeasurementUnit US_QUART;
+    property public final com.gu.recipe.unit.MeasurementUnit US_TABLESPOON;
+    property public final com.gu.recipe.unit.MeasurementUnit US_TEASPOON;
     field public static final com.gu.recipe.unit.Units INSTANCE;
   }
 
