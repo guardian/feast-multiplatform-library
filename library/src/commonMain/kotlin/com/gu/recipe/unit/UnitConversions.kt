@@ -9,7 +9,7 @@ object UnitConversions {
         Units.METRIC_TABLESPOON,
         Units.METRIC_CUP,
     )
-    val METRIC_CONVENIENCE_LADDER = listOf<Pair<Float, Unit>>(
+    val METRIC_CONVENIENCE_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.GRAM,
         1000f to Units.KILOGRAM,
 
@@ -23,7 +23,7 @@ object UnitConversions {
         10f to Units.CENTIMETRE,
     )
 
-    val METRIC_CONVERSION_LADDER = listOf<Pair<Float, Unit>>(
+    val METRIC_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.GRAM,
         1000f to Units.KILOGRAM,
 
@@ -34,7 +34,7 @@ object UnitConversions {
         10f to Units.CENTIMETRE,
     )
 
-    val US_CUSTOMARY_CONVERSION_LADDER = listOf<Pair<Float, Unit>>(
+    val US_CUSTOMARY_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.OUNCE,
         16f * Units.OUNCE.quantity to Units.POUND,
 
@@ -47,7 +47,7 @@ object UnitConversions {
         0f to Units.INCH,
     )
 
-    val IMPERIAL_CONVERSION_LADDER = listOf<Pair<Float, Unit>>(
+    val IMPERIAL_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.OUNCE,
         16f * Units.OUNCE.quantity to Units.POUND,
 

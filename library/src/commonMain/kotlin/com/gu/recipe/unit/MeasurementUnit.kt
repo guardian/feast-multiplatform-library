@@ -11,7 +11,7 @@ enum class UnitType {
     LENGTH,
 }
 
-data class Unit(
+data class MeasurementUnit(
     val singular: String,
     val plural: String,
     val symbol: String,
@@ -22,7 +22,7 @@ data class Unit(
 )
 
 object Units {
-    val GRAM = Unit(
+    val GRAM = MeasurementUnit(
         singular = "gram",
         plural = "grams",
         symbol = "g",
@@ -32,7 +32,7 @@ object Units {
         quantity = 1f,
     )
 
-    val KILOGRAM = Unit(
+    val KILOGRAM = MeasurementUnit(
         singular = "kilogram",
         plural = "kilograms",
         symbol = "kg",
@@ -42,7 +42,7 @@ object Units {
         quantity = 1000f,
     )
 
-    val OUNCE = Unit(
+    val OUNCE = MeasurementUnit(
         singular = "ounce",
         plural = "ounces",
         symbol = "oz",
@@ -52,7 +52,7 @@ object Units {
         quantity = 28.3495f,
     )
 
-    val POUND = Unit(
+    val POUND = MeasurementUnit(
         singular = "pound",
         plural = "pounds",
         symbol = "lb",
@@ -62,7 +62,7 @@ object Units {
         quantity = 16 * OUNCE.quantity,
     )
 
-    val MILLILITRE = Unit(
+    val MILLILITRE = MeasurementUnit(
         singular = "millilitre",
         plural = "millilitres",
         symbol = "ml",
@@ -72,7 +72,7 @@ object Units {
         quantity = 1f,
     )
 
-    val CENTILITRE = Unit(
+    val CENTILITRE = MeasurementUnit(
         singular = "centilitre",
         plural = "centilitres",
         symbol = "cl",
@@ -82,7 +82,7 @@ object Units {
         quantity = 10f,
     )
 
-    val LITRE = Unit(
+    val LITRE = MeasurementUnit(
         singular = "litre",
         plural = "litres",
         symbol = "l",
@@ -92,7 +92,7 @@ object Units {
         quantity = 1000f,
     )
 
-    val METRIC_TEASPOON = Unit(
+    val METRIC_TEASPOON = MeasurementUnit(
         singular = "teaspoon",
         plural = "teaspoons",
         symbol = "tsp",
@@ -102,7 +102,7 @@ object Units {
         quantity = 5f
     )
 
-    val METRIC_TABLESPOON = Unit(
+    val METRIC_TABLESPOON = MeasurementUnit(
         singular = "tablespoon",
         plural = "tablespoons",
         symbol = "tbsp",
@@ -112,7 +112,7 @@ object Units {
         quantity = 15f
     )
 
-    val US_TEASPOON = Unit(
+    val US_TEASPOON = MeasurementUnit(
         singular = "teaspoon",
         plural = "teaspoons",
         symbol = "tsp",
@@ -122,7 +122,7 @@ object Units {
         quantity = 4.9289f
     )
 
-    val US_TABLESPOON = Unit(
+    val US_TABLESPOON = MeasurementUnit(
         singular = "tablespoon",
         plural = "tablespoons",
         symbol = "tbsp",
@@ -132,7 +132,7 @@ object Units {
         quantity = 3 * US_TEASPOON.quantity,
     )
 
-    val FLUID_OUNCE = Unit(
+    val FLUID_OUNCE = MeasurementUnit(
         singular = "fluid ounce",
         plural = "fluid ounces",
         symbol = "fl oz",
@@ -142,7 +142,7 @@ object Units {
         quantity = 6 * US_TEASPOON.quantity,
     )
 
-    val US_CUP = Unit(
+    val US_CUP = MeasurementUnit(
         singular = "cup",
         plural = "cups",
         symbol = "cup",
@@ -152,7 +152,7 @@ object Units {
         quantity = 48 * US_TEASPOON.quantity,
     )
 
-    val METRIC_CUP = Unit(
+    val METRIC_CUP = MeasurementUnit(
         singular = "cup",
         plural = "cups",
         symbol = "cup",
@@ -162,7 +162,7 @@ object Units {
         quantity = 250f,
     )
 
-    val US_PINT = Unit(
+    val US_PINT = MeasurementUnit(
         singular = "pint",
         plural = "pints",
         symbol = "pt",
@@ -172,7 +172,7 @@ object Units {
         quantity = 2 * US_CUP.quantity,
     )
 
-    val US_QUART = Unit(
+    val US_QUART = MeasurementUnit(
         singular = "quart",
         plural = "quarts",
         symbol = "qt",
@@ -182,7 +182,7 @@ object Units {
         quantity = 2 * US_PINT.quantity,
     )
 
-    val US_GALLON = Unit(
+    val US_GALLON = MeasurementUnit(
         singular = "gallon",
         plural = "gallons",
         symbol = "gal",
@@ -192,7 +192,7 @@ object Units {
         quantity = 4 * US_QUART.quantity,
     )
 
-    val MILLIMETRE = Unit(
+    val MILLIMETRE = MeasurementUnit(
         singular = "millimetre",
         plural = "millimetres",
         symbol = "mm",
@@ -202,7 +202,7 @@ object Units {
         quantity = 1f,
     )
 
-    val CENTIMETRE = Unit(
+    val CENTIMETRE = MeasurementUnit(
         singular = "centimetre",
         plural = "centimetres",
         symbol = "cm",
@@ -212,7 +212,7 @@ object Units {
         quantity = 10f,
     )
 
-    val INCH = Unit(
+    val INCH = MeasurementUnit(
         singular = "inch",
         plural = "inches",
         symbol = "in",
@@ -245,7 +245,7 @@ object Units {
         INCH,
     )
 
-    val METRIC_UNIT_FROM_SYMBOL: Map<String, Unit> =
+    val METRIC_UNIT_FROM_SYMBOL: Map<String, MeasurementUnit> =
         ALL_UNITS.filter { it.measuringSystems.contains(MeasuringSystem.Metric) }
             .let {
                 it.associateBy { it.symbol } +
@@ -254,7 +254,7 @@ object Units {
                         it.associateBy { it.plural }
             }
 
-    val IMPERIAL_UNIT_FROM_SYMBOL: Map<String, Unit> =
+    val IMPERIAL_UNIT_FROM_SYMBOL: Map<String, MeasurementUnit> =
         ALL_UNITS.filter { it.measuringSystems.contains(MeasuringSystem.Imperial) }
             .let {
                 it.associateBy { it.symbol } +
@@ -263,7 +263,7 @@ object Units {
                         it.associateBy { it.plural }
             }
 
-    val US_CUSTOMARY_UNIT_FROM_SYMBOL: Map<String, Unit> =
+    val US_CUSTOMARY_UNIT_FROM_SYMBOL: Map<String, MeasurementUnit> =
         ALL_UNITS.filter { it.measuringSystems.contains(MeasuringSystem.USCustomary) }
             .let {
                 it.associateBy { it.symbol } +
@@ -276,7 +276,7 @@ object Units {
      * Find a unit coming from a recipe.
      * Because we know it's coming from a recipe we bias it towards metric units first
      */
-    fun findRecipeUnit(name: String): Unit {
+    fun findRecipeUnit(name: String): MeasurementUnit {
         val unit = METRIC_UNIT_FROM_SYMBOL[name]
             ?: IMPERIAL_UNIT_FROM_SYMBOL[name]
             ?: US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
@@ -284,7 +284,7 @@ object Units {
         if (unit != null) {
             return unit
         } else {
-            return Unit(
+            return MeasurementUnit(
                 singular = name,
                 plural = name,
                 symbol = name,
