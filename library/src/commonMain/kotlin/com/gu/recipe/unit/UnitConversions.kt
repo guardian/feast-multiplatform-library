@@ -88,12 +88,19 @@ object UnitConversions {
 
         val smallestUnitAmount = toSmallestUnit(scaledAmount)
 
-        val ladder = when (target) {
-            MeasuringSystem.Metric if CONVENIENCE_UNITS.contains(amount.unit) -> METRIC_CONVENIENCE_LADDER
-            MeasuringSystem.Metric -> METRIC_CONVERSION_LADDER
-            MeasuringSystem.USCustomary if amount.usCust == true -> US_CUSTOMARY_CONVERSION_LADDER
-            else -> IMPERIAL_CONVERSION_LADDER
-        }
+val ladder = when (target) {
+    MeasuringSystem.Metric -> if (CONVENIENCE_UNITS.contains(amount.unit))
+        METRIC_CONVENIENCE_LADDER
+    else
+        METRIC_CONVERSION_LADDER
+
+    MeasuringSystem.USCustomary -> if (amount.usCust == true)
+        US_CUSTOMARY_CONVERSION_LADDER
+    else
+        IMPERIAL_CONVERSION_LADDER
+
+    MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
+}
 
         val mostRelevantUnit = ladder
             .filter { it.second.unitType == amount.unit?.unitType }
