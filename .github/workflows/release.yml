@@ -68,13 +68,30 @@ jobs:
           path: library/build/distributions/FeastMultiplatformLibrary.xcframework.zip
 
       - name: Commit and push Package.swift changes
+        env:
+          BRANCH: "release/package-swift-${{ steps.version.outputs.VERSION }}"
         run: |
           git config --local user.email "${{ steps.get-user-id.outputs.user-id }}+${{ steps.create-app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
           git config --local user.name "${{ steps.create-app-token.outputs.app-slug }}[bot]"
           git remote set-url origin https://x-access-token:${{ steps.create-app-token.outputs.token }}@github.com/${{ github.repository }}.git
+          git checkout -b "$BRANCH"
           git add Package.swift
           git commit -m "Update Package.swift for release ${{ steps.version.outputs.VERSION }}"
-          git push
+          git push origin "$BRANCH"
+
+      - name: PR and merge Package.swift changes
+        if: github.ref == 'refs/heads/main'
+        env:
+          BRANCH: "release/package-swift-${{ steps.version.outputs.VERSION }}"
+          GH_TOKEN: ${{ steps.create-app-token.outputs.token }}
+        run: |
+          gh pr create --head "$BRANCH" --base main \
+            --title "Update Package.swift for release ${{ steps.version.outputs.VERSION }}" \
+            --body "Automated update for release ${{ steps.version.outputs.VERSION }}"
+          gh pr merge "$BRANCH" \
+            --merge \
+            --auto \
+            --delete-branch
 
       - name: Create GitHub Release
         uses: actions/github-script@v7
