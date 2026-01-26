@@ -106,7 +106,6 @@ internal fun wrapWithStrongTag(value: String): String {
     return "<strong>$before</strong>${after.orEmpty()}"
 }
 
-
 /**
  * scaleAndConvertUnitRecipe used to convert units and scale recipe
  *
