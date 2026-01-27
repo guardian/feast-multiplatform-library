@@ -4,7 +4,14 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import com.gu.recipe.generated.internalDensityData
 
-data class TableSchema(val preparedAt: String, val key: List<String>, val values: List<List<Any>>)
+@Serializable
+data class TableSchema constructor(
+    @SerialName("prepared_at") val preparedAt: String,
+    val key: List<String>,
+    val values: List<List<JsonElement>>
+)
+
+@Serializable
 data class Ingredient(val id: Int, val name: String, val normalised_name: String, val density: Float)
 
 class DensityTable(val preparedAt: String, private val normalised_map: Map<String, Ingredient>, private val name_map:Map<String, Ingredient>) {
@@ -34,7 +41,10 @@ fun loadDensityTable(raw:String): Result<DensityTable> {
         val data = Json.decodeFromString<TableSchema>(raw)
 
         val ingredients = data.values.map {
-            Ingredient(it[0] as Int, it[1] as String, it[2] as String, it[3] as Float)
+            Ingredient(it[0].jsonPrimitive.int, //throws if the json isn't a number, caught below
+                it[1].jsonPrimitive.content,
+                it[2].jsonPrimitive.content,
+                it[3].jsonPrimitive.float)
         }
 
         val normalised_map = ingredients.associate {
