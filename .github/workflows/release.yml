@@ -53,6 +53,7 @@ jobs:
           app-id: ${{ secrets.GU_SWIFT_LIBRARY_RELEASE_CLIENT_ID }}
           private-key: ${{ secrets.GU_SWIFT_LIBRARY_RELEASE_PRIVATE_KEY }}
           owner: guardian
+          repositories: feast-multiplatform-library
           permission-contents: write
           permission-pull-requests: write
 
@@ -88,10 +89,11 @@ jobs:
         run: |
           gh pr create --head "$BRANCH" --base main \
             --title "Update Package.swift for release ${{ steps.version.outputs.VERSION }}" \
-            --body "Automated update for release ${{ steps.version.outputs.VERSION }}"
+            --body "Automated update for release ${{ steps.version.outputs.VERSION }}" \
+            --label "maintenance"
           gh pr merge "$BRANCH" \
             --merge \
-            --auto \
+            --admin \
             --delete-branch
 
       - name: Create GitHub Release
