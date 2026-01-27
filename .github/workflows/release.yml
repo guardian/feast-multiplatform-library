@@ -54,6 +54,7 @@ jobs:
           private-key: ${{ secrets.GU_SWIFT_LIBRARY_RELEASE_PRIVATE_KEY }}
           owner: guardian
           permission-contents: write
+          permission-pull-requests: write
 
       - name: Get GitHub User ID
         id: get-user-id
