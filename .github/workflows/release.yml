@@ -88,7 +88,8 @@ jobs:
         run: |
           gh pr create --head "$BRANCH" --base main \
             --title "Update Package.swift for release ${{ steps.version.outputs.VERSION }}" \
-            --body "Automated update for release ${{ steps.version.outputs.VERSION }}"
+            --body "Automated update for release ${{ steps.version.outputs.VERSION }}" \
+            --label "maintenance"
           gh pr merge "$BRANCH" \
             --merge \
             --auto \
