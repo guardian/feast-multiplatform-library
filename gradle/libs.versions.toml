@@ -1,12 +1,12 @@
 [versions]
 agp = "8.12.3"
-kotlin = "2.3.0"
+kotlin = "2.2.21"
 android-minSdk = "24"
 android-compileSdk = "36"
 jvm = "11"
 ios = "17"
 metalava = "0.4.0-alpha03"
-kotlinx-serialization-json = "1.10.0"
+kotlinx-serialization-json = "1.9.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

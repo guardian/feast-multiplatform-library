@@ -13,6 +13,8 @@ import com.gu.recipe.template.parseTemplate
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.unit.UnitConversions
 import com.gu.recipe.unit.Units
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 import kotlin.math.max
 
 private fun splitBeforeSuffix(value: String): Pair<String, String?> {
@@ -33,6 +35,8 @@ internal fun wrapWithStrongTag(value: String): String {
     return "<strong>$before</strong>${after.orEmpty()}"
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 class TemplateSession(private val densityTable: DensityTable) {
     internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String {
         val fanTempC = element.temperatureFanC?.let {
