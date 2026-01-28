@@ -12,5 +12,6 @@ class DensityTableTest {
 
         assertEquals(0.47f,densityTable.getOrNull()?.let { it.densityFor("Olive oil") })
         assertEquals(0.47f, densityTable.getOrNull()?.let { it.densityForNorm("olive oil") })
+        assertEquals(0.36f, densityTable.getOrNull()?.let { it.densityForNorm("salt") })
     }
 }

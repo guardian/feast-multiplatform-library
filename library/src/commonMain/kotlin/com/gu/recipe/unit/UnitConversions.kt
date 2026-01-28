@@ -3,6 +3,8 @@ package com.gu.recipe.unit
 import com.gu.recipe.Amount
 
 object UnitConversions {
+    private val CUPS_PER_ML = 0.00422675f
+    private val TSP_PER_ML = 0.202884f
 
     val CONVENIENCE_UNITS = setOf(
         Units.METRIC_TEASPOON,
@@ -79,7 +81,7 @@ object UnitConversions {
         }
     }
 
-    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem, factor: Float = 1f): Amount {
+    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem, factor: Float = 1f, density: Float): Amount {
         val scaledAmount = amount.copy(min = amount.min * factor, max = amount.max?.let { it * factor })
 
         if (scaledAmount.unit == null || (target == MeasuringSystem.Metric && factor == 1f)) {
@@ -102,16 +104,31 @@ object UnitConversions {
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
         }
 
-        val mostRelevantUnit = ladder
-            .filter { it.second.unitType == amount.unit?.unitType }
-            .lastOrNull { smallestUnitAmount.min >= it.first }?.second
+        val amountToConvert = if(amount.usCust==true && amount.unit?.unitType== UnitType.WEIGHT) {
+            //convert from g to ml. Metric -> US unit conversion is done below.
+            // Assume that incoming weight here is in g (smallest unit in metric set)
+            //density is in g/ml, so divide by density to go g -> ml
+            Amount(
+                min=smallestUnitAmount.min / density,
+                max=smallestUnitAmount.max?.let { (it / density) },
+                unit=Units.MILLILITRE,
+            )
+        } else {
+            smallestUnitAmount
+        }
 
+        println(amountToConvert)
+
+        val mostRelevantUnit = ladder
+            .filter { it.second.unitType == amountToConvert.unit?.unitType }
+            .lastOrNull { amountToConvert.min >= it.first }?.second
+        println(mostRelevantUnit)
         return mostRelevantUnit?.let {
             Amount(
-                min = smallestUnitAmount.min / it.quantity,
-                max = smallestUnitAmount.max?.let { max -> max / it.quantity },
+                min = amountToConvert.min / it.quantity,
+                max = amountToConvert.max?.let { max -> max / it.quantity },
                 unit = it,
             )
-        } ?: smallestUnitAmount
+        } ?: amountToConvert
     }
 }
