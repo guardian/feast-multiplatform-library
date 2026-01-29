@@ -21,6 +21,7 @@ package com.gu.recipe {
   public final class ScaleRecipeKt {
     method public static String ingredientWithoutSuffix(String renderedTemplate);
     method public static Object newTemplateSession();
+    method public static com.gu.recipe.TemplateSession noCustomaryTemplateSession();
   }
 
   public final class TemplateSession {
@@ -427,7 +428,7 @@ package com.gu.recipe.unit {
   }
 
   public final class UnitConversions {
-    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor, float density);
+    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor, Float? density);
     method public error.NonExistentClass getCONVENIENCE_UNITS();
     method public error.NonExistentClass getIMPERIAL_CONVERSION_LADDER();
     method public error.NonExistentClass getMETRIC_CONVENIENCE_LADDER();

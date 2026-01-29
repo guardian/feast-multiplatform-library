@@ -155,6 +155,15 @@ fun newTemplateSession():Result<TemplateSession> {
     return densityTable.map { TemplateSession(it) }
 }
 
+/**
+ * Creates a TemplateSession without any density conversion data.  This is intended as a fallback
+ * if newTemplateSession fails on internal data
+ */
+fun noCustomaryTemplateSession(): TemplateSession {
+    val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+    return TemplateSession(densityTable)
+}
+
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
     val (before, _) = splitBeforeSuffix(renderedTemplate)
     return before.trim()
