@@ -65,7 +65,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         val factorToUse = if (!element.scale) 1f else factor
 
         val density = element.ingredient?.let { densityTable.densityForNorm(it) }
-        amount = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse, density ?: 1.0f)
+        amount = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse, density)
 
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
@@ -83,7 +83,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
 
         val unitString = if (amount.unit != null) {
-            if (max(amount.min, amount.max ?: amount.min) > 1) {
+            if (max(amount.min, amount.max ?: amount.min) > 1.1f) { //need to offset from exactly one, so that when rounding a value below 1/8 we don't get "1 cups
                 " ${amount.unit.symbolPlural}"
             } else {
                 " ${amount.unit.symbol}"

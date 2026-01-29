@@ -10,8 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class RenderTemplateTest {
-    val densityTable = DensityTable("test", HashMap(), HashMap())
-    val session = TemplateSession(densityTable)
+    val session = newTemplateSession().getOrThrow()
 
     @Test
     fun `scale template with simple quantity placeholder`() {
@@ -101,6 +100,75 @@ class RenderTemplateTest {
         )
         val result = session.renderTemplate(template, 0.25f, MeasuringSystem.Metric)
         assertEquals("½", result)
+    }
+
+    @Test
+    fun `render template with us customary goes to tsp or cups with ingredient density`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 200f,
+                    unit = "grams",
+                    scale = true,
+                    ingredient = "plain flour",
+                    usCust = true
+                )
+            )
+        )
+        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
+        assertEquals("1 cup", result)
+    }
+
+    @Test
+    fun `render template with us customary goes to oz if no density`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 250f,
+                    unit = "grams",
+                    scale = true,
+                    ingredient = "lego bricks",
+                    usCust = true
+                )
+            )
+        )
+        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
+        assertEquals("8.82 oz", result)
+    }
+
+    @Test
+    fun `render minmax template with us customary goes to tsp or cups with ingredient density`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 250f,
+                    max = 600f,
+                    unit = "grams",
+                    scale = true,
+                    ingredient = "plain flour",
+                    usCust = true
+                )
+            )
+        )
+        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
+        assertEquals("1⅓-3⅛ cups", result)
+    }
+
+    @Test
+    fun `scale template with us customary goes to tsp or cups with ingredient density`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 200f,
+                    unit = "grams",
+                    scale = true,
+                    ingredient = "plain flour",
+                    usCust = true
+                )
+            )
+        )
+        val result = session.renderTemplate(template, 2.0f, MeasuringSystem.USCustomary)
+        assertEquals("2⅛ cups", result) //extra 1/8 due to rounding
     }
 
     @Test

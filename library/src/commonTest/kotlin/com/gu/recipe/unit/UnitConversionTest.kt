@@ -112,12 +112,12 @@ class UnitConversionTest {
     }
 
     @Test
-    fun `falls back to imperial conversion for non-volume units in USCustomary`() {
+    fun `performs weight to volume conversion by density in USCustomary`() {
         val amount = Amount(min = 219f, max = 500f, unit = Units.GRAM, usCust = true)
         //an _average_ density of plain flour - seems to be compatible with online recipes. Not the value we carry,
-        //but suitable for testing functionality
+        //but suitable for testing functionality. See https://sallysbakingaddiction.com/master-muffin-recipe/,
+        //https://www.google.com/search?q=density+of+plain+flour&sca_esv=d802faf0aaa25922&source=hp&ei=aWV7adfCDai5hbIPg6WgyQg&iflsig=AFdpzrgAAAAAaXtzedfrVDFvuGlKbEwLsZPDl2mlL2B2&ved=0ahUKEwiXm6OB8rCSAxWoXEEAHYMSKIkQ4dUDCBY&uact=5&oq=density+of+plain+flour&gs_lp=Egdnd3Mtd2l6IhZkZW5zaXR5IG9mIHBsYWluIGZsb3VyMgUQABiABDIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yCxAAGIAEGIoFGIYDMgUQABjvBTIFEAAY7wVI5ExQ8BRYoktwAngAkAEAmAFBoAG6CKoBAjIzuAEDyAEA-AEBmAIZoAL7CKgCCsICChAAGAMYjwEY6gLCAgoQLhgDGI8BGOoCwgIOEAAYgAQYigUYsQMYgwHCAhEQLhiABBixAxiDARjHARjRA8ICCBAAGIAEGLEDwgIOEC4YgAQYsQMYxwEY0QPCAgUQLhiABMICCxAAGIAEGLEDGIMBwgILEC4YgAQYxwEY0QPCAhQQLhiABBiKBRixAxiDARjHARjRA8ICCxAAGIAEGIoFGJIDwgILEC4YgAQYsQMYgwHCAgsQABiABBixAxjJA8ICBBAAGAPCAg4QLhiABBjHARivARiOBcICCBAuGIAEGLEDwgIOEC4YgAQYsQMYxwEYrwHCAggQABiABBiiBJgDA_EFALCFAwj93KmSBwIyNaAH3pcBsgcCMjO4B_IIwgcGMC4yMi4zyAcogAgB&sclient=gws-wiz
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=0.528f)
-        println(result)
 
         val expectedMin = 1.753f
         val expectedMax = 4f
