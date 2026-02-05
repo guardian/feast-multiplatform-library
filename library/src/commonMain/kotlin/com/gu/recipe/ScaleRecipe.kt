@@ -118,6 +118,96 @@ class TemplateSession(private val densityTable: DensityTable) {
     }
 
     /**
+     * Combines ingredients across multiple recipes, grouping by normalized ingredient name and unit.
+     * Ingredients with the same normalized name but different units are kept as separate items.
+     *
+     * @param recipes List of recipes to combine ingredients from
+     * @param measuringSystem The target unit system for ingredient measurements
+     * @param includeCount When true, append "(n)" if more than one item was combined
+     * @return List of rendered ingredient strings (e.g., "8 egg", "300 g flour")
+     */
+    fun combineIngredients(
+        recipes: List<RecipeV3>,
+        measuringSystem: MeasuringSystem,
+        includeCount: Boolean = false,
+    ): List<String> {
+        data class GroupKey(
+            val ingredient: String,
+            val unit: String?,
+            val usCust: Boolean?,
+        )
+
+        data class GroupValue(
+            var minSum: Float,
+            var maxSum: Float,
+            var hasMax: Boolean,
+            var count: Int,
+        )
+
+        val groups = mutableMapOf<GroupKey, GroupValue>()
+
+        recipes.forEach { recipe ->
+            recipe.ingredients.orEmpty().forEach { section ->
+                section.ingredientsList.orEmpty().forEach { item ->
+                    val template = item.template ?: return@forEach
+                    val placeholder = parseTemplate(template)
+                        .elements
+                        .filterIsInstance<QuantityPlaceholder>()
+                        .firstOrNull()
+                        ?: return@forEach
+
+                    val ingredient = placeholder.ingredient ?: return@forEach
+                    val key = GroupKey(
+                        ingredient = ingredient,
+                        unit = placeholder.unit,
+                        usCust = placeholder.usCust,
+                    )
+
+                    val maxValue = placeholder.max ?: placeholder.min
+                    val existing = groups[key]
+                    if (existing == null) {
+                        groups[key] = GroupValue(
+                            minSum = placeholder.min,
+                            maxSum = maxValue,
+                            hasMax = placeholder.max != null,
+                            count = 1,
+                        )
+                    } else {
+                        existing.minSum += placeholder.min
+                        existing.maxSum += maxValue
+                        existing.hasMax = existing.hasMax || placeholder.max != null
+                        existing.count += 1
+                    }
+                }
+            }
+        }
+
+        return groups.entries
+            .sortedWith(
+                compareBy<Map.Entry<GroupKey, GroupValue>> { it.key.ingredient }
+                    .thenBy { it.key.unit.orEmpty() }
+                    .thenBy { it.key.usCust?.toString().orEmpty() }
+            )
+            .map { (key, value) ->
+                val combinedPlaceholder = QuantityPlaceholder(
+                    min = value.minSum,
+                    max = if (value.hasMax) value.maxSum else null,
+                    unit = key.unit,
+                    scale = true,
+                    ingredient = key.ingredient,
+                    usCust = key.usCust,
+                )
+                val renderedQuantity = renderQuantity(combinedPlaceholder, 1f, measuringSystem)
+                val combinedText = listOf(renderedQuantity, key.ingredient).joinToString(" ").trim()
+                if (includeCount && value.count > 1) {
+                    "$combinedText (${value.count})"
+                } else {
+                    combinedText
+                }
+            }
+    }
+
+    /**
      * scaleAndConvertUnitRecipe used to convert units and scale recipe
      *
      * @param recipe The recipe as provided by the server (RecipeV3)
