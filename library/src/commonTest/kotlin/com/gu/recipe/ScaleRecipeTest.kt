@@ -2,8 +2,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.TemplateSession
-import com.gu.recipe.density.DensityTable
+import com.gu.recipe.scaleAndConvertUnitRecipe
 import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
@@ -78,9 +77,7 @@ class ScaleRecipeTest {
                 )
             )
         )
-        val densityTable = DensityTable("test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
+        val scaledRecipe = scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe

@@ -20,63 +20,7 @@ package com.gu.recipe {
 
   public final class ScaleRecipeKt {
     method public static String ingredientWithoutSuffix(String renderedTemplate);
-    method public static Object newTemplateSession();
-    method public static com.gu.recipe.TemplateSession noCustomaryTemplateSession();
-  }
-
-  public final class TemplateSession {
-    ctor public TemplateSession(com.gu.recipe.density.DensityTable densityTable);
-    method public com.gu.recipe.generated.RecipeV3 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
-  }
-
-}
-
-package com.gu.recipe.density {
-
-  public final class DensityTable {
-    ctor public DensityTable(String preparedAt, java.util.Map<java.lang.String,com.gu.recipe.density.Ingredient> normalised_map, java.util.Map<java.lang.String,com.gu.recipe.density.Ingredient> name_map);
-    method public com.gu.recipe.density.Ingredient? dataFor(String name);
-    method public com.gu.recipe.density.Ingredient? dataForNorm(String name);
-    method public Float? densityFor(String name);
-    method public Float? densityForNorm(String name);
-    method public String getPreparedAt();
-    property public final String preparedAt;
-  }
-
-  public final class DensityTableKt {
-    method public static Object loadDensityTable(String raw);
-    method public static Object loadInternalDensityTable();
-  }
-
-  @kotlinx.serialization.Serializable public final class Ingredient {
-    ctor public Ingredient(int id, String name, String normalised_name, float density);
-    method public int component1();
-    method public String component2();
-    method public String component3();
-    method public float component4();
-    method public com.gu.recipe.density.Ingredient copy(int id, String name, String normalised_name, float density);
-    method public float getDensity();
-    method public int getId();
-    method public String getName();
-    method public String getNormalised_name();
-    property public final float density;
-    property public final int id;
-    property public final String name;
-    property public final String normalised_name;
-  }
-
-  @kotlinx.serialization.Serializable public final class TableSchema {
-    ctor public TableSchema(@kotlinx.serialization.SerialName("prepared_at") String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
-    method public String component1();
-    method public java.util.List<java.lang.String> component2();
-    method public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> component3();
-    method public com.gu.recipe.density.TableSchema copy(String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
-    method public java.util.List<java.lang.String> getKey();
-    method public String getPreparedAt();
-    method public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> getValues();
-    property public final java.util.List<java.lang.String> key;
-    property public final String preparedAt;
-    property public final java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> values;
+    method public static com.gu.recipe.generated.RecipeV3 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
   }
 
 }
@@ -95,11 +39,6 @@ package com.gu.recipe.generated {
     property public final String sponsorName;
     property public final String territory;
     property public final String url;
-  }
-
-  public final class DensityFixtureKt {
-    method public static String getInternalDensityData();
-    property public static final String internalDensityData;
   }
 
   @kotlinx.serialization.Serializable public final class Image {
@@ -309,10 +248,9 @@ package com.gu.recipe.generated {
 package com.gu.recipe.js {
 
   public final class ScaleRecipeJsContractKt {
-    method public static com.gu.recipe.TemplateSession createTemplateSession();
     method public static java.util.List<com.gu.recipe.template.TemplateElement> parseTemplate(String templateString);
-    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements, com.gu.recipe.TemplateSession session);
-    method public static String scaleRecipe(String recipe, float factor, String unit, com.gu.recipe.TemplateSession session);
+    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements);
+    method public static String scaleRecipe(String recipe, float factor, String unit);
   }
 
 }
@@ -428,7 +366,7 @@ package com.gu.recipe.unit {
   }
 
   public final class UnitConversions {
-    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor, Float? density);
+    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor);
     method public error.NonExistentClass getCONVENIENCE_UNITS();
     method public error.NonExistentClass getIMPERIAL_CONVERSION_LADDER();
     method public error.NonExistentClass getMETRIC_CONVENIENCE_LADDER();
