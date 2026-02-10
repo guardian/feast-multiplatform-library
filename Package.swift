@@ -14,7 +14,7 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "FeastMultiplatformLibrary",
-            url: "https://github.com/guardian/feast-multiplatform-library/releases/download/8.0.5/FeastMultiplatformLibrary.xcframework.zip",
-            checksum:"39615b57ead532d45de109b4c57f5f42860f528b7de8789c2c9deaba516cecf0")
+            url: "https://github.com/guardian/feast-multiplatform-library/releases/download/9.0.0/FeastMultiplatformLibrary.xcframework.zip",
+            checksum:"a1b163e459b409c9f8a31a58daab2b8a0284ffccf317e1f37cc0bc9891e91812")
     ]
 )
