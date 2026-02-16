@@ -163,6 +163,14 @@ jobs:
       - name: Build js target
         run: ./gradlew :library:compileProductionExecutableKotlinJs
 
+      - name: Set version
+        env:
+          VERSION: ${{ jobs.release.outputs.RELEASE_VERSION }}
+        run: |
+          cat version.txt
+          echo $VERSION > version.txt
+          cat version.txt
+
       - name: Publish to npm
         run: |
           cd build/js/packages/feast-multiplatform-library-library
