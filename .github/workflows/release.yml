@@ -165,7 +165,7 @@ jobs:
 
       - name: Set version
         env:
-          VERSION: ${{ jobs.release.outputs.RELEASE_VERSION }}
+          VERSION: ${{ needs.release.outputs.RELEASE_VERSION }}
         run: |
           cat version.txt
           echo $VERSION > version.txt
