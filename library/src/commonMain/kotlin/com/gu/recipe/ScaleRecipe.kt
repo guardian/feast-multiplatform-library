@@ -70,7 +70,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
             Units.CENTIMETRE, Units.INCH -> 1
-            else -> 2
+            else -> 1
         }
 
         val fraction = when (amount.unit) {
