@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # This helps avoid getting 10 separate PRs for one Kotlin release
+    groups:
+      kotlin-ecosystem:
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "org.jetbrains.kotlinx*"
+      android-tooling:
+        patterns:
+          - "com.android.*"
+          - "com.google.android.*"
+    # Labels make it easier to filter in the UI
+    labels:
+      - "dependencies"
+      - "kotlin"
