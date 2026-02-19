@@ -50,6 +50,6 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSes
 * JS style factory for TemplateSession.  If the session can be created,
 * it is returned; if the session cannot be created, then an exception is thrown.
 */
-fun createTemplateSession():TemplateSession {
-    return newTemplateSession().getOrThrow()
+fun createTemplateSession(rawDensityData: String?):TemplateSession {
+    return newTemplateSession(rawDensityData).getOrThrow()
 }
