@@ -2,6 +2,7 @@ package com.gu.recipe
 
 import com.gu.recipe.FormatUtils.applySmartPunctuation
 import com.gu.recipe.density.DensityTable
+import com.gu.recipe.density.loadDensityTable
 import com.gu.recipe.density.loadInternalDensityTable
 import com.gu.recipe.generated.*
 import com.gu.recipe.template.OvenTemperaturePlaceholder
@@ -150,8 +151,8 @@ class TemplateSession(private val densityTable: DensityTable) {
     }
 }
 
-fun newTemplateSession():Result<TemplateSession> {
-    val densityTable = loadInternalDensityTable()
+fun newTemplateSession(rawDensityData: String? = null):Result<TemplateSession> {
+    val densityTable = if(rawDensityData!=null) loadDensityTable(rawDensityData) else loadInternalDensityTable()
     return densityTable.map { TemplateSession(it) }
 }
 
