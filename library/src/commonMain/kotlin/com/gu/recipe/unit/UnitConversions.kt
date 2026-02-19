@@ -96,10 +96,7 @@ object UnitConversions {
             else
                 METRIC_CONVERSION_LADDER
 
-            MeasuringSystem.USCustomary -> if (amount.usCust == true)
-                US_CUSTOMARY_CONVERSION_LADDER
-            else
-                IMPERIAL_CONVERSION_LADDER
+            MeasuringSystem.USCustomary -> US_CUSTOMARY_CONVERSION_LADDER
 
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
         }

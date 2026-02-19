@@ -59,7 +59,7 @@ class TemplateSession(private val densityTable: DensityTable) {
             min = element.min,
             max = if (element.min != element.max) element.max else null,
             unit = element.unit?.let { Units.findRecipeUnit(it) },
-            usCust = element.usCust,
+            usCust = if(element.ingredient == "butter") true else element.usCust,
         )
 
         val factorToUse = if (!element.scale) 1f else factor
@@ -70,18 +70,22 @@ class TemplateSession(private val densityTable: DensityTable) {
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
             Units.CENTIMETRE, Units.INCH -> 1
-            else -> 2
+            else -> 1
         }
+
+//        val fraction = when (amount.unit) {
+//            Units.US_TEASPOON, Units.METRIC_TEASPOON,
+//            Units.US_TABLESPOON, Units.METRIC_TABLESPOON,
+//            Units.METRIC_CUP, Units.US_CUP -> true
+//
+//            null -> true
+//            else -> false
+//        }
 
         val fraction = when (amount.unit) {
-            Units.US_TEASPOON, Units.METRIC_TEASPOON,
-            Units.US_TABLESPOON, Units.METRIC_TABLESPOON,
-            Units.METRIC_CUP, Units.US_CUP -> true
-
-            null -> true
-            else -> false
+            Units.CENTILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE -> false
+            else -> true
         }
-
         val unitString = if (amount.unit != null) {
             if (max(amount.min, amount.max ?: amount.min) > 1.1f) { //need to offset from exactly one, so that when rounding a value below 1/8 we don't get "1 cups
                 " ${amount.unit.symbolPlural}"
