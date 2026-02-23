@@ -36,4 +36,55 @@ class CookTimeUtils {
             "cool-time" to "cool"
         )
     }
+
+    /* ----------------------------- */
+    /* API MODELS                    */
+    /* ----------------------------- */
+
+    data class RecipeTiming(
+        val qualifier: String,
+        val durationInMins: DurationRange?
+    )
+
+    data class DurationRange(
+        val min: Double?,
+        val max: Double?
+    )
+
+    /* ----------------------------- */
+    /* DOMAIN TYPES                  */
+    /* ----------------------------- */
+
+    private data class Timing(
+        val qualifier: String,
+        val passiveLabel: String?,
+        val minutes: Int
+    )
+
+    data class CookDuration(val minutes: Int) {
+        fun format(): String {
+            if (minutes < MINUTES_PER_HOUR) return "$minutes min"
+            val hours = minutes / MINUTES_PER_HOUR
+            val remainder = minutes % MINUTES_PER_HOUR
+            return if (remainder == 0) "$hours hr" else "$hours hr $remainder min"
+        }
+    }
+
+    data class CooktimeInfo(
+        val primary: CookDuration?,
+        val secondary: List<Pair<String, CookDuration>>
+    )
+
+    data class LabeledCookDuration(
+        val label: String,
+        val duration: CookDuration
+    )
+
+    data class StructuredIndividualInfo(
+        val primary: List<LabeledCookDuration>,
+        val fallback: LabeledCookDuration?,
+        val secondary: List<LabeledCookDuration>
+    )
+
+
 }
