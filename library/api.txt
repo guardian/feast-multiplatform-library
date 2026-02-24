@@ -7,20 +7,20 @@ package com.gu.recipe {
     method public Float? component2();
     method public com.gu.recipe.unit.MeasurementUnit? component3();
     method public Boolean? component4();
-    method public com.gu.recipe.Amount copy(float min, Float? max, com.gu.recipe.unit.MeasurementUnit? unit, Boolean? usCust);
-    method public Float? getMax();
-    method public float getMin();
-    method public com.gu.recipe.unit.MeasurementUnit? getUnit();
-    method public Boolean? getUsCust();
-    property public final Float? max;
-    property public final float min;
-    property public final com.gu.recipe.unit.MeasurementUnit? unit;
-    property public final Boolean? usCust;
+    method public com.gu.recipe.Amount copy(optional float min, optional Float? max, optional com.gu.recipe.unit.MeasurementUnit? unit, optional Boolean? usCust);
+    method @InaccessibleFromKotlin public Float? getMax();
+    method @InaccessibleFromKotlin public float getMin();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit? getUnit();
+    method @InaccessibleFromKotlin public Boolean? getUsCust();
+    property public Float? max;
+    property public float min;
+    property public com.gu.recipe.unit.MeasurementUnit? unit;
+    property public Boolean? usCust;
   }
 
   public final class ScaleRecipeKt {
     method public static String ingredientWithoutSuffix(String renderedTemplate);
-    method public static Object newTemplateSession();
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.TemplateSession> newTemplateSession();
     method public static com.gu.recipe.TemplateSession noCustomaryTemplateSession();
   }
 
@@ -39,13 +39,13 @@ package com.gu.recipe.density {
     method public com.gu.recipe.density.Ingredient? dataForNorm(String name);
     method public Float? densityFor(String name);
     method public Float? densityForNorm(String name);
-    method public String getPreparedAt();
-    property public final String preparedAt;
+    method @InaccessibleFromKotlin public String getPreparedAt();
+    property public String preparedAt;
   }
 
   public final class DensityTableKt {
-    method public static Object loadDensityTable(String raw);
-    method public static Object loadInternalDensityTable();
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.density.DensityTable> loadDensityTable(String raw);
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.density.DensityTable> loadInternalDensityTable();
   }
 
   @kotlinx.serialization.Serializable public final class Ingredient {
@@ -54,29 +54,29 @@ package com.gu.recipe.density {
     method public String component2();
     method public String component3();
     method public float component4();
-    method public com.gu.recipe.density.Ingredient copy(int id, String name, String normalised_name, float density);
-    method public float getDensity();
-    method public int getId();
-    method public String getName();
-    method public String getNormalised_name();
-    property public final float density;
-    property public final int id;
-    property public final String name;
-    property public final String normalised_name;
+    method public com.gu.recipe.density.Ingredient copy(optional int id, optional String name, optional String normalised_name, optional float density);
+    method @InaccessibleFromKotlin public float getDensity();
+    method @InaccessibleFromKotlin public int getId();
+    method @InaccessibleFromKotlin public String getName();
+    method @InaccessibleFromKotlin public String getNormalised_name();
+    property public float density;
+    property public int id;
+    property public String name;
+    property public String normalised_name;
   }
 
   @kotlinx.serialization.Serializable public final class TableSchema {
-    ctor public TableSchema(@kotlinx.serialization.SerialName("prepared_at") String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
+    ctor public TableSchema(String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
     method public String component1();
     method public java.util.List<java.lang.String> component2();
     method public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> component3();
-    method public com.gu.recipe.density.TableSchema copy(String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
-    method public java.util.List<java.lang.String> getKey();
-    method public String getPreparedAt();
-    method public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> getValues();
-    property public final java.util.List<java.lang.String> key;
-    property public final String preparedAt;
-    property public final java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> values;
+    method public com.gu.recipe.density.TableSchema copy(optional String preparedAt, optional java.util.List<java.lang.String> key, optional java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getKey();
+    method @InaccessibleFromKotlin public String getPreparedAt();
+    method @InaccessibleFromKotlin public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> getValues();
+    property public java.util.List<java.lang.String> key;
+    property @kotlinx.serialization.SerialName("prepared_at") public String preparedAt;
+    property public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> values;
   }
 
 }
@@ -88,18 +88,18 @@ package com.gu.recipe.generated {
     method public String component1();
     method public String component2();
     method public String component3();
-    method public com.gu.recipe.generated.CommerceCta copy(String sponsorName, String territory, String url);
-    method public String getSponsorName();
-    method public String getTerritory();
-    method public String getUrl();
-    property public final String sponsorName;
-    property public final String territory;
-    property public final String url;
+    method public com.gu.recipe.generated.CommerceCta copy(optional String sponsorName, optional String territory, optional String url);
+    method @InaccessibleFromKotlin public String getSponsorName();
+    method @InaccessibleFromKotlin public String getTerritory();
+    method @InaccessibleFromKotlin public String getUrl();
+    property public String sponsorName;
+    property public String territory;
+    property public String url;
   }
 
   public final class DensityFixtureKt {
-    method public static String getInternalDensityData();
-    property public static final String internalDensityData;
+    method @InaccessibleFromKotlin public static String getInternalDensityData();
+    property public static String internalDensityData;
   }
 
   @kotlinx.serialization.Serializable public final class Image {
@@ -112,26 +112,27 @@ package com.gu.recipe.generated {
     method public String? component6();
     method public String? component7();
     method public String component8();
-    method public com.gu.recipe.generated.Image copy(String? caption, String cropId, String? imageType, String? mediaApiUrl, String mediaId, String? photographer, String? source, String url);
-    method public String? getCaption();
-    method public String getCropId();
-    method public String? getImageType();
-    method public String? getMediaApiUrl();
-    method public String getMediaId();
-    method public String? getPhotographer();
-    method public String? getSource();
-    method public String getUrl();
-    property public final String? caption;
-    property public final String cropId;
-    property public final String? imageType;
-    property public final String? mediaApiUrl;
-    property public final String mediaId;
-    property public final String? photographer;
-    property public final String? source;
-    property public final String url;
+    method public com.gu.recipe.generated.Image copy(optional String? caption, optional String cropId, optional String? imageType, optional String? mediaApiUrl, optional String mediaId, optional String? photographer, optional String? source, optional String url);
+    method @InaccessibleFromKotlin public String? getCaption();
+    method @InaccessibleFromKotlin public String getCropId();
+    method @InaccessibleFromKotlin public String? getImageType();
+    method @InaccessibleFromKotlin public String? getMediaApiUrl();
+    method @InaccessibleFromKotlin public String getMediaId();
+    method @InaccessibleFromKotlin public String? getPhotographer();
+    method @InaccessibleFromKotlin public String? getSource();
+    method @InaccessibleFromKotlin public String getUrl();
+    property public String? caption;
+    property public String cropId;
+    property public String? imageType;
+    property public String? mediaApiUrl;
+    property public String mediaId;
+    property public String? photographer;
+    property public String? source;
+    property public String url;
   }
 
   @kotlinx.serialization.Serializable public final class IngredientItem {
+    ctor public IngredientItem();
     ctor public IngredientItem(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? unit);
     method public com.gu.recipe.generated.Range? component1();
     method public String? component2();
@@ -142,36 +143,37 @@ package com.gu.recipe.generated {
     method public String? component7();
     method public String? component8();
     method public String? component9();
-    method public com.gu.recipe.generated.IngredientItem copy(com.gu.recipe.generated.Range? amount, String? ingredientId, String? name, Boolean? optional, String? prefix, String? suffix, String? template, String? text, String? unit);
-    method public com.gu.recipe.generated.Range? getAmount();
-    method public String? getIngredientId();
-    method public String? getName();
-    method public Boolean? getOptional();
-    method public String? getPrefix();
-    method public String? getSuffix();
-    method public String? getTemplate();
-    method public String? getText();
-    method public String? getUnit();
-    property public final com.gu.recipe.generated.Range? amount;
-    property public final String? ingredientId;
-    property public final String? name;
-    property public final Boolean? optional;
-    property public final String? prefix;
-    property public final String? suffix;
-    property public final String? template;
-    property public final String? text;
-    property public final String? unit;
+    method public com.gu.recipe.generated.IngredientItem copy(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? unit);
+    method @InaccessibleFromKotlin public com.gu.recipe.generated.Range? getAmount();
+    method @InaccessibleFromKotlin public String? getIngredientId();
+    method @InaccessibleFromKotlin public String? getName();
+    method @InaccessibleFromKotlin public Boolean? getOptional();
+    method @InaccessibleFromKotlin public String? getPrefix();
+    method @InaccessibleFromKotlin public String? getSuffix();
+    method @InaccessibleFromKotlin public String? getTemplate();
+    method @InaccessibleFromKotlin public String? getText();
+    method @InaccessibleFromKotlin public String? getUnit();
+    property public com.gu.recipe.generated.Range? amount;
+    property public String? ingredientId;
+    property public String? name;
+    property public Boolean? optional;
+    property public String? prefix;
+    property public String? suffix;
+    property public String? template;
+    property public String? text;
+    property public String? unit;
   }
 
   @kotlinx.serialization.Serializable public final class IngredientsList {
+    ctor public IngredientsList();
     ctor public IngredientsList(optional java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList, optional String? recipeSection);
     method public java.util.List<com.gu.recipe.generated.IngredientItem>? component1();
     method public String? component2();
-    method public com.gu.recipe.generated.IngredientsList copy(java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList, String? recipeSection);
-    method public java.util.List<com.gu.recipe.generated.IngredientItem>? getIngredientsList();
-    method public String? getRecipeSection();
-    property public final java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList;
-    property public final String? recipeSection;
+    method public com.gu.recipe.generated.IngredientsList copy(optional java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList, optional String? recipeSection);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.generated.IngredientItem>? getIngredientsList();
+    method @InaccessibleFromKotlin public String? getRecipeSection();
+    property public java.util.List<com.gu.recipe.generated.IngredientItem>? ingredientsList;
+    property public String? recipeSection;
   }
 
   @kotlinx.serialization.Serializable public final class Instruction {
@@ -180,26 +182,27 @@ package com.gu.recipe.generated {
     method public String? component2();
     method public java.util.List<java.lang.String>? component3();
     method public Double? component4();
-    method public com.gu.recipe.generated.Instruction copy(String description, String? descriptionTemplate, java.util.List<java.lang.String>? images, Double? stepNumber);
-    method public String getDescription();
-    method public String? getDescriptionTemplate();
-    method public java.util.List<java.lang.String>? getImages();
-    method public Double? getStepNumber();
-    property public final String description;
-    property public final String? descriptionTemplate;
-    property public final java.util.List<java.lang.String>? images;
-    property public final Double? stepNumber;
+    method public com.gu.recipe.generated.Instruction copy(optional String description, optional String? descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
+    method @InaccessibleFromKotlin public String getDescription();
+    method @InaccessibleFromKotlin public String? getDescriptionTemplate();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String>? getImages();
+    method @InaccessibleFromKotlin public Double? getStepNumber();
+    property public String description;
+    property public String? descriptionTemplate;
+    property public java.util.List<java.lang.String>? images;
+    property public Double? stepNumber;
   }
 
   @kotlinx.serialization.Serializable public final class Range {
+    ctor public Range();
     ctor public Range(optional Double? max, optional Double? min);
     method public Double? component1();
     method public Double? component2();
-    method public com.gu.recipe.generated.Range copy(Double? max, Double? min);
-    method public Double? getMax();
-    method public Double? getMin();
-    property public final Double? max;
-    property public final Double? min;
+    method public com.gu.recipe.generated.Range copy(optional Double? max, optional Double? min);
+    method @InaccessibleFromKotlin public Double? getMax();
+    method @InaccessibleFromKotlin public Double? getMin();
+    property public Double? max;
+    property public Double? min;
   }
 
   @kotlinx.serialization.Serializable public final class RecipeV3 {
@@ -227,53 +230,53 @@ package com.gu.recipe.generated {
     method public java.util.List<java.lang.String>? component7();
     method public java.util.List<java.lang.String?>? component8();
     method public String? component9();
-    method public com.gu.recipe.generated.RecipeV3 copy(String? bookCredit, java.util.List<java.lang.String>? byline, String? canonicalArticle, java.util.List<java.lang.String?>? celebrationIds, java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas, String? composerId, java.util.List<java.lang.String>? contributors, java.util.List<java.lang.String?>? cuisineIds, String? description, String? difficultyLevel, com.gu.recipe.generated.Image? featuredImage, String id, java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients, java.util.List<com.gu.recipe.generated.Instruction>? instructions, Boolean? isAppReady, java.util.List<java.lang.String?>? mealTypeIds, java.util.List<com.gu.recipe.generated.Serves>? serves, java.util.List<java.lang.String?>? suitableForDietIds, java.util.List<java.lang.String?>? techniquesUsedIds, java.util.List<com.gu.recipe.generated.Timing>? timings, String? title, java.util.List<java.lang.String?>? utensilsAndApplianceIds, String? webPublicationDate);
-    method public String? getBookCredit();
-    method public java.util.List<java.lang.String>? getByline();
-    method public String? getCanonicalArticle();
-    method public java.util.List<java.lang.String?>? getCelebrationIds();
-    method public java.util.List<com.gu.recipe.generated.CommerceCta>? getCommerceCtas();
-    method public String? getComposerId();
-    method public java.util.List<java.lang.String>? getContributors();
-    method public java.util.List<java.lang.String?>? getCuisineIds();
-    method public String? getDescription();
-    method public String? getDifficultyLevel();
-    method public com.gu.recipe.generated.Image? getFeaturedImage();
-    method public String getId();
-    method public java.util.List<com.gu.recipe.generated.IngredientsList>? getIngredients();
-    method public java.util.List<com.gu.recipe.generated.Instruction>? getInstructions();
-    method public java.util.List<java.lang.String?>? getMealTypeIds();
-    method public java.util.List<com.gu.recipe.generated.Serves>? getServes();
-    method public java.util.List<java.lang.String?>? getSuitableForDietIds();
-    method public java.util.List<java.lang.String?>? getTechniquesUsedIds();
-    method public java.util.List<com.gu.recipe.generated.Timing>? getTimings();
-    method public String? getTitle();
-    method public java.util.List<java.lang.String?>? getUtensilsAndApplianceIds();
-    method public String? getWebPublicationDate();
-    method public Boolean? isAppReady();
-    property public final String? bookCredit;
-    property public final java.util.List<java.lang.String>? byline;
-    property public final String? canonicalArticle;
-    property public final java.util.List<java.lang.String?>? celebrationIds;
-    property public final java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas;
-    property public final String? composerId;
-    property public final java.util.List<java.lang.String>? contributors;
-    property public final java.util.List<java.lang.String?>? cuisineIds;
-    property public final String? description;
-    property public final String? difficultyLevel;
-    property public final com.gu.recipe.generated.Image? featuredImage;
-    property public final String id;
-    property public final java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients;
-    property public final java.util.List<com.gu.recipe.generated.Instruction>? instructions;
-    property public final Boolean? isAppReady;
-    property public final java.util.List<java.lang.String?>? mealTypeIds;
-    property public final java.util.List<com.gu.recipe.generated.Serves>? serves;
-    property public final java.util.List<java.lang.String?>? suitableForDietIds;
-    property public final java.util.List<java.lang.String?>? techniquesUsedIds;
-    property public final java.util.List<com.gu.recipe.generated.Timing>? timings;
-    property public final String? title;
-    property public final java.util.List<java.lang.String?>? utensilsAndApplianceIds;
-    property public final String? webPublicationDate;
+    method public com.gu.recipe.generated.RecipeV3 copy(optional String? bookCredit, optional java.util.List<java.lang.String>? byline, optional String? canonicalArticle, optional java.util.List<java.lang.String?>? celebrationIds, optional java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas, optional String? composerId, optional java.util.List<java.lang.String>? contributors, optional java.util.List<java.lang.String?>? cuisineIds, optional String? description, optional String? difficultyLevel, optional com.gu.recipe.generated.Image? featuredImage, optional String id, optional java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients, optional java.util.List<com.gu.recipe.generated.Instruction>? instructions, optional Boolean? isAppReady, optional java.util.List<java.lang.String?>? mealTypeIds, optional java.util.List<com.gu.recipe.generated.Serves>? serves, optional java.util.List<java.lang.String?>? suitableForDietIds, optional java.util.List<java.lang.String?>? techniquesUsedIds, optional java.util.List<com.gu.recipe.generated.Timing>? timings, optional String? title, optional java.util.List<java.lang.String?>? utensilsAndApplianceIds, optional String? webPublicationDate);
+    method @InaccessibleFromKotlin public String? getBookCredit();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String>? getByline();
+    method @InaccessibleFromKotlin public String? getCanonicalArticle();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String?>? getCelebrationIds();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.generated.CommerceCta>? getCommerceCtas();
+    method @InaccessibleFromKotlin public String? getComposerId();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String>? getContributors();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String?>? getCuisineIds();
+    method @InaccessibleFromKotlin public String? getDescription();
+    method @InaccessibleFromKotlin public String? getDifficultyLevel();
+    method @InaccessibleFromKotlin public com.gu.recipe.generated.Image? getFeaturedImage();
+    method @InaccessibleFromKotlin public String getId();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.generated.IngredientsList>? getIngredients();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.generated.Instruction>? getInstructions();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String?>? getMealTypeIds();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.generated.Serves>? getServes();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String?>? getSuitableForDietIds();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String?>? getTechniquesUsedIds();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.generated.Timing>? getTimings();
+    method @InaccessibleFromKotlin public String? getTitle();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String?>? getUtensilsAndApplianceIds();
+    method @InaccessibleFromKotlin public String? getWebPublicationDate();
+    method @InaccessibleFromKotlin public Boolean? isAppReady();
+    property public String? bookCredit;
+    property public java.util.List<java.lang.String>? byline;
+    property public String? canonicalArticle;
+    property public java.util.List<java.lang.String?>? celebrationIds;
+    property public java.util.List<com.gu.recipe.generated.CommerceCta>? commerceCtas;
+    property public String? composerId;
+    property public java.util.List<java.lang.String>? contributors;
+    property public java.util.List<java.lang.String?>? cuisineIds;
+    property public String? description;
+    property public String? difficultyLevel;
+    property public com.gu.recipe.generated.Image? featuredImage;
+    property public String id;
+    property public java.util.List<com.gu.recipe.generated.IngredientsList>? ingredients;
+    property public java.util.List<com.gu.recipe.generated.Instruction>? instructions;
+    property public Boolean? isAppReady;
+    property public java.util.List<java.lang.String?>? mealTypeIds;
+    property public java.util.List<com.gu.recipe.generated.Serves>? serves;
+    property public java.util.List<java.lang.String?>? suitableForDietIds;
+    property public java.util.List<java.lang.String?>? techniquesUsedIds;
+    property public java.util.List<com.gu.recipe.generated.Timing>? timings;
+    property public String? title;
+    property public java.util.List<java.lang.String?>? utensilsAndApplianceIds;
+    property public String? webPublicationDate;
   }
 
   @kotlinx.serialization.Serializable public final class Serves {
@@ -281,27 +284,28 @@ package com.gu.recipe.generated {
     method public com.gu.recipe.generated.Range? component1();
     method public String? component2();
     method public String component3();
-    method public com.gu.recipe.generated.Serves copy(com.gu.recipe.generated.Range? amount, String? text, String unit);
-    method public com.gu.recipe.generated.Range? getAmount();
-    method public String? getText();
-    method public String getUnit();
-    property public final com.gu.recipe.generated.Range? amount;
-    property public final String? text;
-    property public final String unit;
+    method public com.gu.recipe.generated.Serves copy(optional com.gu.recipe.generated.Range? amount, optional String? text, optional String unit);
+    method @InaccessibleFromKotlin public com.gu.recipe.generated.Range? getAmount();
+    method @InaccessibleFromKotlin public String? getText();
+    method @InaccessibleFromKotlin public String getUnit();
+    property public com.gu.recipe.generated.Range? amount;
+    property public String? text;
+    property public String unit;
   }
 
   @kotlinx.serialization.Serializable public final class Timing {
+    ctor public Timing();
     ctor public Timing(optional com.gu.recipe.generated.Range? durationInMins, optional String? qualifier, optional String? text);
     method public com.gu.recipe.generated.Range? component1();
     method public String? component2();
     method public String? component3();
-    method public com.gu.recipe.generated.Timing copy(com.gu.recipe.generated.Range? durationInMins, String? qualifier, String? text);
-    method public com.gu.recipe.generated.Range? getDurationInMins();
-    method public String? getQualifier();
-    method public String? getText();
-    property public final com.gu.recipe.generated.Range? durationInMins;
-    property public final String? qualifier;
-    property public final String? text;
+    method public com.gu.recipe.generated.Timing copy(optional com.gu.recipe.generated.Range? durationInMins, optional String? qualifier, optional String? text);
+    method @InaccessibleFromKotlin public com.gu.recipe.generated.Range? getDurationInMins();
+    method @InaccessibleFromKotlin public String? getQualifier();
+    method @InaccessibleFromKotlin public String? getText();
+    property public com.gu.recipe.generated.Range? durationInMins;
+    property public String? qualifier;
+    property public String? text;
   }
 
 }
@@ -320,28 +324,29 @@ package com.gu.recipe.js {
 package com.gu.recipe.template {
 
   @kotlinx.serialization.Serializable public final class OvenTemperaturePlaceholder implements com.gu.recipe.template.TemplateElement {
+    ctor public OvenTemperaturePlaceholder();
     ctor public OvenTemperaturePlaceholder(optional Integer? temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
     method public Integer? component1();
     method public Integer? component2();
     method public Integer? component3();
     method public Float? component4();
-    method public com.gu.recipe.template.OvenTemperaturePlaceholder copy(Integer? temperatureC, Integer? temperatureFanC, Integer? temperatureF, Float? gasMark);
-    method public Float? getGasMark();
-    method public Integer? getTemperatureC();
-    method public Integer? getTemperatureF();
-    method public Integer? getTemperatureFanC();
-    property public final Float? gasMark;
-    property public final Integer? temperatureC;
-    property public final Integer? temperatureF;
-    property public final Integer? temperatureFanC;
+    method public com.gu.recipe.template.OvenTemperaturePlaceholder copy(optional Integer? temperatureC, optional Integer? temperatureFanC, optional Integer? temperatureF, optional Float? gasMark);
+    method @InaccessibleFromKotlin public Float? getGasMark();
+    method @InaccessibleFromKotlin public Integer? getTemperatureC();
+    method @InaccessibleFromKotlin public Integer? getTemperatureF();
+    method @InaccessibleFromKotlin public Integer? getTemperatureFanC();
+    property public Float? gasMark;
+    property public Integer? temperatureC;
+    property public Integer? temperatureF;
+    property public Integer? temperatureFanC;
   }
 
   public final class ParsedTemplate {
     ctor public ParsedTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> elements);
     method public java.util.List<com.gu.recipe.template.TemplateElement> component1();
-    method public com.gu.recipe.template.ParsedTemplate copy(java.util.List<? extends com.gu.recipe.template.TemplateElement> elements);
-    method public java.util.List<com.gu.recipe.template.TemplateElement> getElements();
-    property public final java.util.List<com.gu.recipe.template.TemplateElement> elements;
+    method public com.gu.recipe.template.ParsedTemplate copy(optional java.util.List<? extends com.gu.recipe.template.TemplateElement> elements);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.template.TemplateElement> getElements();
+    property public java.util.List<com.gu.recipe.template.TemplateElement> elements;
   }
 
   public final class ParserKt {
@@ -356,30 +361,30 @@ package com.gu.recipe.template {
     method public boolean component4();
     method public String? component5();
     method public Boolean? component6();
-    method public com.gu.recipe.template.QuantityPlaceholder copy(float min, Float? max, String? unit, boolean scale, String? ingredient, Boolean? usCust);
-    method public String? getIngredient();
-    method public Float? getMax();
-    method public float getMin();
-    method public boolean getScale();
-    method public String? getUnit();
-    method public Boolean? getUsCust();
-    property public final String? ingredient;
-    property public final Float? max;
-    property public final float min;
-    property public final boolean scale;
-    property public final String? unit;
-    property public final Boolean? usCust;
+    method public com.gu.recipe.template.QuantityPlaceholder copy(optional float min, optional Float? max, optional String? unit, optional boolean scale, optional String? ingredient, optional Boolean? usCust);
+    method @InaccessibleFromKotlin public String? getIngredient();
+    method @InaccessibleFromKotlin public Float? getMax();
+    method @InaccessibleFromKotlin public float getMin();
+    method @InaccessibleFromKotlin public boolean getScale();
+    method @InaccessibleFromKotlin public String? getUnit();
+    method @InaccessibleFromKotlin public Boolean? getUsCust();
+    property public String? ingredient;
+    property public Float? max;
+    property public float min;
+    property public boolean scale;
+    property public String? unit;
+    property public Boolean? usCust;
   }
 
   public final class TemplateConst implements com.gu.recipe.template.TemplateElement {
     ctor public TemplateConst(String value);
     method public String component1();
-    method public com.gu.recipe.template.TemplateConst copy(String value);
-    method public String getValue();
-    property public final String value;
+    method public com.gu.recipe.template.TemplateConst copy(optional String value);
+    method @InaccessibleFromKotlin public String getValue();
+    property public String value;
   }
 
-  public sealed interface TemplateElement {
+  public sealed exhaustive interface TemplateElement {
   }
 
 }
@@ -395,24 +400,24 @@ package com.gu.recipe.unit {
     method public com.gu.recipe.unit.UnitType? component5();
     method public java.util.Set<com.gu.recipe.unit.MeasuringSystem> component6();
     method public float component7();
-    method public com.gu.recipe.unit.MeasurementUnit copy(String singular, String plural, String symbol, String symbolPlural, com.gu.recipe.unit.UnitType? unitType, java.util.Set<? extends com.gu.recipe.unit.MeasuringSystem> measuringSystems, float quantity);
-    method public java.util.Set<com.gu.recipe.unit.MeasuringSystem> getMeasuringSystems();
-    method public String getPlural();
-    method public float getQuantity();
-    method public String getSingular();
-    method public String getSymbol();
-    method public String getSymbolPlural();
-    method public com.gu.recipe.unit.UnitType? getUnitType();
-    property public final java.util.Set<com.gu.recipe.unit.MeasuringSystem> measuringSystems;
-    property public final String plural;
-    property public final float quantity;
-    property public final String singular;
-    property public final String symbol;
-    property public final String symbolPlural;
-    property public final com.gu.recipe.unit.UnitType? unitType;
+    method public com.gu.recipe.unit.MeasurementUnit copy(optional String singular, optional String plural, optional String symbol, optional String symbolPlural, optional com.gu.recipe.unit.UnitType? unitType, optional java.util.Set<? extends com.gu.recipe.unit.MeasuringSystem> measuringSystems, optional float quantity);
+    method @InaccessibleFromKotlin public java.util.Set<com.gu.recipe.unit.MeasuringSystem> getMeasuringSystems();
+    method @InaccessibleFromKotlin public String getPlural();
+    method @InaccessibleFromKotlin public float getQuantity();
+    method @InaccessibleFromKotlin public String getSingular();
+    method @InaccessibleFromKotlin public String getSymbol();
+    method @InaccessibleFromKotlin public String getSymbolPlural();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.UnitType? getUnitType();
+    property public java.util.Set<com.gu.recipe.unit.MeasuringSystem> measuringSystems;
+    property public String plural;
+    property public float quantity;
+    property public String singular;
+    property public String symbol;
+    property public String symbolPlural;
+    property public com.gu.recipe.unit.UnitType? unitType;
   }
 
-  public sealed interface MeasuringSystem {
+  public sealed exhaustive interface MeasuringSystem {
   }
 
   public static final class MeasuringSystem.Imperial implements com.gu.recipe.unit.MeasuringSystem {
@@ -429,17 +434,17 @@ package com.gu.recipe.unit {
 
   public final class UnitConversions {
     method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor, Float? density);
-    method public error.NonExistentClass getCONVENIENCE_UNITS();
-    method public error.NonExistentClass getIMPERIAL_CONVERSION_LADDER();
-    method public error.NonExistentClass getMETRIC_CONVENIENCE_LADDER();
-    method public error.NonExistentClass getMETRIC_CONVERSION_LADDER();
-    method public error.NonExistentClass getUS_CUSTOMARY_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.Set<com.gu.recipe.unit.MeasurementUnit> getCONVENIENCE_UNITS();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getIMPERIAL_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVENIENCE_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_CONVERSION_LADDER();
     method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
-    property public final error.NonExistentClass CONVENIENCE_UNITS;
-    property public final error.NonExistentClass IMPERIAL_CONVERSION_LADDER;
-    property public final error.NonExistentClass METRIC_CONVENIENCE_LADDER;
-    property public final error.NonExistentClass METRIC_CONVERSION_LADDER;
-    property public final error.NonExistentClass US_CUSTOMARY_CONVERSION_LADDER;
+    property public java.util.Set<com.gu.recipe.unit.MeasurementUnit> CONVENIENCE_UNITS;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> IMPERIAL_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVENIENCE_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_CONVERSION_LADDER;
     field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
   }
 
@@ -451,54 +456,54 @@ package com.gu.recipe.unit {
 
   public final class Units {
     method public com.gu.recipe.unit.MeasurementUnit findRecipeUnit(String name);
-    method public error.NonExistentClass getALL_UNITS();
-    method public com.gu.recipe.unit.MeasurementUnit getCENTILITRE();
-    method public com.gu.recipe.unit.MeasurementUnit getCENTIMETRE();
-    method public com.gu.recipe.unit.MeasurementUnit getFLUID_OUNCE();
-    method public com.gu.recipe.unit.MeasurementUnit getGRAM();
-    method public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getIMPERIAL_UNIT_FROM_SYMBOL();
-    method public com.gu.recipe.unit.MeasurementUnit getINCH();
-    method public com.gu.recipe.unit.MeasurementUnit getKILOGRAM();
-    method public com.gu.recipe.unit.MeasurementUnit getLITRE();
-    method public com.gu.recipe.unit.MeasurementUnit getMETRIC_CUP();
-    method public com.gu.recipe.unit.MeasurementUnit getMETRIC_TABLESPOON();
-    method public com.gu.recipe.unit.MeasurementUnit getMETRIC_TEASPOON();
-    method public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getMETRIC_UNIT_FROM_SYMBOL();
-    method public com.gu.recipe.unit.MeasurementUnit getMILLILITRE();
-    method public com.gu.recipe.unit.MeasurementUnit getMILLIMETRE();
-    method public com.gu.recipe.unit.MeasurementUnit getOUNCE();
-    method public com.gu.recipe.unit.MeasurementUnit getPOUND();
-    method public com.gu.recipe.unit.MeasurementUnit getUS_CUP();
-    method public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getUS_CUSTOMARY_UNIT_FROM_SYMBOL();
-    method public com.gu.recipe.unit.MeasurementUnit getUS_GALLON();
-    method public com.gu.recipe.unit.MeasurementUnit getUS_PINT();
-    method public com.gu.recipe.unit.MeasurementUnit getUS_QUART();
-    method public com.gu.recipe.unit.MeasurementUnit getUS_TABLESPOON();
-    method public com.gu.recipe.unit.MeasurementUnit getUS_TEASPOON();
-    property public final error.NonExistentClass ALL_UNITS;
-    property public final com.gu.recipe.unit.MeasurementUnit CENTILITRE;
-    property public final com.gu.recipe.unit.MeasurementUnit CENTIMETRE;
-    property public final com.gu.recipe.unit.MeasurementUnit FLUID_OUNCE;
-    property public final com.gu.recipe.unit.MeasurementUnit GRAM;
-    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> IMPERIAL_UNIT_FROM_SYMBOL;
-    property public final com.gu.recipe.unit.MeasurementUnit INCH;
-    property public final com.gu.recipe.unit.MeasurementUnit KILOGRAM;
-    property public final com.gu.recipe.unit.MeasurementUnit LITRE;
-    property public final com.gu.recipe.unit.MeasurementUnit METRIC_CUP;
-    property public final com.gu.recipe.unit.MeasurementUnit METRIC_TABLESPOON;
-    property public final com.gu.recipe.unit.MeasurementUnit METRIC_TEASPOON;
-    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> METRIC_UNIT_FROM_SYMBOL;
-    property public final com.gu.recipe.unit.MeasurementUnit MILLILITRE;
-    property public final com.gu.recipe.unit.MeasurementUnit MILLIMETRE;
-    property public final com.gu.recipe.unit.MeasurementUnit OUNCE;
-    property public final com.gu.recipe.unit.MeasurementUnit POUND;
-    property public final com.gu.recipe.unit.MeasurementUnit US_CUP;
-    property public final java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> US_CUSTOMARY_UNIT_FROM_SYMBOL;
-    property public final com.gu.recipe.unit.MeasurementUnit US_GALLON;
-    property public final com.gu.recipe.unit.MeasurementUnit US_PINT;
-    property public final com.gu.recipe.unit.MeasurementUnit US_QUART;
-    property public final com.gu.recipe.unit.MeasurementUnit US_TABLESPOON;
-    property public final com.gu.recipe.unit.MeasurementUnit US_TEASPOON;
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.unit.MeasurementUnit> getALL_UNITS();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getCENTILITRE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getCENTIMETRE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getFLUID_OUNCE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getGRAM();
+    method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getIMPERIAL_UNIT_FROM_SYMBOL();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getINCH();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getKILOGRAM();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getLITRE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMETRIC_CUP();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMETRIC_TABLESPOON();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMETRIC_TEASPOON();
+    method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getMETRIC_UNIT_FROM_SYMBOL();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMILLILITRE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMILLIMETRE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getOUNCE();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getPOUND();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_CUP();
+    method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getUS_CUSTOMARY_UNIT_FROM_SYMBOL();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_GALLON();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_PINT();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_QUART();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_TABLESPOON();
+    method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_TEASPOON();
+    property public java.util.List<com.gu.recipe.unit.MeasurementUnit> ALL_UNITS;
+    property public com.gu.recipe.unit.MeasurementUnit CENTILITRE;
+    property public com.gu.recipe.unit.MeasurementUnit CENTIMETRE;
+    property public com.gu.recipe.unit.MeasurementUnit FLUID_OUNCE;
+    property public com.gu.recipe.unit.MeasurementUnit GRAM;
+    property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> IMPERIAL_UNIT_FROM_SYMBOL;
+    property public com.gu.recipe.unit.MeasurementUnit INCH;
+    property public com.gu.recipe.unit.MeasurementUnit KILOGRAM;
+    property public com.gu.recipe.unit.MeasurementUnit LITRE;
+    property public com.gu.recipe.unit.MeasurementUnit METRIC_CUP;
+    property public com.gu.recipe.unit.MeasurementUnit METRIC_TABLESPOON;
+    property public com.gu.recipe.unit.MeasurementUnit METRIC_TEASPOON;
+    property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> METRIC_UNIT_FROM_SYMBOL;
+    property public com.gu.recipe.unit.MeasurementUnit MILLILITRE;
+    property public com.gu.recipe.unit.MeasurementUnit MILLIMETRE;
+    property public com.gu.recipe.unit.MeasurementUnit OUNCE;
+    property public com.gu.recipe.unit.MeasurementUnit POUND;
+    property public com.gu.recipe.unit.MeasurementUnit US_CUP;
+    property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> US_CUSTOMARY_UNIT_FROM_SYMBOL;
+    property public com.gu.recipe.unit.MeasurementUnit US_GALLON;
+    property public com.gu.recipe.unit.MeasurementUnit US_PINT;
+    property public com.gu.recipe.unit.MeasurementUnit US_QUART;
+    property public com.gu.recipe.unit.MeasurementUnit US_TABLESPOON;
+    property public com.gu.recipe.unit.MeasurementUnit US_TEASPOON;
     field public static final com.gu.recipe.unit.Units INSTANCE;
   }
 
