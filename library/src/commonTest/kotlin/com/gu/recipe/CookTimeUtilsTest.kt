@@ -1,12 +1,13 @@
 package com.gu.recipe
 
+import com.gu.recipe.generated.Range
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class CookTimeUtilsTest {
 
-    private val utils = CookTimeUtils()
+    private val utils = CookTimeUtils
 
     @Test
     fun `prep + cook sums correctly`() {
@@ -184,7 +185,7 @@ class CookTimeUtilsTest {
         val input = listOf(
             CookTimeUtils.RecipeTiming(
                 qualifier = "total-time",
-                durationInMins = CookTimeUtils.DurationRange(min = 89.6, max = null)
+                durationInMins = Range(min = 89.6, max = null)
             )
         )
 
@@ -196,7 +197,7 @@ class CookTimeUtilsTest {
         val input = listOf(
             CookTimeUtils.RecipeTiming(
                 qualifier = "total-time",
-                durationInMins = CookTimeUtils.DurationRange(min = 90.0, max = 90.0)
+                durationInMins = Range(min = 90.0, max = 90.0)
             )
         )
 
@@ -253,7 +254,7 @@ class CookTimeUtilsTest {
         val input = listOf(
             CookTimeUtils.RecipeTiming(
                 qualifier = "unknown-time",
-                durationInMins = CookTimeUtils.DurationRange(min = 30.0, max = 30.0)
+                durationInMins = Range(min = 30.0, max = 30.0)
             )
         )
         assertNull(utils.format(input))
@@ -269,15 +270,15 @@ class CookTimeUtilsTest {
         val input = listOf(
             CookTimeUtils.RecipeTiming(
                 qualifier = "prep-time",
-                durationInMins = CookTimeUtils.DurationRange(min = null, max = null)
+                durationInMins = Range(min = null, max = null)
             ),
             CookTimeUtils.RecipeTiming(
                 qualifier = "cook-time",
-                durationInMins = CookTimeUtils.DurationRange(min = 0.0, max = 0.0)
+                durationInMins = Range(min = 0.0, max = 0.0)
             ),
             CookTimeUtils.RecipeTiming(
                 qualifier = "total-time",
-                durationInMins = CookTimeUtils.DurationRange(min = -10.0, max = null)
+                durationInMins = Range(min = -10.0, max = null)
             )
         )
         assertNull(utils.format(input))
@@ -335,7 +336,7 @@ class CookTimeUtilsTest {
         max: Int = min
     ) = CookTimeUtils.RecipeTiming(
         qualifier = qualifier,
-        durationInMins = CookTimeUtils.DurationRange(
+        durationInMins = Range(
             min = min.toDouble(),
             max = max.toDouble()
         )

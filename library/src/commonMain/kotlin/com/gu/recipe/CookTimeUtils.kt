@@ -1,5 +1,6 @@
 package com.gu.recipe
 
+import com.gu.recipe.generated.Range
 import kotlin.math.roundToInt
 
 /**
@@ -17,25 +18,23 @@ import kotlin.math.roundToInt
  * `structured()` returns the display model with combined primary timing.
  * `structuredIndividual()` returns individual prep/cook entries without combining.
  */
-class CookTimeUtils {
-    private companion object {
-        const val MINUTES_PER_HOUR = 60
-        const val MINUTES_PER_DAY = 1440
-        const val MINUTES_PER_QUARTER_DAY = 360
-        val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time")
-        val TOTAL_QUALIFIERS = setOf("total-time")
-        val READY_IN_QUALIFIERS = setOf("ready-in", "ready-in-time")
-        val PASSIVE_LABELS = mapOf(
-            "chill-time" to "chill",
-            "marinate-time" to "marinate",
-            "freeze-time" to "freeze",
-            "prove-time" to "prove",
-            "rest-time" to "rest",
-            "soak-time" to "soak",
-            "set-time" to "set",
-            "cool-time" to "cool"
-        )
-    }
+object CookTimeUtils {
+    private const val MINUTES_PER_HOUR = 60
+    private const val MINUTES_PER_DAY = 1440
+    private const val MINUTES_PER_QUARTER_DAY = 360
+    private val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time")
+    private val TOTAL_QUALIFIERS = setOf("total-time")
+    private val READY_IN_QUALIFIERS = setOf("ready-in", "ready-in-time")
+    private val PASSIVE_LABELS = mapOf(
+        "chill-time" to "chill",
+        "marinate-time" to "marinate",
+        "freeze-time" to "freeze",
+        "prove-time" to "prove",
+        "rest-time" to "rest",
+        "soak-time" to "soak",
+        "set-time" to "set",
+        "cool-time" to "cool"
+    )
 
     /* ----------------------------- */
     /* API MODELS                    */
@@ -43,12 +42,7 @@ class CookTimeUtils {
 
     data class RecipeTiming(
         val qualifier: String,
-        val durationInMins: DurationRange?
-    )
-
-    data class DurationRange(
-        val min: Double?,
-        val max: Double?
+        val durationInMins: Range?
     )
 
     /* ----------------------------- */
@@ -126,7 +120,7 @@ class CookTimeUtils {
     /* MAPPING                       */
     /* ----------------------------- */
 
-    private fun DurationRange.toCookDuration(): CookDuration? {
+    private fun Range.toCookDuration(): CookDuration? {
         // Source may contain ranges; display uses a single value, so we prioritise min.
         val minutes = (min ?: max)?.toRoundedMinutes() ?: return null
         if (minutes <= 0) return null
