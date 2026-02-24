@@ -1,6 +1,7 @@
 package com.gu.recipe
 
 import com.gu.recipe.generated.Range
+import com.gu.recipe.generated.Timing
 import kotlin.math.roundToInt
 
 /**
@@ -37,19 +38,10 @@ object CookTimeUtils {
     )
 
     /* ----------------------------- */
-    /* API MODELS                    */
-    /* ----------------------------- */
-
-    data class RecipeTiming(
-        val qualifier: String,
-        val durationInMins: Range?
-    )
-
-    /* ----------------------------- */
     /* DOMAIN TYPES                  */
     /* ----------------------------- */
 
-    private data class Timing(
+    private data class ParsedTiming(
         val qualifier: String,
         val passiveLabel: String?,
         val minutes: Int
@@ -85,7 +77,7 @@ object CookTimeUtils {
     /* ----------------------------- */
 
     fun format(
-        timings: List<RecipeTiming>,
+        timings: List<Timing>,
     ): String? {
         val info = structured(timings)
 
@@ -101,7 +93,7 @@ object CookTimeUtils {
         return "$primaryString + $secondaryString"
     }
 
-    fun structured(timings: List<RecipeTiming>): CooktimeInfo {
+    fun structured(timings: List<Timing>): CooktimeInfo {
         val individual = structuredIndividual(timings)
         val combinedPrimary = when {
             individual.primary.isNotEmpty() -> CookDuration(individual.primary.sumOf { it.duration.minutes })
@@ -129,15 +121,16 @@ object CookTimeUtils {
 
     private fun Double.toRoundedMinutes(): Int = roundToInt()
 
-    private fun RecipeTiming.toTiming(): Timing? {
+    private fun Timing.toParsedTiming(): ParsedTiming? {
         val duration = durationInMins?.toCookDuration() ?: return null
-        val isPrimary = qualifier in PRIMARY_QUALIFIERS
-        val isFallback = qualifier in TOTAL_QUALIFIERS || qualifier in READY_IN_QUALIFIERS
-        val passiveLabel = PASSIVE_LABELS[qualifier] ?: qualifier.toPassiveLabelOrNull()
+        val qualifierValue = qualifier ?: return null
+        val isPrimary = qualifierValue in PRIMARY_QUALIFIERS
+        val isFallback = qualifierValue in TOTAL_QUALIFIERS || qualifierValue in READY_IN_QUALIFIERS
+        val passiveLabel = PASSIVE_LABELS[qualifierValue] ?: qualifierValue.toPassiveLabelOrNull()
         if (!isPrimary && !isFallback && passiveLabel == null) return null
 
-        return Timing(
-            qualifier = qualifier,
+        return ParsedTiming(
+            qualifier = qualifierValue,
             passiveLabel = passiveLabel,
             minutes = duration.minutes
         )
@@ -169,8 +162,8 @@ object CookTimeUtils {
         }
     }
 
-    fun structuredIndividual(timings: List<RecipeTiming>): StructuredIndividualInfo {
-        val mapped = timings.mapNotNull { it.toTiming() }
+    fun structuredIndividual(timings: List<Timing>): StructuredIndividualInfo {
+        val mapped = timings.mapNotNull { it.toParsedTiming() }
 
         val primary = mapped
             .filter { it.qualifier in PRIMARY_QUALIFIERS }

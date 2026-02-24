@@ -1,6 +1,7 @@
 package com.gu.recipe
 
 import com.gu.recipe.generated.Range
+import com.gu.recipe.generated.Timing
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -183,7 +184,7 @@ class CookTimeUtilsTest {
     @Test
     fun `decimal minute values round and do not display decimals`() {
         val input = listOf(
-            CookTimeUtils.RecipeTiming(
+            Timing(
                 qualifier = "total-time",
                 durationInMins = Range(min = 89.6, max = null)
             )
@@ -195,7 +196,7 @@ class CookTimeUtilsTest {
     @Test
     fun `fractional hour source values convert to hr and min`() {
         val input = listOf(
-            CookTimeUtils.RecipeTiming(
+            Timing(
                 qualifier = "total-time",
                 durationInMins = Range(min = 90.0, max = 90.0)
             )
@@ -252,7 +253,7 @@ class CookTimeUtilsTest {
     @Test
     fun `missing valid time data returns null`() {
         val input = listOf(
-            CookTimeUtils.RecipeTiming(
+            Timing(
                 qualifier = "unknown-time",
                 durationInMins = Range(min = 30.0, max = 30.0)
             )
@@ -268,15 +269,15 @@ class CookTimeUtilsTest {
     @Test
     fun `known qualifiers with no usable duration return null`() {
         val input = listOf(
-            CookTimeUtils.RecipeTiming(
+            Timing(
                 qualifier = "prep-time",
                 durationInMins = Range(min = null, max = null)
             ),
-            CookTimeUtils.RecipeTiming(
+            Timing(
                 qualifier = "cook-time",
                 durationInMins = Range(min = 0.0, max = 0.0)
             ),
-            CookTimeUtils.RecipeTiming(
+            Timing(
                 qualifier = "total-time",
                 durationInMins = Range(min = -10.0, max = null)
             )
@@ -334,7 +335,7 @@ class CookTimeUtilsTest {
         qualifier: String,
         min: Int,
         max: Int = min
-    ) = CookTimeUtils.RecipeTiming(
+    ) = Timing(
         qualifier = qualifier,
         durationInMins = Range(
             min = min.toDouble(),
