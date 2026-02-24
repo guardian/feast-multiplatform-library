@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 import json
+from argparse import ArgumentParser
+from operator import truediv
+
+from groupings import load_groupings
 from recipe_api import load_all_recipes
 from typing import Optional, List
 import csv
@@ -39,7 +43,7 @@ def get_ingredient_props(content):
                     raise ValueError("Ingredient had no template string")
                 yield IngredientProps(templ)
             except KeyError as e:
-                print(f"ERROR processing template {templ} in recipe {content['id']}: missing key {e}")
+                #print(f"ERROR processing template {templ} in recipe {content['id']}: missing key {e}")
                 yield None
 
 JsonFinder = regex.compile(r'\{(?:[^{}]|(?R))*\}')
@@ -52,7 +56,19 @@ def extract_json_template(templateString:str)-> Optional[dict]:
         return json.loads(match.group(0))
     except json.JSONDecodeError as e:
         raise ValueError(f"Error parsing JSON from template string: {e}")
-    
+
+def is_known_ingredient(props:IngredientProps) -> bool:
+    if props.name in known_ingredients:
+        return True
+
+    if props.name in groupings:
+        ing = groupings.get(props.name)
+        if not ing in known_ingredients:
+            print(f"WARNING inaccurate grouping, {ing} was not found in known_ingredients")
+            return False
+        return True
+    return False
+
 def process_recipe(csid, content) -> Optional[RecipeProps]:
     try:
         props = list(get_ingredient_props(content))
@@ -63,7 +79,7 @@ def process_recipe(csid, content) -> Optional[RecipeProps]:
         recipe_props = RecipeProps(csid, content['id'], content['title'])
         recipe_props.needs_scaling = any(p is not None and p.can_scale for p in props)
         recipe_props.has_us_cust = any(p is not None and p.us_cust for p in props)
-        recipe_props.has_unknown_ingredients = any(p is not None and p.name not in known_ingredients and p.us_cust for p in props)
+        recipe_props.has_unknown_ingredients = any(p is not None and not is_known_ingredient(p) and p.us_cust for p in props)
         recipe_props.has_missing_keys = any(p is None for p in props)
 
         return recipe_props
@@ -77,8 +93,19 @@ def load_densities(filepath:str) -> List[str]:
         return [entry[2] for entry in content['values']]
     
 ### START MAIN
-known_ingredients = load_densities('densities.json')
+parser = ArgumentParser()
+parser.add_argument("--no-groupings", action="store_true", help="don't attempt to load groupings, use plain data")
+parser.add_argument("--groupings-file", default="groupings.csv", help="equivalent ingredients grouping data")
+parser.add_argument("--input", type=str, default="densities.json", help="densities JSON to use for lookups")
+args = parser.parse_args()
+
+known_ingredients = load_densities(args.input)
 print(f"Loaded {len(known_ingredients)} known ingredients with densities")
+
+groupings = {}
+if not args.no_groupings:
+    groupings = load_groupings(args.groupings_file)
+    print(f"Loaded {len(groupings)} groupings")
 
 fp_scaled_and_cust_known = open('scaled_and_cust_known.csv', 'w', newline='')
 fp_scaled_and_cust_unknown = open('scaled_and_cust_unknown.csv', 'w', newline='')
