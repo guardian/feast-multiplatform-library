@@ -20,7 +20,7 @@ class IngredientProps(object):
             self.name = templateData['ingredient']
             if templateData.get('scale', False):
                 self.can_scale = True
-            if templateData.get('usCust', False):
+            if templateData.get('usCust', False) and (templateData.get('unit')=="g" or templateData.get('unit')=="kg"):
                 self.us_cust = True
             
         
