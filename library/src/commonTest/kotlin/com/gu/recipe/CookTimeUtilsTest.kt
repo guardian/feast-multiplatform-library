@@ -23,7 +23,7 @@ class CookTimeUtilsTest {
     }
 
     @Test
-    fun `total time overrides prep and cook`() {
+    fun `prep and cook take priority over total time`() {
         val input = listOf(
             timing("prep-time", 10),
             timing("cook-time", 20),

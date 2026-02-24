@@ -56,16 +56,27 @@ object CookTimeUtils {
         }
     }
 
-    data class CooktimeInfo(
+    /**
+     * Combined display model containing primary cook time and passive secondary timings.
+     */
+    data class CookTimeInfo(
         val primary: CookDuration?,
         val secondary: List<Pair<String, CookDuration>>
     )
 
+    /**
+     * A labeled [CookDuration] entry used for a single timing.
+     */
     data class LabeledCookDuration(
         val label: String,
         val duration: CookDuration
     )
 
+    /**
+     * Uncombined timing model with primary entries, fallback entry, and passive entries.
+     * Useful when apps need to render individual timing entries while preserving formatter output (i.e. in recipe
+     * page).
+     */
     data class StructuredIndividualInfo(
         val primary: List<LabeledCookDuration>,
         val fallback: LabeledCookDuration?,
@@ -93,7 +104,7 @@ object CookTimeUtils {
         return "$primaryString + $secondaryString"
     }
 
-    fun structured(timings: List<Timing>): CooktimeInfo {
+    fun structured(timings: List<Timing>): CookTimeInfo {
         val individual = structuredIndividual(timings)
         val combinedPrimary = when {
             individual.primary.isNotEmpty() -> CookDuration(individual.primary.sumOf { it.duration.minutes })
@@ -105,7 +116,7 @@ object CookTimeUtils {
         } else {
             emptyList()
         }
-        return CooktimeInfo(primary = combinedPrimary, secondary = secondary)
+        return CookTimeInfo(primary = combinedPrimary, secondary = secondary)
     }
 
     /* ----------------------------- */
