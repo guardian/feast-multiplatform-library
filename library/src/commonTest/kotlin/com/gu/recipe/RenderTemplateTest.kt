@@ -133,7 +133,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
-        assertEquals("8.82 oz", result)
+        assertEquals("8⅞ oz", result)
     }
 
     @Test
@@ -396,7 +396,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.Metric)
-        assertEquals("1½ cups 1.5 lbs", result)
+        assertEquals("1½ cups 1½ lbs", result)
     }
 
     @Test
@@ -423,7 +423,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.Imperial)
-        assertEquals("3.31 lbs 3.53 oz 1", result)
+        assertEquals("3⅓ lbs 3½ oz 1", result)
     }
 
     @Test

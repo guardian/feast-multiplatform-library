@@ -73,17 +73,8 @@ class TemplateSession(private val densityTable: DensityTable) {
             else -> 1
         }
 
-//        val fraction = when (amount.unit) {
-//            Units.US_TEASPOON, Units.METRIC_TEASPOON,
-//            Units.US_TABLESPOON, Units.METRIC_TABLESPOON,
-//            Units.METRIC_CUP, Units.US_CUP -> true
-//
-//            null -> true
-//            else -> false
-//        }
-
         val fraction = when (amount.unit) {
-            Units.CENTILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE -> false
+            Units.CENTILITRE, Units.MILLILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE -> false
             else -> true
         }
         val unitString = if (amount.unit != null) {
