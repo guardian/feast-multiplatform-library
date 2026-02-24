@@ -59,6 +59,8 @@ class TemplateSession(private val densityTable: DensityTable) {
             min = element.min,
             max = if (element.min != element.max) element.max else null,
             unit = element.unit?.let { Units.findRecipeUnit(it) },
+            //Specific override for butter - this should definitely be in cups but CMS data usually indicates it should be in oz.
+            //We will fix the upstream CMS but need to move ahead with testing now.
             usCust = if(element.ingredient == "butter") true else element.usCust,
         )
 
