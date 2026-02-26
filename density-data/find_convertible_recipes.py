@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import json
 from argparse import ArgumentParser
-from operator import truediv
-
 from groupings import load_groupings
 from recipe_api import load_all_recipes
 from typing import Optional, List
