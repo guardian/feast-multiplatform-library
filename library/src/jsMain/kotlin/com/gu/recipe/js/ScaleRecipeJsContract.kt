@@ -16,7 +16,7 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
  * Scales the given recipe by a given factor and optionally converts between measuring systems.
  * `session` is a TemplateSession object which can be obtained by calling `createTemplateSession`
  */
-fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSession): String {
+fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSession, usePartials: Boolean?): String {
     val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
@@ -26,7 +26,7 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSe
         "USWithImperial" -> MeasuringSystem.USCustomaryWithImperial
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
-    val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)
+    val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem, usePartials ?: false)
     return Json.encodeToString(scaledRecipe)
 }
 
@@ -41,9 +41,9 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession): String {
+fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, usePartials: Boolean?): String {
     val template = ParsedTemplate(templateElements)
-    return session.renderTemplate(template, 1.0f, MeasuringSystem.Metric)
+    return session.renderTemplate(template, 1.0f, MeasuringSystem.Metric, usePartials ?: false)
 }
 
 @OptIn(ExperimentalJsExport::class)

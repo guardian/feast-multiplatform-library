@@ -1,6 +1,8 @@
 package com.gu.recipe.unit
 
 import com.gu.recipe.Amount
+import kotlin.math.exp
+import kotlin.math.floor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -28,8 +30,10 @@ class UnitConversionTest {
 
         val expectedMin = 3.527f
         val expectedMax = 7.055f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
-        assertEquals(expectedMax, result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMax), result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(expectedMax-floor(expectedMax), result.remainderMax!!, absoluteTolerance = 0.001f)
         assertEquals(Units.OUNCE, result.unit)
     }
 
@@ -40,8 +44,10 @@ class UnitConversionTest {
 
         val expectedMin = 4.410f
         val expectedMax = 6.614f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
-        assertEquals(expectedMax, result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMax), result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(expectedMax-floor(expectedMax), result.remainderMax!!, absoluteTolerance = 0.001f)
         assertEquals(Units.POUND, result.unit)
     }
 
@@ -50,7 +56,8 @@ class UnitConversionTest {
         val amount = Amount(min = 100f, unit = Units.MILLILITRE, usCust = true)
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
-        assertEquals(0.423f, result.min, absoluteTolerance = 0.001f)
+        assertEquals(0.0f, result.min, absoluteTolerance = 0.001f)
+        assertEquals(0.423f, result.remainderMin!!, absoluteTolerance = 0.001f)
         assertEquals(Units.US_CUP, result.unit)
     }
 
@@ -61,8 +68,10 @@ class UnitConversionTest {
 
         val expectedMin = 3.94f
         val expectedMax = 7.87f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.01f)
-        assertEquals(expectedMax, result.max!!, absoluteTolerance = 0.01f)
+        assertEquals(floor(expectedMin+0.1f), result.min, absoluteTolerance = 0.01f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.01f)
+        assertEquals(floor(expectedMax+0.1f), result.max!!, absoluteTolerance = 0.01f)
+        assertEquals(expectedMax-floor(expectedMax), result.remainderMax!!, absoluteTolerance = 0.01f)
         assertEquals(Units.INCH, result.unit)
     }
 
@@ -73,8 +82,10 @@ class UnitConversionTest {
 
         val expectedMin = 0.39f
         val expectedMax = 0.79f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.01f)
-        assertEquals(expectedMax, result.max!!, absoluteTolerance = 0.01f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.01f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.01f)
+        assertEquals(floor(expectedMax), result.max!!, absoluteTolerance = 0.01f)
+        assertEquals(expectedMax-floor(expectedMax), result.remainderMax!!, absoluteTolerance = 0.01f)
         assertEquals(Units.INCH, result.unit)
     }
 
@@ -95,8 +106,10 @@ class UnitConversionTest {
 
         val expectedMin = 3.381f
         val expectedMax = 6.762f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
-        assertEquals(expectedMax, result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMax), result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(expectedMax-floor(expectedMax), result.remainderMax!!, absoluteTolerance = 0.01f)
         assertEquals(Units.US_CUP, result.unit)
     }
 
@@ -106,7 +119,8 @@ class UnitConversionTest {
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
         val expectedMin = 1.0567f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
         assertNull(result.max)
         assertEquals(Units.US_QUART, result.unit)
     }
@@ -122,15 +136,19 @@ class UnitConversionTest {
         val expectedMin = 1.753f
         val expectedMax = 4f
         assertEquals(Units.US_CUP, result.unit)
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
-        assertEquals(expectedMax, result.max!!, absoluteTolerance = 0.003f)
+        assertEquals(expectedMin-1.0f, result.remainderMin!!, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(0f, result.remainderMax!!, absoluteTolerance = 0.01f)
+        assertEquals(floor(expectedMax), result.max!!, absoluteTolerance = 0.003f)
     }
 
     @Test
     fun `returns amount unchanged when unit is already Imperial`() {
         val amount = Amount(min = 5f, max = 10f, unit = Units.OUNCE)
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.Imperial, density=1.0f)
-        assertEquals(amount, result)
+        assertEquals(amount.min, result.min, absoluteTolerance = 0.001f)
+        assertEquals(amount.max!!, result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(amount.unit, result.unit)
     }
 
     @Test
@@ -139,7 +157,8 @@ class UnitConversionTest {
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.Imperial, density=1.0f)
 
         val expectedMin = 3.527f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
         assertEquals(null, result.max)
         assertEquals(Units.OUNCE, result.unit)
     }
@@ -150,7 +169,8 @@ class UnitConversionTest {
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.Imperial, density=1.0f)
 
         val expectedMin = 1.32f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
         assertEquals(Units.US_GALLON, result.unit)
     }
 
@@ -160,7 +180,8 @@ class UnitConversionTest {
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
         val expectedMin = 0.423f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
         assertEquals(Units.US_CUP, result.unit)
     }
 
@@ -170,7 +191,8 @@ class UnitConversionTest {
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
         val expectedMin = 2.1133f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
+        assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
+        assertEquals(expectedMin - floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.01f)
         assertEquals(Units.US_CUP, result.unit)
     }
 

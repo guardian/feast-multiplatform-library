@@ -5,6 +5,7 @@ import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
+import com.gu.recipe.template.parseTemplate
 import com.gu.recipe.unit.MeasuringSystem
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -541,8 +542,15 @@ class RenderTemplateTest {
                 TemplateConst(" of vegan pork"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric, usePartials = true)
         assertEquals("100 g (3½ oz) of vegan pork", result)
+    }
+
+    @Test
+    fun `correctly render small quantities in metric + cups`() {
+        val template = parseTemplate("{\"min\": 90, \"unit\": \"g\", \"scale\": true, \"ingredient\": \"plain flour\", \"usCust\": true} plain flour")
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomary, usePartials = true)
+        assertEquals("", result)
     }
 }
 

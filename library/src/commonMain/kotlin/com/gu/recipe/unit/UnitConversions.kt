@@ -1,6 +1,8 @@
 package com.gu.recipe.unit
 
 import com.gu.recipe.Amount
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 object UnitConversions {
     private val CUPS_PER_ML = 0.00422675f
@@ -41,8 +43,8 @@ object UnitConversions {
         16f * Units.OUNCE.quantity to Units.POUND,
 
         0f to Units.US_TEASPOON,
-        3f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        12f * Units.US_TEASPOON.quantity to Units.US_CUP,
+        16f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        48f * Units.US_TEASPOON.quantity to Units.US_CUP,
         192 * Units.US_TEASPOON.quantity to Units.US_QUART,
         768f * Units.US_TEASPOON.quantity to Units.US_GALLON,
 
@@ -89,7 +91,7 @@ object UnitConversions {
         }
 
         val smallestUnitAmount = toSmallestUnit(scaledAmount)
-
+        println(smallestUnitAmount)
         val ladder = when (target) {
             MeasuringSystem.Metric -> if (CONVENIENCE_UNITS.contains(amount.unit))
                 METRIC_CONVENIENCE_LADDER
@@ -101,7 +103,12 @@ object UnitConversions {
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
         }
 
-        val amountToConvert = if(amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
+        val amountToConvert = if(
+            amount.usCust==true &&
+            target== MeasuringSystem.USCustomary &&
+            density!=null &&
+            amount.unit?.unitType== UnitType.WEIGHT
+            ) {
             //convert from g to ml. Metric -> US unit conversion is done below.
             // Assume that incoming weight here is in g (smallest unit in metric set)
             //density is in g/ml, so divide by density to go g -> ml
@@ -120,9 +127,11 @@ object UnitConversions {
 
         return mostRelevantUnit?.let {
             Amount(
-                min = amountToConvert.min / it.quantity,
-                max = amountToConvert.max?.let { max -> max / it.quantity },
+                min = floor((amountToConvert.min / it.quantity) + 0.1f),    //the extra +0.1 ensures that anything over 0.89999999 goes up
+                max = amountToConvert.max?.let { max -> floor((max / it.quantity) + 0.1f) },
                 unit = it,
+                remainderMin = (amountToConvert.min % it.quantity) / it.quantity,
+                remainderMax = amountToConvert.max?.let { max -> (max % it.quantity) / it.quantity },
             )
         } ?: amountToConvert
     }
