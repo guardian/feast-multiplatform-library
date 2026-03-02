@@ -81,7 +81,7 @@ object UnitConversions {
         }
     }
 
-    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem, factor: Float = 1f, density: Float?): Amount {
+    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem.MeasuringSystemInternal, factor: Float = 1f, density: Float?): Amount {
         val scaledAmount = amount.copy(min = amount.min * factor, max = amount.max?.let { it * factor })
 
         if (scaledAmount.unit == null || (target == MeasuringSystem.Metric && factor == 1f)) {

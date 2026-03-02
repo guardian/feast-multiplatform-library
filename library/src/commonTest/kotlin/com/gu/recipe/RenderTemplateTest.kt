@@ -460,5 +460,89 @@ class RenderTemplateTest {
         val result = session.renderTemplate(template, 1f, MeasuringSystem.Metric)
         assertEquals("Use “00” flour and you’ll get – I think – the best results.", result)
     }
+
+    @Test
+    fun `render hybrid metric + cups when requested`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of water, "),
+                QuantityPlaceholder(
+                    min = 120f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of oil"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
+        assertEquals("100 ml (⅜ cup) of water, 120 ml (½ cup) of oil", result)
+    }
+
+    @Test
+    fun `render hybrid imperial + cups when requested`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of water, "),
+                QuantityPlaceholder(
+                    min = 120f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of oil"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
+        assertEquals("3⅜ fl oz (⅜ cup) of water, 4 fl oz (½ cup) of oil", result)
+    }
+
+    @Test
+    fun `not duplicate weight measurements in imperial + cups`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    max = 100f,
+                    unit = "g",
+                    scale = true,
+                    usCust = false
+                ),
+                TemplateConst(" of vegan pork"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
+        assertEquals("3½ oz of vegan pork", result)
+    }
+
+    @Test
+    fun `correctly show weight measurements in metric + cups`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    max = 100f,
+                    unit = "g",
+                    scale = true,
+                    usCust = false
+                ),
+                TemplateConst(" of vegan pork"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
+        assertEquals("100 g (3½ oz) of vegan pork", result)
+    }
 }
 
