@@ -101,7 +101,7 @@ object UnitConversions {
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
         }
 
-        val amountToConvert = if(amount.usCust==true && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
+        val amountToConvert = if(amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
             //convert from g to ml. Metric -> US unit conversion is done below.
             // Assume that incoming weight here is in g (smallest unit in metric set)
             //density is in g/ml, so divide by density to go g -> ml
