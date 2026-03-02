@@ -110,9 +110,13 @@ class TemplateSession(private val densityTable: DensityTable) {
                         } else {
                             val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
                             val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
-                            //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
-                            //only works on JVM; therefore we can't use it here
-                            metricPart + " (" + cupsPart + ")"
+                            if (cupsPart == metricPart) {
+                                cupsPart
+                            } else {
+                                //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
+                                //only works on JVM; therefore we can't use it here
+                                metricPart + " (" + cupsPart + ")"
+                            }
                         }
                     }
                     is MeasuringSystem.USCustomaryWithImperial -> {
