@@ -106,20 +106,28 @@ class TemplateSession(private val densityTable: DensityTable) {
                 when (measuringSystem) {
                     is MeasuringSystem.Metric, is MeasuringSystem.Imperial, is MeasuringSystem.USCustomary -> renderQuantity(element, factor, measuringSystem)
                     is MeasuringSystem.USCustomaryWithMetric -> {
-                        val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                        val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
-                        //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
-                        //only works on JVM; therefore we can't use it here
-                        metricPart + " (" + cupsPart + ")"
+                        if(element.unit.isNullOrBlank()) {
+                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        } else {
+                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
+                            //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
+                            //only works on JVM; therefore we can't use it here
+                            metricPart + " (" + cupsPart + ")"
+                        }
                     }
                     is MeasuringSystem.USCustomaryWithImperial -> {
-                        val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                        val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
-
-                        if(cupsPart==imperialPart) {
-                            cupsPart
+                        if(element.unit.isNullOrBlank()) {
+                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
                         } else {
-                            imperialPart + " (" + cupsPart + ")"
+                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
+
+                            if (cupsPart == imperialPart) {
+                                cupsPart
+                            } else {
+                                imperialPart + " (" + cupsPart + ")"
+                            }
                         }
                     }
                 }
