@@ -19,6 +19,12 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.metalava)
     alias(libs.plugins.kotlinSerialization)
+    id("org.jetbrains.kotlinx.benchmark") version "0.4.12"
+    kotlin("plugin.allopen") version "2.0.0"
+}
+
+allOpen {
+    annotation("org.openjdk.jmh.annotations.State")
 }
 
 kotlin {
@@ -75,6 +81,53 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.test)
             }
+        }
+
+        val commonBenchmark by creating {
+            //dependsOn(commonMain)
+            dependencies {
+                // This MUST be here for the generated code to compile
+                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.12")
+            }
+        }
+
+//        val jvmBenchmark by getting {
+//            dependsOn(commonBenchmark)
+//        }
+    }
+
+        // This is the "Magic Fix" for the generated code error.
+    // It finds the 'benchmark' compilation for EVERY target and
+    // explicitly attaches the correct source set.
+    targets.all {
+        compilations.configureEach {
+            if (name.contains("Benchmark")) {
+                // We use project.kotlin.sourceSets to be explicit and avoid deprecation
+                val commonBenchmark = project.extensions.getByType<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension>()
+                    .sourceSets.getByName("commonBenchmark")
+
+                defaultSourceSet.dependsOn(commonBenchmark)
+            }
+        }
+    }
+}
+
+benchmark {
+    // This creates "targets" for the benchmark plugin based on your KMP targets
+    targets {
+        register("jvm")
+        register("iosSimulatorArm64")
+        register("js")
+    }
+
+    configurations {
+        getByName("main") {
+            reportFormat = "text"
+
+            warmups = 5
+            iterations = 5
+            iterationTime = 1
+            iterationTimeUnit = "s"
         }
     }
 }

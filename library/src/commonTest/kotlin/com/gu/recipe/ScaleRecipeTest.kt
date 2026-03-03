@@ -1,11 +1,8 @@
-package io.github.kotlin.fibonacci.com.gu.recipe
+package com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.TemplateSession
 import com.gu.recipe.density.DensityTable
-import com.gu.recipe.ingredientWithoutSuffix
-import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
