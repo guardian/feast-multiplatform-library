@@ -91,7 +91,6 @@ object UnitConversions {
         }
 
         val smallestUnitAmount = toSmallestUnit(scaledAmount)
-        println(smallestUnitAmount)
         val ladder = when (target) {
             MeasuringSystem.Metric -> if (CONVENIENCE_UNITS.contains(amount.unit))
                 METRIC_CONVENIENCE_LADDER

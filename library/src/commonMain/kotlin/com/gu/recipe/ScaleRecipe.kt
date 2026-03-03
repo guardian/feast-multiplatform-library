@@ -55,7 +55,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         ).joinToString("")
     }
 
-    internal fun baseRenderQuantity(amount:Amount, density:Float?, factorToUse: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
+    internal fun renderAmount(amount:Amount, density:Float?, factorToUse: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
             Units.CENTIMETRE, Units.INCH -> 1
@@ -89,27 +89,22 @@ class TemplateSession(private val densityTable: DensityTable) {
             //We will fix the upstream CMS but need to move ahead with testing now.
             usCust = if(element.ingredient == "butter") true else element.usCust,
         )
-        println(amount)
         val factorToUse = if (!element.scale) 1f else factor
         val density = element.ingredient?.let { densityTable.densityForNorm(it) }
         val converted = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse, density)
-        println(converted)
 
         if (usePartials && converted.unit == Units.US_CUP && converted.remainderMin != null) {
-            val base = baseRenderQuantity(converted, density, factorToUse, measuringSystem)
+            val base = renderAmount(converted, density, factorToUse, measuringSystem)
             var remainderAmount = Amount(
                 min = converted.remainderMin,
                 max = converted.remainderMax,
                 unit = Units.US_CUP,
             )
-            println(remainderAmount)
             remainderAmount = UnitConversions.convertUnitSystemAndScale(remainderAmount, measuringSystem, 1.0f, density)
-            println(remainderAmount)
-            val remainder = baseRenderQuantity(remainderAmount, density, factorToUse, measuringSystem)
-            println(remainder)
+            val remainder = renderAmount(remainderAmount, density, factorToUse, measuringSystem)
             return base + " + " + remainder
         } else {
-            return baseRenderQuantity(converted.asFractional(), density, factorToUse, measuringSystem)
+            return renderAmount(converted.asFractional(), density, factorToUse, measuringSystem)
         }
 
     }

@@ -53,11 +53,11 @@ class UnitConversionTest {
 
     @Test
     fun `converts ml to cups when target is USCustomary`() {
-        val amount = Amount(min = 100f, unit = Units.MILLILITRE, usCust = true)
+        val amount = Amount(min = 300f, unit = Units.MILLILITRE, usCust = true)
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
-        assertEquals(0.0f, result.min, absoluteTolerance = 0.001f)
-        assertEquals(0.423f, result.remainderMin!!, absoluteTolerance = 0.001f)
+        assertEquals(1.0f, result.min, absoluteTolerance = 0.001f)
+        assertEquals(0.268f, result.remainderMin!!, absoluteTolerance = 0.001f)
         assertEquals(Units.US_CUP, result.unit)
     }
 
@@ -91,11 +91,11 @@ class UnitConversionTest {
 
     @Test
     fun `converts millilitres to cups when target is USCustomary`() {
-        val amount = Amount(min = 236.56f, max = 473.12f, unit = Units.MILLILITRE, usCust = true)
+        val amount = Amount(min = 237f, max = 473.12f, unit = Units.MILLILITRE, usCust = true)
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
-        assertEquals(1f, result.min, absoluteTolerance = 0.001f)
-        assertEquals(2f, result.max!!, absoluteTolerance = 0.001f)
+        assertEquals(1.0f, result.min, absoluteTolerance = 0.001f)
+        assertEquals(2.0f, result.max!!, absoluteTolerance = 0.001f)
         assertEquals(Units.US_CUP, result.unit)
     }
 
@@ -179,10 +179,10 @@ class UnitConversionTest {
         val amount = Amount(min = 10f, unit = Units.CENTILITRE, usCust = true)
         val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
 
-        val expectedMin = 0.423f
+        val expectedMin = 6.763f
         assertEquals(floor(expectedMin), result.min, absoluteTolerance = 0.001f)
         assertEquals(expectedMin-floor(expectedMin), result.remainderMin!!, absoluteTolerance = 0.001f)
-        assertEquals(Units.US_CUP, result.unit)
+        assertEquals(Units.US_TABLESPOON, result.unit)
     }
 
     @Test

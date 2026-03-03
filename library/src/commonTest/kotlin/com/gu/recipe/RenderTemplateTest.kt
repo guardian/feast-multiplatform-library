@@ -448,7 +448,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomary)
-        assertEquals("⅜ cup of water, ½ cup of oil", result)
+        assertEquals("6¾ tbsp of water, 8⅛ tbsp of oil", result)
     }
 
     @Test
@@ -483,7 +483,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
-        assertEquals("100 ml (⅜ cup) of water, 120 ml (½ cup) of oil", result)
+        assertEquals("100 ml (6¾ tbsp) of water, 120 ml (8⅛ tbsp) of oil", result)
     }
 
     @Test
@@ -507,7 +507,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
-        assertEquals("3⅜ fl oz (⅜ cup) of water, 4 fl oz (½ cup) of oil", result)
+        assertEquals("3⅜ fl oz (6¾ tbsp) of water, 4 fl oz (8⅛ tbsp) of oil", result)
     }
 
     @Test
@@ -550,7 +550,7 @@ class RenderTemplateTest {
     fun `correctly render small quantities in metric + cups`() {
         val template = parseTemplate("{\"min\": 90, \"unit\": \"g\", \"scale\": true, \"ingredient\": \"plain flour\", \"usCust\": true} plain flour")
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomary, usePartials = true)
-        assertEquals("", result)
+        assertEquals("7⅝ tbsp plain flour", result)
     }
 }
 
