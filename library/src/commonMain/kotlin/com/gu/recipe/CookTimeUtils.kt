@@ -89,11 +89,16 @@ object CookTimeUtils {
 
     fun format(
         timings: List<Timing>,
+        withStyle: Boolean = false,
     ): String? {
         val info = structured(timings)
 
         val primary = info.primary ?: return null
-        val primaryString = primary.format()
+        val primaryString = if (withStyle) {
+            "<strong>${primary.format()}</strong>"
+        } else {
+            primary.format()
+        }
 
         if (info.secondary.isEmpty()) return primaryString
 
