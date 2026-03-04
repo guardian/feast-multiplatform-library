@@ -589,6 +589,23 @@ class RenderTemplateTest {
     }
 
     @Test
+    fun `render more than 6 tbsp as cups`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 9f,
+                    max = 9f,
+                    unit = "tbsp",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of oil"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        assertEquals("9 tbsp (4½ fl oz • ½ cup) of oil", result)
+    }
+    @Test
     fun `correctly show weight measurements in metric + cups`() {
         val template = ParsedTemplate(
             listOf(
