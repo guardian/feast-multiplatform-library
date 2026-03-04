@@ -133,7 +133,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
-        assertEquals("8⅞ oz", result)
+        assertEquals("8¾ oz", result)
     }
 
     @Test
@@ -151,7 +151,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
-        assertEquals("1⅓-3⅛ cups", result)
+        assertEquals("1⅓-3¼ cups", result)
     }
 
     @Test
@@ -168,7 +168,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 2.0f, MeasuringSystem.USCustomary)
-        assertEquals("2⅛ cups", result) //extra 1/8 due to rounding
+        assertEquals("2 cups", result) //extra 1/8 due to rounding
     }
 
     @Test
@@ -447,7 +447,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomary)
-        assertEquals("⅜ cup of water, ½ cup of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
@@ -482,7 +482,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
-        assertEquals("100 ml (⅜ cup) of water, 120 ml (½ cup) of oil", result)
+        assertEquals("100 ml (½ cup) of water, 120 ml (½ cup) of oil", result)
     }
 
     @Test
@@ -506,7 +506,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
-        assertEquals("3⅜ fl oz (⅜ cup) of water, 4 fl oz (½ cup) of oil", result)
+        assertEquals("3⅓ fl oz (½ cup) of water, 4 fl oz (½ cup) of oil", result)
     }
 
     @Test

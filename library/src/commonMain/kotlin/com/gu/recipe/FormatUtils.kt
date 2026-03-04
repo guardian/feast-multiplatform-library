@@ -11,19 +11,14 @@ internal object FormatUtils {
         val fractionalPart = number - integerPart
 
         // these hard coded values are midpoints between fractions.
-        // For instance 0.1875 is halfway between 1/8 (0.125) and 1/4 (0.25)
         // This keeps the logic dead simple
         return when (fractionalPart) {
-            in 0.0f..0.062500f -> integerPartStr
-            in 0.062500f..0.187500f -> "$integerPartStr⅛"
-            in 0.187500f..0.291667f -> "$integerPartStr¼"
-            in 0.291667f..0.354167f -> "$integerPartStr⅓"
-            in 0.354167f..0.437500f -> "$integerPartStr⅜"
-            in 0.437500f..0.562500f -> "$integerPartStr½"
-            in 0.562500f..0.645833f -> "$integerPartStr⅝"
-            in 0.645833f..0.708333f -> "$integerPartStr⅔"
-            in 0.708333f..0.812500f -> "$integerPartStr¾"
-            in 0.812500f..0.937500f -> "$integerPartStr⅞"
+            in 0.0f..0.125f -> integerPartStr
+            in 0.125f..0.291667f -> "$integerPartStr¼"
+            in 0.291667f..0.416667f -> "$integerPartStr⅓"
+            in 0.416667f..0.583333f -> "$integerPartStr½"
+            in 0.583333f..0.708333f -> "$integerPartStr⅔"
+            in 0.708333f..0.875f -> "$integerPartStr¾"
             else -> "${integerPart + 1}"
         }
     }
