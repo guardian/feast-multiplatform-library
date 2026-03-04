@@ -70,13 +70,14 @@ class TemplateSession(private val densityTable: DensityTable) {
         amount = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse, density)
 
         val decimals = when (amount.unit) {
-            Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
+            Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE, Units.US_TEASPOON, Units.METRIC_TEASPOON, Units.US_TABLESPOON, Units.METRIC_TABLESPOON -> 0
             Units.CENTIMETRE, Units.INCH -> 1
             else -> 1
         }
 
         val fraction = when (amount.unit) {
-            Units.CENTILITRE, Units.MILLILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE -> false
+            Units.CENTILITRE, Units.MILLILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE , Units.METRIC_TEASPOON, Units.METRIC_TABLESPOON -> false
+            Units.US_TABLESPOON, Units.US_TEASPOON -> false
             else -> true
         }
         val unitString = if (amount.unit != null) {
