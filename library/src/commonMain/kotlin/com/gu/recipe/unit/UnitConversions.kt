@@ -49,6 +49,18 @@ object UnitConversions {
         0f to Units.INCH,
     )
 
+    val US_CUSTOMARY_DRY_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
+        0f to Units.OUNCE,
+        16f * Units.OUNCE.quantity to Units.POUND,
+
+        0f to Units.US_TEASPOON,
+        3f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        12f * Units.US_TEASPOON.quantity to Units.US_CUP,
+
+        0f to Units.INCH,
+    )
+
+
     val IMPERIAL_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.OUNCE,
         16f * Units.OUNCE.quantity to Units.POUND,
@@ -81,7 +93,7 @@ object UnitConversions {
         }
     }
 
-    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem, factor: Float = 1f, density: Float?): Amount {
+    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem.MeasuringSystemInternal, factor: Float = 1f, density: Float?): Amount {
         val scaledAmount = amount.copy(min = amount.min * factor, max = amount.max?.let { it * factor })
 
         if (scaledAmount.unit == null || (target == MeasuringSystem.Metric && factor == 1f)) {
@@ -96,12 +108,15 @@ object UnitConversions {
             else
                 METRIC_CONVERSION_LADDER
 
-            MeasuringSystem.USCustomary -> US_CUSTOMARY_CONVERSION_LADDER
+            MeasuringSystem.USCustomary -> if(amount.usCust==true && amount.unit?.unitType==UnitType.WEIGHT)
+                US_CUSTOMARY_DRY_CONVERSION_LADDER
+            else
+                US_CUSTOMARY_CONVERSION_LADDER
 
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
         }
 
-        val amountToConvert = if(amount.usCust==true && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
+        val amountToConvert = if(amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
             //convert from g to ml. Metric -> US unit conversion is done below.
             // Assume that incoming weight here is in g (smallest unit in metric set)
             //density is in g/ml, so divide by density to go g -> ml
