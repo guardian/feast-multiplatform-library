@@ -487,6 +487,30 @@ class RenderTemplateTest {
     }
 
     @Test
+    fun `render hybrid metric + imperial + cups when requested`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of water, "),
+                QuantityPlaceholder(
+                    min = 120f,
+                    unit = "ml",
+                    scale = true,
+                    usCust = true
+                ),
+                TemplateConst(" of oil"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        assertEquals("100 ml (3⅓ fl oz • ½ cup) of water, 120 ml (4 fl oz • ½ cup) of oil", result)
+    }
+
+    @Test
     fun `render hybrid imperial + cups when requested`() {
         val template = ParsedTemplate(
             listOf(
@@ -526,6 +550,42 @@ class RenderTemplateTest {
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
         assertEquals("3½ oz of vegan pork", result)
+    }
+
+    @Test
+    fun `not duplicate weight measurements in imperial + cups + metric`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 100f,
+                    max = 100f,
+                    unit = "g",
+                    scale = true,
+                    usCust = false
+                ),
+                TemplateConst(" of vegan pork"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        assertEquals("100 g (3½ oz) of vegan pork", result)
+    }
+
+    @Test
+    fun `not duplicate non-standard units in imperial + cups + metric`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 5f,
+                    max = 5f,
+                    unit = "pinches",
+                    scale = true,
+                    usCust = false
+                ),
+                TemplateConst(" of gunpowder"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        assertEquals("5 pinches of gunpowder", result)
     }
 
     @Test

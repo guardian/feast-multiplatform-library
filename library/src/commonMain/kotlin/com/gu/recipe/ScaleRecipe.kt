@@ -134,6 +134,23 @@ class TemplateSession(private val densityTable: DensityTable) {
                             }
                         }
                     }
+                    is MeasuringSystem.USCombined -> {
+                        if(element.unit.isNullOrBlank()) {
+                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        } else {
+                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
+                            val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
+
+                            if (cupsPart == metricPart && cupsPart == imperialPart) {
+                                metricPart
+                            } else if (cupsPart == imperialPart) {
+                                metricPart + " (" + cupsPart + ")"
+                            } else {
+                                metricPart + " (" + imperialPart + " • " + cupsPart + ")"
+                            }
+                        }
+                    }
                 }
             }
             is OvenTemperaturePlaceholder -> renderOvenTemperature(element)

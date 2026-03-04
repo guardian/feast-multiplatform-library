@@ -9,6 +9,7 @@ sealed interface MeasuringSystem {
 
     object USCustomaryWithMetric: MeasuringSystem
     object USCustomaryWithImperial: MeasuringSystem
+    object USCombined: MeasuringSystem
 }
 
 enum class UnitType {
