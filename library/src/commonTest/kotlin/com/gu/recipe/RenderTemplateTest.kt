@@ -58,21 +58,20 @@ class RenderTemplateTest {
         assertEquals("1 tbsp", result)
     }
 
-    //Dropped fractional teaspoons - pending editorial confirmation on <1 tsp measurement
-//    @Test
-//    fun `scale template with fraction for tsp`() {
-//        val template = ParsedTemplate(
-//            listOf(
-//                QuantityPlaceholder(
-//                    min = 0.25f,
-//                    unit = "tsp",
-//                    scale = true
-//                )
-//            )
-//        )
-//        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
-//        assertEquals("½ tsp", result)
-//    }
+    @Test
+    fun `scale template with fraction for tsp`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 0.25f,
+                    unit = "tsp",
+                    scale = true
+                )
+            )
+        )
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        assertEquals("½ tsp", result)
+    }
 
     @Test
     fun `scale template with fraction for cups`() {
