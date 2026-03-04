@@ -87,6 +87,16 @@ object CookTimeUtils {
     /* PUBLIC API                    */
     /* ----------------------------- */
 
+    /**
+     * Formats a list of [Timing] entries into a human-readable cook-time display string.
+     *
+     * The primary duration is resolved by priority: prep + cook (combined) → total-time → ready-in.
+     * Passive timings (e.g. chill, marinate) are appended with " + " only when a prep/cook primary exists.
+     *
+     * @param timings the raw timing metadata from a recipe.
+     * @param withStyle when `true`, wraps the primary duration in `<strong>` tags for styled rendering.
+     * @return the formatted cook-time string, or `null` if no displayable primary timing is available.
+     */
     fun format(
         timings: List<Timing>,
         withStyle: Boolean = false,
@@ -109,6 +119,17 @@ object CookTimeUtils {
         return "$primaryString + $secondaryString"
     }
 
+    /**
+     * Builds a [CookTimeInfo] display model from raw [Timing] entries.
+     *
+     * Primary duration is resolved by combining prep + cook times when available,
+     * falling back to total-time or ready-in otherwise.
+     * Passive timings (e.g. chill, marinate) are included as secondary entries only when
+     * a prep/cook primary exists.
+     *
+     * @param timings the raw timing metadata from a recipe.
+     * @return a [CookTimeInfo] containing the combined primary duration and any secondary passive timings.
+     */
     fun structured(timings: List<Timing>): CookTimeInfo {
         val individual = structuredIndividual(timings)
         val combinedPrimary = when {
