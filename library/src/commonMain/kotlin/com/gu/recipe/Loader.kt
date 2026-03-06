@@ -18,7 +18,7 @@ import kotlinx.datetime.toLocalDateTime
  * If the device is not on the network, a synthetic "504" should be returned without body content.
  * This should NOT throw on error. Rather log the error and return a status code of "504" with other fields empty
  */
-expect fun makeHttpRequest(method: String, url: String, body: String?=null, headers:Map<String, String>?=null): Loader.HttpResponse
+expect suspend fun makeHttpRequest(method: String, url: String, body: String?=null, headers:Map<String, String>?=null): Loader.HttpResponse
 
 /**
  * Load the cached density data and timestamp from persistent storage.  If there is an error, or no
