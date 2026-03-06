@@ -62,7 +62,7 @@ object Loader {
      *  Firebase config
      *  - authToken: user's JWT for CDN authentication. Don't include `Bearer` header or similar.
      */
-    fun initialiseConversionSession(url: String, authToken: String): Result<TemplateSession> {
+    suspend fun initialiseConversionSession(url: String, authToken: String): Result<TemplateSession> {
         val maybeCachedData = readCachedDensityData()
 
         val needToLoad = maybeCachedData==null || maybeCachedData.timestamp < Clock.System.now().minus(15.minutes)
@@ -75,7 +75,7 @@ object Loader {
 
             var headers = mapOf(
                 "Authorization" to "Bearer $authToken",
-                "Expect" to "application/json",
+                "Accept" to "application/json",
             )
 
             if(maybeTimestamp!=null) {
@@ -91,7 +91,7 @@ object Loader {
                 }
                 200 -> {
                     //We got new data
-                    val ts = response.responseHeaders?.get("Last-Modified").let {
+                    val ts = response.responseHeaders?.get("last-modified").let {
                         if(it!=null)
                             LocalDateTime.parse(it, httpDateFormat).toInstant(TimeZone.UTC)
                         else null
@@ -131,6 +131,9 @@ object Loader {
                     return newTemplateSession(maybeCachedData?.content)
                 }
             }
+        } else {
+            //if(!needToLoad)
+            return newTemplateSession(maybeCachedData.content)
         }
     }
 }

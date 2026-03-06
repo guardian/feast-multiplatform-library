@@ -1,14 +1,31 @@
 package com.gu.recipe.js
 
+import com.gu.recipe.Loader
 import com.gu.recipe.TemplateSession
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
 import com.gu.recipe.newTemplateSession
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.promise
+import kotlin.js.Promise
 
 private val tolerantJson = Json { ignoreUnknownKeys = true }
+//Using this rather than MainScope apparently means there are no underlying UI assumptions or leakage risk
+private val libraryScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+fun initialise(url: String, authToken: String): Promise<TemplateSession> {
+    return libraryScope.promise {
+        Loader.initialiseConversionSession(url, authToken).getOrThrow()
+    }
+}
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
