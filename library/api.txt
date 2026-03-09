@@ -472,31 +472,48 @@ package com.gu.recipe.unit {
   public sealed exhaustive interface MeasuringSystem {
   }
 
-  public static final class MeasuringSystem.Imperial implements com.gu.recipe.unit.MeasuringSystem {
+  public static final class MeasuringSystem.Imperial implements com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal {
     field public static final com.gu.recipe.unit.MeasuringSystem.Imperial INSTANCE;
   }
 
-  public static final class MeasuringSystem.Metric implements com.gu.recipe.unit.MeasuringSystem {
+  public static sealed exhaustive interface MeasuringSystem.MeasuringSystemInternal extends com.gu.recipe.unit.MeasuringSystem {
+  }
+
+  public static final class MeasuringSystem.Metric implements com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal {
     field public static final com.gu.recipe.unit.MeasuringSystem.Metric INSTANCE;
   }
 
-  public static final class MeasuringSystem.USCustomary implements com.gu.recipe.unit.MeasuringSystem {
+  public static final class MeasuringSystem.USCombined implements com.gu.recipe.unit.MeasuringSystem {
+    field public static final com.gu.recipe.unit.MeasuringSystem.USCombined INSTANCE;
+  }
+
+  public static final class MeasuringSystem.USCustomary implements com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal {
     field public static final com.gu.recipe.unit.MeasuringSystem.USCustomary INSTANCE;
   }
 
+  public static final class MeasuringSystem.USCustomaryWithImperial implements com.gu.recipe.unit.MeasuringSystem {
+    field public static final com.gu.recipe.unit.MeasuringSystem.USCustomaryWithImperial INSTANCE;
+  }
+
+  public static final class MeasuringSystem.USCustomaryWithMetric implements com.gu.recipe.unit.MeasuringSystem {
+    field public static final com.gu.recipe.unit.MeasuringSystem.USCustomaryWithMetric INSTANCE;
+  }
+
   public final class UnitConversions {
-    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem target, optional float factor, Float? density);
+    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal target, optional float factor, Float? density);
     method @InaccessibleFromKotlin public java.util.Set<com.gu.recipe.unit.MeasurementUnit> getCONVENIENCE_UNITS();
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getIMPERIAL_CONVERSION_LADDER();
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVENIENCE_LADDER();
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVERSION_LADDER();
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_DRY_CONVERSION_LADDER();
     method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
     property public java.util.Set<com.gu.recipe.unit.MeasurementUnit> CONVENIENCE_UNITS;
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> IMPERIAL_CONVERSION_LADDER;
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVENIENCE_LADDER;
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVERSION_LADDER;
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_DRY_CONVERSION_LADDER;
     field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
   }
 
