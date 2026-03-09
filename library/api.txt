@@ -72,7 +72,7 @@ package com.gu.recipe {
 
   public final class ScaleRecipeKt {
     method public static String ingredientWithoutSuffix(String renderedTemplate);
-    method @KotlinOnly public static kotlin.Result<com.gu.recipe.TemplateSession> newTemplateSession();
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.TemplateSession> newTemplateSession(optional String? rawDensityData);
     method public static com.gu.recipe.TemplateSession noCustomaryTemplateSession();
   }
 
@@ -365,7 +365,7 @@ package com.gu.recipe.generated {
 package com.gu.recipe.js {
 
   public final class ScaleRecipeJsContractKt {
-    method public static com.gu.recipe.TemplateSession createTemplateSession();
+    method public static com.gu.recipe.TemplateSession createTemplateSession(String? rawDensityData);
     method public static java.util.List<com.gu.recipe.template.TemplateElement> parseTemplate(String templateString);
     method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements, com.gu.recipe.TemplateSession session);
     method public static String scaleRecipe(String recipe, float factor, String unit, com.gu.recipe.TemplateSession session);
