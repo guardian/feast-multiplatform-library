@@ -358,6 +358,95 @@ class CookTimeUtilsTest {
         assertEquals("30 min", utils.format(input))
     }
 
+    @Test
+    fun `formatItems returns prep and cook as separate items`() {
+        val input = listOf(
+            timing("prep-time", 20),
+            timing("cook-time", 10)
+        )
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(
+                mapOf("Prep" to "20 min"),
+                mapOf("Cook" to "10 min")
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `formatItems includes secondary passive items after primary`() {
+        val input = listOf(
+            timing("prep-time", 20),
+            timing("cook-time", 10),
+            timing("rest-time", 40)
+        )
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(
+                mapOf("Prep" to "20 min"),
+                mapOf("Cook" to "10 min"),
+                mapOf("Rest" to "40 min")
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `formatItems uses fallback when no primary timings`() {
+        val input = listOf(timing("total-time", 90))
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(mapOf("Total" to "1 hr 30 min")),
+            result
+        )
+    }
+
+    @Test
+    fun `formatItems returns empty list when no displayable timings`() {
+        val result = utils.formatItems(emptyList())
+        assertEquals(emptyList(), result)
+    }
+
+    @Test
+    fun `formatItems uses unicode fractions for passive day durations`() {
+        val input = listOf(
+            timing("prep-time", 30),
+            timing("marinate-time", 720)
+        )
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(
+                mapOf("Prep" to "30 min"),
+                mapOf("Marinate" to "½ day")
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `formatItems does not include passive when only fallback`() {
+        val input = listOf(
+            timing("total-time", 90),
+            timing("chill-time", 30)
+        )
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(mapOf("Total" to "1 hr 30 min")),
+            result
+        )
+    }
+
     private fun timing(
         qualifier: String,
         min: Int,

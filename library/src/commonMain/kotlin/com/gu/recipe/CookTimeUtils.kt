@@ -120,6 +120,38 @@ object CookTimeUtils {
     }
 
     /**
+     * Formats a list of [Timing] entries into individual timing items, each represented as a map.
+     *
+     * Each timing entry is kept separate (prep, cook, passive) rather than being combined. The returned list contains
+     * primary or fallback entries first, followed by secondary (passive) entries.
+     *
+     * Each map is a single entry where the key is the capitalised label and the value
+     * is the formatted duration, e.g. `mapOf("Prep" to "20 min")`.
+     *
+     * @param timings the raw timing metadata from a recipe.
+     * @return a list of single-entry maps, or an empty list if no displayable timings are available.
+     */
+    fun formatItems(timings: List<Timing>): List<Map<String, String>> {
+        val individual = structuredIndividual(timings)
+
+        val items = mutableListOf<Map<String, String>>()
+
+        if (individual.primary.isNotEmpty()) {
+            individual.primary.forEach {
+                items.add(mapOf(it.label.replaceFirstChar { c -> c.uppercaseChar() } to it.duration.format()))
+            }
+        } else if (individual.fallback != null) {
+            items.add(mapOf(individual.fallback.label.replaceFirstChar { it.uppercaseChar() } to individual.fallback.duration.format()))
+        }
+
+        individual.secondary.forEach {
+            items.add(mapOf(it.label.replaceFirstChar { c -> c.uppercaseChar() } to formatPassiveDuration(it.duration.minutes)))
+        }
+
+        return items
+    }
+
+    /**
      * Builds a [CookTimeInfo] display model from raw [Timing] entries.
      *
      * Primary duration is resolved by combining prep + cook times when available,
