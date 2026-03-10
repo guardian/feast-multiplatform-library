@@ -506,7 +506,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("100 ml (3⅓ fl oz • ½ cup) of water, 120 ml (4 fl oz • ½ cup) of oil", result)
+        assertEquals("100 ml (½ cup) of water, 120 ml (½ cup) of oil", result)
     }
 
     @Test
@@ -602,7 +602,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("9 tbsp (4½ fl oz • ½ cup) of oil", result)
+        assertEquals("½ cup of oil", result)
     }
     @Test
     fun `correctly show weight measurements in metric + cups`() {

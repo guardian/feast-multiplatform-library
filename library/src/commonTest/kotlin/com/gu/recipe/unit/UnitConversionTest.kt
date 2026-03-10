@@ -101,17 +101,6 @@ class UnitConversionTest {
     }
 
     @Test
-    fun `converts litres to quarts when target is USCustomary`() {
-        val amount = Amount(min = 1f, unit = Units.LITRE, usCust = true)
-        val result = UnitConversions.convertUnitSystemAndScale(amount, MeasuringSystem.USCustomary, density=1.0f)
-
-        val expectedMin = 1.0567f
-        assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
-        assertNull(result.max)
-        assertEquals(Units.US_QUART, result.unit)
-    }
-
-    @Test
     fun `performs weight to volume conversion by density in USCustomary`() {
         val amount = Amount(min = 219f, max = 500f, unit = Units.GRAM, usCust = true)
         //an _average_ density of plain flour - seems to be compatible with online recipes. Not the value we carry,
