@@ -44,7 +44,7 @@ class CookTimeUtilsTest {
 
         val result = utils.format(input)
 
-        assertEquals("45 min + chill 30 min", result)
+        assertEquals("45 min + chill", result)
     }
 
     @Test
@@ -135,7 +135,7 @@ class CookTimeUtilsTest {
             timing("marinate-time", 120),
             timing("chill-time", 30)
         )
-        assertEquals("1 hr + marinate 2 hr + chill 30 min", utils.format(input))
+        assertEquals("1 hr + marinate + chill", utils.format(input))
     }
 
     @Test
@@ -144,7 +144,7 @@ class CookTimeUtilsTest {
             timing("prep-time", 80),
             timing("marinate-time", 720)
         )
-        assertEquals("1 hr 20 min + marinate ½ day", utils.format(input))
+        assertEquals("1 hr 20 min + marinate", utils.format(input))
     }
 
     @Test
@@ -158,8 +158,8 @@ class CookTimeUtilsTest {
             timing("prove-time", 1080)
         )
 
-        assertEquals("30 min + rest ¼ day", utils.format(quarter))
-        assertEquals("30 min + prove ¾ day", utils.format(threeQuarters))
+        assertEquals("30 min + rest", utils.format(quarter))
+        assertEquals("30 min + prove", utils.format(threeQuarters))
     }
 
     @Test
@@ -168,7 +168,7 @@ class CookTimeUtilsTest {
             timing("prep-time", 30),
             timing("ferment-time", 180)
         )
-        assertEquals("30 min + ferment 3 hr", utils.format(input))
+        assertEquals("30 min + ferment", utils.format(input))
     }
 
     @Test
@@ -331,32 +331,6 @@ class CookTimeUtilsTest {
         assertEquals(0, structured.secondary.size)
     }
 
-    @Test
-    fun `format with style wraps primary in bold tags`() {
-        val input = listOf(
-            timing("prep-time", 15),
-            timing("cook-time", 45)
-        )
-
-        assertEquals("<strong>1 hr</strong>", utils.format(input, withStyle = true))
-    }
-
-    @Test
-    fun `format with style wraps only primary when passive timings present`() {
-        val input = listOf(
-            timing("prep-time", 45),
-            timing("chill-time", 30)
-        )
-
-        assertEquals("<strong>45 min</strong> + chill 30 min", utils.format(input, withStyle = true))
-    }
-
-    @Test
-    fun `format with style defaults to false`() {
-        val input = listOf(timing("prep-time", 30))
-
-        assertEquals("30 min", utils.format(input))
-    }
 
     @Test
     fun `formatItems returns prep and cook as separate items`() {

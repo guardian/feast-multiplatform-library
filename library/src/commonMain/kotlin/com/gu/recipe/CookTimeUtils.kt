@@ -91,30 +91,20 @@ object CookTimeUtils {
      * Formats a list of [Timing] entries into a human-readable cook-time display string.
      *
      * The primary duration is resolved by priority: prep + cook (combined) → total-time → ready-in.
-     * Passive timings (e.g. chill, marinate) are appended with " + " only when a prep/cook primary exists.
+     * Passive timings (e.g. chill, marinate) are appended as label-only with " + " when a prep/cook primary exists.
      *
      * @param timings the raw timing metadata from a recipe.
-     * @param withStyle when `true`, wraps the primary duration in `<strong>` tags for styled rendering.
      * @return the formatted cook-time string, or `null` if no displayable primary timing is available.
      */
-    fun format(
-        timings: List<Timing>,
-        withStyle: Boolean = false,
-    ): String? {
+    fun format(timings: List<Timing>): String? {
         val info = structured(timings)
 
         val primary = info.primary ?: return null
-        val primaryString = if (withStyle) {
-            "<strong>${primary.format()}</strong>"
-        } else {
-            primary.format()
-        }
+        val primaryString = primary.format()
 
         if (info.secondary.isEmpty()) return primaryString
 
-        val secondaryString = info.secondary.joinToString(" + ") {
-            "${it.first} ${formatPassiveDuration(it.second.minutes)}"
-        }
+        val secondaryString = info.secondary.joinToString(" + ") { it.first }
 
         return "$primaryString + $secondaryString"
     }
