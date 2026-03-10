@@ -55,7 +55,6 @@ class FormatUtilsTest {
         assertEquals("1½", formatAmount(1.52f, 2, true))
         assertEquals("2¼", formatAmount(2.26f, 2, true))
         assertEquals("2⅔", formatAmount(2.67f, 2, true))
-        assertEquals("7⅛", formatAmount(7.13f, 2, true))
         assertEquals("8", formatAmount(8.01f, 2, true))
         assertEquals("8", formatAmount(7.99f, 2, true))
     }

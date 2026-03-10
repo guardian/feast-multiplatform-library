@@ -22,6 +22,9 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSe
         "Imperial" -> MeasuringSystem.Imperial
         "Metric" -> MeasuringSystem.Metric
         "US" -> MeasuringSystem.USCustomary
+        "USWithMetric" -> MeasuringSystem.USCustomaryWithMetric
+        "USWithImperial" -> MeasuringSystem.USCustomaryWithImperial
+        "Combined" -> MeasuringSystem.USCombined
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
     val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)

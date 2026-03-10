@@ -58,7 +58,7 @@ class ScaleRecipeTest {
                         ),
                         IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt""",
-                            text = "<strong>1½ tsp of salt</strong>"
+                            text = "<strong>2 tsp of salt</strong>"
                         ),
                         IngredientItem(
                             template = """{"min":1, "scale":true} x {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",

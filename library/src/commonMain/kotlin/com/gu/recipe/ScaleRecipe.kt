@@ -55,7 +55,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         ).joinToString("")
     }
 
-    internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem): String {
+    internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
         var amount = Amount(
             min = element.min,
             max = if (element.min != element.max) element.max else null,
@@ -71,13 +71,14 @@ class TemplateSession(private val densityTable: DensityTable) {
         amount = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse, density)
 
         val decimals = when (amount.unit) {
-            Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE -> 0
+            Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE, Units.US_TEASPOON, Units.METRIC_TEASPOON, Units.US_TABLESPOON, Units.METRIC_TABLESPOON -> 0
             Units.CENTIMETRE, Units.INCH -> 1
             else -> 1
         }
 
         val fraction = when (amount.unit) {
             Units.CENTILITRE, Units.MILLILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE -> false
+            Units.METRIC_TEASPOON, Units.METRIC_TABLESPOON, Units.US_TABLESPOON, Units.US_TEASPOON -> amount.min < 1f
             else -> true
         }
         val unitString = if (amount.unit != null) {
@@ -102,7 +103,57 @@ class TemplateSession(private val densityTable: DensityTable) {
     ): String {
         return when (element) {
             is TemplateConst -> element.value
-            is QuantityPlaceholder -> renderQuantity(element, factor, measuringSystem)
+            is QuantityPlaceholder -> {
+                when (measuringSystem) {
+                    is MeasuringSystem.Metric, is MeasuringSystem.Imperial, is MeasuringSystem.USCustomary -> renderQuantity(element, factor, measuringSystem)
+                    is MeasuringSystem.USCustomaryWithMetric -> {
+                        if(element.unit.isNullOrBlank()) {
+                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        } else {
+                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
+                            if (cupsPart == metricPart) {
+                                cupsPart
+                            } else {
+                                //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
+                                //only works on JVM; therefore we can't use it here
+                                metricPart + " (" + cupsPart + ")"
+                            }
+                        }
+                    }
+                    is MeasuringSystem.USCustomaryWithImperial -> {
+                        if(element.unit.isNullOrBlank()) {
+                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        } else {
+                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
+
+                            if (cupsPart == imperialPart) {
+                                cupsPart
+                            } else {
+                                imperialPart + " (" + cupsPart + ")"
+                            }
+                        }
+                    }
+                    is MeasuringSystem.USCombined -> {
+                        if(element.unit.isNullOrBlank()) {
+                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        } else {
+                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
+                            val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
+
+                            if (cupsPart == metricPart && cupsPart == imperialPart) {
+                                metricPart
+                            } else if (cupsPart == imperialPart) {
+                                metricPart + " (" + cupsPart + ")"
+                            } else {
+                                metricPart + " (" + imperialPart + " • " + cupsPart + ")"
+                            }
+                        }
+                    }
+                }
+            }
             is OvenTemperaturePlaceholder -> renderOvenTemperature(element)
         }
     }
