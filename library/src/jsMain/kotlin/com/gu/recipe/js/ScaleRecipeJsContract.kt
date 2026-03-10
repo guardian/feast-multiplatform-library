@@ -22,6 +22,9 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSe
         "Imperial" -> MeasuringSystem.Imperial
         "Metric" -> MeasuringSystem.Metric
         "US" -> MeasuringSystem.USCustomary
+        "USWithMetric" -> MeasuringSystem.USCustomaryWithMetric
+        "USWithImperial" -> MeasuringSystem.USCustomaryWithImperial
+        "Combined" -> MeasuringSystem.USCombined
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
     val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)
@@ -50,6 +53,6 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSes
 * JS style factory for TemplateSession.  If the session can be created,
 * it is returned; if the session cannot be created, then an exception is thrown.
 */
-fun createTemplateSession():TemplateSession {
-    return newTemplateSession().getOrThrow()
+fun createTemplateSession(rawDensityData: String?):TemplateSession {
+    return newTemplateSession(rawDensityData).getOrThrow()
 }
