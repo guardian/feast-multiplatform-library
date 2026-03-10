@@ -43,7 +43,6 @@ object UnitConversions {
         0f to Units.US_TEASPOON,
         3f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
         12f * Units.US_TEASPOON.quantity to Units.US_CUP,
-        192 * Units.US_TEASPOON.quantity to Units.US_QUART,
         768f * Units.US_TEASPOON.quantity to Units.US_GALLON,
 
         0f to Units.INCH,
