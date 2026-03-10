@@ -121,7 +121,7 @@ object CookTimeUtils {
      * @param timings the raw timing metadata from a recipe.
      * @return a list of single-entry maps, or an empty list if no displayable timings are available.
      */
-    fun formatItems(timings: List<Timing>): List<Map<String, String>> {
+    fun formatToItems(timings: List<Timing>): List<Map<String, String>> {
         val individual = structuredIndividual(timings)
 
         val items = mutableListOf<Map<String, String>>()
