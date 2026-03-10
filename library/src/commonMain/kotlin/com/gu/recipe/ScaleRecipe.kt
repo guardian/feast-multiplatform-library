@@ -13,6 +13,7 @@ import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.unit.UnitConversions
+import com.gu.recipe.unit.UnitType
 import com.gu.recipe.unit.Units
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -104,6 +105,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         return when (element) {
             is TemplateConst -> element.value
             is QuantityPlaceholder -> {
+
                 when (measuringSystem) {
                     is MeasuringSystem.Metric, is MeasuringSystem.Imperial, is MeasuringSystem.USCustomary -> renderQuantity(element, factor, measuringSystem)
                     is MeasuringSystem.USCustomaryWithMetric -> {
@@ -136,11 +138,20 @@ class TemplateSession(private val densityTable: DensityTable) {
                         }
                     }
                     is MeasuringSystem.USCombined -> {
-                        if(element.unit.isNullOrBlank()) {
-                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        val unit = element.unit?.let { Units.findRecipeUnit(it) }
+                        if( unit==null ||
+                            unit==Units.METRIC_TEASPOON ||
+                            unit==Units.METRIC_TABLESPOON ||
+                            unit==Units.US_TEASPOON ||
+                            unit==Units.US_TABLESPOON) {
+                                renderQuantity(element, factor, MeasuringSystem.USCustomary)
                         } else {
                             val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                            val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
+                            val imperialPart = if(unit.unitType==UnitType.VOLUME) {    //don't show extra volumes in US
+                                cupsPart
+                            } else {
+                                renderQuantity(element, factor, MeasuringSystem.Imperial)
+                            }
                             val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
 
                             if (cupsPart == metricPart && cupsPart == imperialPart) {
