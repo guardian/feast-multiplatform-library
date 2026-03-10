@@ -183,5 +183,38 @@ class UnitConversionTest {
         assertEquals(expectedMin, result.min, absoluteTolerance = 0.001f)
         assertEquals(Units.LITRE, result.unit)
     }
+
+    @Test
+    fun `scales US teaspoons to tablespoons and cup at expected thresholds`() {
+        val cases = listOf(
+            Triple(0f, 0f, Units.US_TEASPOON),
+            Triple(1f, 1f, Units.US_TEASPOON),
+            Triple(2f, 2f, Units.US_TEASPOON),
+            Triple(3f, 1f, Units.US_TABLESPOON),
+            Triple(4f, 4f, Units.US_TEASPOON),
+            Triple(5f, 5f, Units.US_TEASPOON),
+            Triple(6f, 2f, Units.US_TABLESPOON),
+            Triple(7f, 7f, Units.US_TEASPOON),
+            Triple(8f, 8f, Units.US_TEASPOON),
+            Triple(9f, 3f, Units.US_TABLESPOON),
+            Triple(10f, 10f, Units.US_TEASPOON),
+            Triple(11f, 11f, Units.US_TEASPOON),
+            Triple(12f, 0.25f, Units.US_CUP),
+        )
+
+        cases.forEach { (scaledTeaspoons, expectedQuantity, expectedUnit) ->
+            val amount = Amount(min = 1f, unit = Units.US_TEASPOON, usCust = true)
+            val result = UnitConversions.convertUnitSystemAndScale(
+                amount,
+                target = MeasuringSystem.USCustomary,
+                factor = scaledTeaspoons,
+                density = 1.0f,
+            )
+
+            assertEquals(expectedQuantity, result.min, absoluteTolerance = 0.001f)
+            assertEquals(expectedUnit, result.unit)
+            assertNull(result.max)
+        }
+    }
 }
 

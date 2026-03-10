@@ -40,8 +40,15 @@ object UnitConversions {
         0f to Units.OUNCE,
         16f * Units.OUNCE.quantity to Units.POUND,
 
+        //This layout reflects requests from editorial to display partial tablespoon as a full number of teaspoon
+        //up to 1/4 cup
         0f to Units.US_TEASPOON,
         3f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        4f * Units.US_TEASPOON.quantity to Units.US_TEASPOON,
+        6f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        7f * Units.US_TEASPOON.quantity to Units.US_TEASPOON,
+        9f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        10f * Units.US_TEASPOON.quantity to Units.US_TEASPOON,
         12f * Units.US_TEASPOON.quantity to Units.US_CUP,
         768f * Units.US_TEASPOON.quantity to Units.US_GALLON,
 
