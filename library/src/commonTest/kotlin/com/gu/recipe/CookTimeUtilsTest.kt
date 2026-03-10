@@ -421,6 +421,38 @@ class CookTimeUtilsTest {
         )
     }
 
+    @Test
+    fun `formatItems includes passive with qualifier missing time suffix`() {
+        val input = listOf(
+            Timing(qualifier = "prep-time", durationInMins = Range(min = 15.0, max = 15.0)),
+            Timing(qualifier = "ferment", durationInMins = Range(min = 10080.0, max = 14400.0))
+        )
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(
+                mapOf("Prep" to "15 min"),
+                mapOf("Ferment" to "168 hr")
+            ),
+            result
+        )
+    }
+
+    @Test
+    fun `formatItems handles primary qualifier without time suffix`() {
+        val input = listOf(
+            Timing(qualifier = "prep", durationInMins = Range(min = 3.0, max = 3.0))
+        )
+
+        val result = utils.formatItems(input)
+
+        assertEquals(
+            listOf(mapOf("Prep" to "3 min")),
+            result
+        )
+    }
+
     private fun timing(
         qualifier: String,
         min: Int,

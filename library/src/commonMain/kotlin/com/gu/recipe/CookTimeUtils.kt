@@ -23,7 +23,7 @@ object CookTimeUtils {
     private const val MINUTES_PER_HOUR = 60
     private const val MINUTES_PER_DAY = 1440
     private const val MINUTES_PER_QUARTER_DAY = 360
-    private val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time")
+    private val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time", "prep", "cook")
     private val TOTAL_QUALIFIERS = setOf("total-time")
     private val READY_IN_QUALIFIERS = setOf("ready-in", "ready-in-time")
     private val PASSIVE_LABELS = mapOf(
@@ -196,10 +196,10 @@ object CookTimeUtils {
     }
 
     private fun String.toPassiveLabelOrNull(): String? {
-        if (!endsWith("-time")) return null
         if (this in PRIMARY_QUALIFIERS || this in TOTAL_QUALIFIERS || this in READY_IN_QUALIFIERS) {
             return null
         }
+        // Qualifiers may omit the "-time" suffix (e.g. "ferment"), so treat any unknown qualifier as passive.
         return removeSuffix("-time").lowercase()
     }
 
@@ -227,7 +227,7 @@ object CookTimeUtils {
         val primary = mapped
             .filter { it.qualifier in PRIMARY_QUALIFIERS }
             .map { timing ->
-                val label = if (timing.qualifier == "prep-time") "prep" else "cook"
+                val label = if (timing.qualifier in setOf("prep-time", "prep")) "prep" else "cook"
                 LabeledCookDuration(label = label, duration = CookDuration(timing.minutes))
             }
 
