@@ -36,6 +36,11 @@ object UnitConversions {
         10f to Units.CENTIMETRE,
     )
 
+    //Butter is just.... special. Sigh.
+    val BUTTER_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
+        0f to Units.STICK,
+    )
+
     val US_CUSTOMARY_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.OUNCE,
         16f * Units.OUNCE.quantity to Units.POUND,
@@ -120,9 +125,13 @@ object UnitConversions {
                 US_CUSTOMARY_CONVERSION_LADDER
 
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
+            MeasuringSystem.Butter -> BUTTER_CONVERSION_LADDER
         }
 
-        val amountToConvert = if(amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
+        val amountToConvert = if(
+            (target== MeasuringSystem.Butter && density !=null) ||
+            (amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT)
+        ) {
             //convert from g to ml. Metric -> US unit conversion is done below.
             // Assume that incoming weight here is in g (smallest unit in metric set)
             //density is in g/ml, so divide by density to go g -> ml

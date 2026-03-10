@@ -621,5 +621,24 @@ class RenderTemplateTest {
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
         assertEquals("100 g (3½ oz) of vegan pork", result)
     }
+
+    @Test
+    fun `display butter differently to everything else`() {
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min=118f,
+                    max=118f,
+                    unit = "g",
+                    scale = true,
+                    usCust = true,
+                    ingredient = "butter",
+                ),
+                TemplateConst(" of butter"),
+            )
+        )
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        assertEquals("118 g (1 sticks • ½ cup) of butter", result)
+    }
 }
 

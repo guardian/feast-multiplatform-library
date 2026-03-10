@@ -63,13 +63,20 @@ class TemplateSession(private val densityTable: DensityTable) {
             unit = element.unit?.let { Units.findRecipeUnit(it) },
             //Specific override for butter - this should definitely be in cups but CMS data usually indicates it should be in oz.
             //We will fix the upstream CMS but need to move ahead with testing now.
-            usCust = if(element.ingredient == "butter") true else element.usCust,
+            usCust = element.usCust,
         )
 
         val factorToUse = if (!element.scale) 1f else factor
 
         val density = element.ingredient?.let { densityTable.densityForNorm(it) }
-        amount = UnitConversions.convertUnitSystemAndScale(amount, measuringSystem, factorToUse, density)
+
+        // Butter is.... special :shrug:
+        val targetSystem = if(element.ingredient=="butter" && measuringSystem== MeasuringSystem.Imperial) {
+            MeasuringSystem.Butter
+        } else {
+            measuringSystem
+        }
+        amount = UnitConversions.convertUnitSystemAndScale(amount, targetSystem, factorToUse, density)
 
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE, Units.US_TEASPOON, Units.METRIC_TEASPOON, Units.US_TABLESPOON, Units.METRIC_TABLESPOON -> 0
@@ -107,7 +114,7 @@ class TemplateSession(private val densityTable: DensityTable) {
             is QuantityPlaceholder -> {
 
                 when (measuringSystem) {
-                    is MeasuringSystem.Metric, is MeasuringSystem.Imperial, is MeasuringSystem.USCustomary -> renderQuantity(element, factor, measuringSystem)
+                    is MeasuringSystem.Metric, is MeasuringSystem.Imperial, is MeasuringSystem.USCustomary, is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem)
                     is MeasuringSystem.USCustomaryWithMetric -> {
                         if(element.unit.isNullOrBlank()) {
                             renderQuantity(element, factor, MeasuringSystem.USCustomary)

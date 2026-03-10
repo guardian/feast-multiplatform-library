@@ -216,5 +216,26 @@ class UnitConversionTest {
             assertNull(result.max)
         }
     }
+
+    @Test
+    fun `converts cups to sticks of butter`() {
+        val amount = Amount(min=0.5f, unit = Units.US_CUP, usCust = false)
+        val result = UnitConversions.convertUnitSystemAndScale(amount, target = MeasuringSystem.Butter, density=1.0f)
+        assertEquals(Units.STICK, result.unit)
+        assertEquals(1.00f, result.min, absoluteTolerance = 0.001f)
+    }
+
+    @Test
+    fun `converts grams to sticks of butter`() {
+        val amount = Amount(min=113.0f, unit = Units.GRAM, usCust = false)
+        val result = UnitConversions.convertUnitSystemAndScale(amount, target = MeasuringSystem.Butter, density=0.96f)
+        assertEquals(Units.STICK, result.unit)
+        assertEquals(1.00f, result.min, absoluteTolerance = 0.01f)
+
+        val newAmount = Amount(min=57.0f, unit = Units.GRAM, usCust = true)
+        val newResult = UnitConversions.convertUnitSystemAndScale(newAmount, target = MeasuringSystem.Butter, density=0.96f)
+        assertEquals(Units.STICK, newResult.unit)
+        assertEquals(0.5f, newResult.min, absoluteTolerance = 0.01f)
+    }
 }
 
