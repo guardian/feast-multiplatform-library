@@ -23,7 +23,7 @@ object CookTimeUtils {
     private const val MINUTES_PER_HOUR = 60
     private const val MINUTES_PER_DAY = 1440
     private const val MINUTES_PER_QUARTER_DAY = 360
-    private val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time")
+    private val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time", "prep", "cook")
     private val TOTAL_QUALIFIERS = setOf("total-time")
     private val READY_IN_QUALIFIERS = setOf("ready-in", "ready-in-time")
     private val PASSIVE_LABELS = mapOf(
@@ -91,32 +91,56 @@ object CookTimeUtils {
      * Formats a list of [Timing] entries into a human-readable cook-time display string.
      *
      * The primary duration is resolved by priority: prep + cook (combined) → total-time → ready-in.
-     * Passive timings (e.g. chill, marinate) are appended with " + " only when a prep/cook primary exists.
+     * Passive timings (e.g. chill, marinate) are appended as label-only with " + " when a prep/cook primary exists.
      *
      * @param timings the raw timing metadata from a recipe.
-     * @param withStyle when `true`, wraps the primary duration in `<strong>` tags for styled rendering.
      * @return the formatted cook-time string, or `null` if no displayable primary timing is available.
      */
-    fun format(
-        timings: List<Timing>,
-        withStyle: Boolean = false,
-    ): String? {
+    fun format(timings: List<Timing>): String? {
         val info = structured(timings)
 
         val primary = info.primary ?: return null
-        val primaryString = if (withStyle) {
-            "<strong>${primary.format()}</strong>"
-        } else {
-            primary.format()
-        }
+        val primaryString = primary.format()
 
         if (info.secondary.isEmpty()) return primaryString
 
-        val secondaryString = info.secondary.joinToString(" + ") {
-            "${it.first} ${formatPassiveDuration(it.second.minutes)}"
-        }
+        val secondaryString = info.secondary.joinToString(" + ") { it.first }
 
         return "$primaryString + $secondaryString"
+    }
+
+    /**
+     * Formats a list of [Timing] entries into individual timing items, each represented as a map.
+     *
+     * Each timing entry is kept separate (prep, cook, passive) rather than being combined. The returned list contains
+     * primary entries first, followed by secondary (passive) entries when a prep/cook primary exists. When only a
+     * total-time or ready-in fallback is available, only the fallback entry is returned and passive timings are
+     * omitted.
+     *
+     * Each map is a single entry where the key is the capitalised label and the value
+     * is the formatted duration, e.g. `mapOf("Prep" to "20 min")`.
+     *
+     * @param timings the raw timing metadata from a recipe.
+     * @return a list of single-entry maps, or an empty list if no displayable timings are available.
+     */
+    fun formatToItems(timings: List<Timing>): List<Map<String, String>> {
+        val individual = structuredIndividual(timings)
+
+        val items = mutableListOf<Map<String, String>>()
+
+        if (individual.primary.isNotEmpty()) {
+            individual.primary.forEach {
+                items.add(mapOf(it.label.replaceFirstChar { c -> c.uppercaseChar() } to it.duration.format()))
+            }
+        } else if (individual.fallback != null) {
+            items.add(mapOf(individual.fallback.label.replaceFirstChar { it.uppercaseChar() } to individual.fallback.duration.format()))
+        }
+
+        individual.secondary.forEach {
+            items.add(mapOf(it.label.replaceFirstChar { c -> c.uppercaseChar() } to formatPassiveDuration(it.duration.minutes)))
+        }
+
+        return items
     }
 
     /**
@@ -174,10 +198,10 @@ object CookTimeUtils {
     }
 
     private fun String.toPassiveLabelOrNull(): String? {
-        if (!endsWith("-time")) return null
         if (this in PRIMARY_QUALIFIERS || this in TOTAL_QUALIFIERS || this in READY_IN_QUALIFIERS) {
             return null
         }
+        // Qualifiers may omit the "-time" suffix (e.g. "ferment"), so treat any unknown qualifier as passive.
         return removeSuffix("-time").lowercase()
     }
 
@@ -205,7 +229,7 @@ object CookTimeUtils {
         val primary = mapped
             .filter { it.qualifier in PRIMARY_QUALIFIERS }
             .map { timing ->
-                val label = if (timing.qualifier == "prep-time") "prep" else "cook"
+                val label = if (timing.qualifier == "prep-time" || timing.qualifier == "prep") "prep" else "cook"
                 LabeledCookDuration(label = label, duration = CookDuration(timing.minutes))
             }
 
