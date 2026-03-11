@@ -113,7 +113,9 @@ object CookTimeUtils {
      * Formats a list of [Timing] entries into individual timing items, each represented as a map.
      *
      * Each timing entry is kept separate (prep, cook, passive) rather than being combined. The returned list contains
-     * primary or fallback entries first, followed by secondary (passive) entries.
+     * primary entries first, followed by secondary (passive) entries when a prep/cook primary exists. When only a
+     * total-time or ready-in fallback is available, only the fallback entry is returned and passive timings are
+     * omitted.
      *
      * Each map is a single entry where the key is the capitalised label and the value
      * is the formatted duration, e.g. `mapOf("Prep" to "20 min")`.
