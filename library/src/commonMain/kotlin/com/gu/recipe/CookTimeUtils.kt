@@ -227,7 +227,7 @@ object CookTimeUtils {
         val primary = mapped
             .filter { it.qualifier in PRIMARY_QUALIFIERS }
             .map { timing ->
-                val label = if (timing.qualifier in setOf("prep-time", "prep")) "prep" else "cook"
+                val label = if (timing.qualifier == "prep-time" || timing.qualifier == "prep") "prep" else "cook"
                 LabeledCookDuration(label = label, duration = CookDuration(timing.minutes))
             }
 
