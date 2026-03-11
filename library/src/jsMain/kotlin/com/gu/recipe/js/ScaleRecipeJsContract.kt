@@ -42,9 +42,18 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession): String {
+fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String): String {
+    val measuringSystem = when (unit) {
+        "Imperial" -> MeasuringSystem.Imperial
+        "Metric" -> MeasuringSystem.Metric
+        "US" -> MeasuringSystem.USCustomary
+        "USWithMetric" -> MeasuringSystem.USCustomaryWithMetric
+        "USWithImperial" -> MeasuringSystem.USCustomaryWithImperial
+        "Combined" -> MeasuringSystem.USCombined
+        else -> throw IllegalArgumentException("Unknown unit: $unit")
+    }
     val template = ParsedTemplate(templateElements)
-    return session.renderTemplate(template, 1.0f, MeasuringSystem.Metric)
+    return session.renderTemplate(template, 1.0f, measuringSystem)
 }
 
 @OptIn(ExperimentalJsExport::class)
