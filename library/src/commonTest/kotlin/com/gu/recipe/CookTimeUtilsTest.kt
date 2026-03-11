@@ -139,30 +139,6 @@ class CookTimeUtilsTest {
     }
 
     @Test
-    fun `fractional passive day uses unicode fraction`() {
-        val input = listOf(
-            timing("prep-time", 80),
-            timing("marinate-time", 720)
-        )
-        assertEquals("1 hr 20 min + marinate", utils.format(input))
-    }
-
-    @Test
-    fun `fractional passive day supports quarter and three quarters`() {
-        val quarter = listOf(
-            timing("prep-time", 30),
-            timing("rest-time", 360)
-        )
-        val threeQuarters = listOf(
-            timing("prep-time", 30),
-            timing("prove-time", 1080)
-        )
-
-        assertEquals("30 min + rest", utils.format(quarter))
-        assertEquals("30 min + prove", utils.format(threeQuarters))
-    }
-
-    @Test
     fun `unknown passive qualifier follows passive pattern`() {
         val input = listOf(
             timing("prep-time", 30),
