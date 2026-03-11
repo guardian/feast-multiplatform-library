@@ -63,7 +63,7 @@ class TemplateSession(private val densityTable: DensityTable) {
             unit = element.unit?.let { Units.findRecipeUnit(it) },
             //Specific override for butter - this should definitely be in cups but CMS data usually indicates it should be in oz.
             //We will fix the upstream CMS but need to move ahead with testing now.
-            usCust = element.usCust,
+            usCust = if(element.ingredient=="butter") true else element.usCust,
         )
 
         val factorToUse = if (!element.scale) 1f else factor
