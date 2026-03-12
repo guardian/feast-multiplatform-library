@@ -13,8 +13,8 @@ import kotlin.math.roundToInt
  * - otherwise ready-in,
  * - otherwise no display.
  *
- * Output uses fixed `hr`/`min` units (never pluralised) and `days` (always plural, since threshold ≥ 4).
- * Durations ≥ 5760 min (4 days / 96 hr) are converted to the `day` unit with
+ * Output uses fixed `hr`/`min` units (never pluralised) and `days` (always plural, since day-based formatting only starts above 4 days).
+ * Durations > 5760 min (more than 4 days / 96 hr) are converted to the `day` unit with
  * Unicode fractions (¼ ½ ¾) for quarter-day remainders.
  *
  * When min ≠ max, durations are formatted as ranges: `"20 - 30 min"`.
