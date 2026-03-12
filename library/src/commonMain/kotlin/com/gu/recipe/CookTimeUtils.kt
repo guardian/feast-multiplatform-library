@@ -30,7 +30,7 @@ object CookTimeUtils {
     private const val MINUTES_PER_HOUR = 60
     private const val MINUTES_PER_DAY = 1440
     private const val MINUTES_PER_QUARTER_DAY = 360
-    // 4 days (96 hr) — threshold above which output switches to the "day" unit.
+    // 4 days (96 hr) — output switches to the "days" unit only above this value (exclusive).
     private const val DAY_THRESHOLD = 5760
     private val PRIMARY_QUALIFIERS = setOf("prep-time", "cook-time", "prep", "cook")
     private val PREP_QUALIFIERS = setOf("prep-time", "prep")
@@ -233,7 +233,7 @@ object CookTimeUtils {
      * Used by [CookDurationRange.format] to decide whether a range can be consolidated.
      */
     private fun unitOf(minutes: Int): String? = when {
-        minutes >= DAY_THRESHOLD && isDayFormattable(minutes) -> "days"
+        minutes > DAY_THRESHOLD && isDayFormattable(minutes) -> "days"
         minutes < MINUTES_PER_HOUR -> "min"
         minutes % MINUTES_PER_HOUR == 0 -> "hr"
         else -> null // compound "N hr M min"
@@ -247,12 +247,12 @@ object CookTimeUtils {
 
     /**
      * Formats a minute value into `hr`/`min`/`day` text.
-     * ≥ [DAY_THRESHOLD] (5760 min / 96 hr / 4 days) → day unit.
+     * > [DAY_THRESHOLD] (5760 min / 96 hr / 4 days) → days unit.
      * ≥ 60 min → hr/min unit.
      * Otherwise → min unit.
      */
     private fun formatMinutes(minutes: Int): String {
-        if (minutes >= DAY_THRESHOLD) {
+        if (minutes > DAY_THRESHOLD) {
             val days = minutes / MINUTES_PER_DAY
             val remainder = minutes % MINUTES_PER_DAY
             if (remainder == 0) return "$days days"

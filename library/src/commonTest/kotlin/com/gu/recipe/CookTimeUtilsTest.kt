@@ -437,10 +437,17 @@ class CookTimeUtilsTest {
     /* ----------------------------- */
 
     @Test
-    fun `format converts to days unit at threshold`() {
-        val input = listOf(timing("total-time", 5760)) // exactly 4 days
+    fun `format uses hr at exactly four days`() {
+        val input = listOf(timing("total-time", 5760)) // exactly 4 days = 96 hr
 
-        assertEquals("4 days", utils.format(input))
+        assertEquals("96 hr", utils.format(input))
+    }
+
+    @Test
+    fun `format converts to days unit above four days`() {
+        val input = listOf(timing("total-time", 7200)) // 5 days
+
+        assertEquals("5 days", utils.format(input))
     }
 
     @Test
