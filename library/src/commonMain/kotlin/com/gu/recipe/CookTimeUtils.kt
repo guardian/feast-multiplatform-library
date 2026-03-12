@@ -58,12 +58,12 @@ object CookTimeUtils {
             if (isFixed) return formatMinutes(minMinutes)
             val minText = formatMinutes(minMinutes)
             val maxText = formatMinutes(maxMinutes)
-            // When both ends are a simple "<number> <unit>" with the same unit,
-            // consolidate into "<min> - <max> <unit>" (e.g. "20 - 30 min").
-            val minParts = minText.split(' ')
-            val maxParts = maxText.split(' ')
-            if (minParts.size == 2 && maxParts.size == 2 && minParts[1] == maxParts[1]) {
-                return "${minParts[0]} - $maxText"
+            // When both ends resolve to the same simple unit, strip the unit from the
+            // first value so the range reads e.g. "20 - 30 min" instead of "20 min - 30 min".
+            val minUnit = unitOf(minMinutes)
+            val maxUnit = unitOf(maxMinutes)
+            if (minUnit != null && minUnit == maxUnit) {
+                return "${minText.removeSuffix(" $minUnit").trimEnd()} - $maxText"
             }
             return "$minText - $maxText"
         }
@@ -225,6 +225,24 @@ object CookTimeUtils {
         }
         // Qualifiers may omit the "-time" suffix (e.g. "ferment"), so treat any unknown qualifier as passive.
         return removeSuffix("-time").lowercase()
+    }
+
+    /**
+     * Returns the single display unit a minute value would format into,
+     * or `null` when the output is compound (e.g. "1 hr 30 min").
+     * Used by [CookDurationRange.format] to decide whether a range can be consolidated.
+     */
+    private fun unitOf(minutes: Int): String? = when {
+        minutes >= DAY_THRESHOLD && isDayFormattable(minutes) -> "days"
+        minutes < MINUTES_PER_HOUR -> "min"
+        minutes % MINUTES_PER_HOUR == 0 -> "hr"
+        else -> null // compound "N hr M min"
+    }
+
+    /** `true` when the value formats as whole or fractional days (not hr/min fallback). */
+    private fun isDayFormattable(minutes: Int): Boolean {
+        val remainder = minutes % MINUTES_PER_DAY
+        return remainder == 0 || remainder.toQuarterDayFraction() != null
     }
 
     /**
