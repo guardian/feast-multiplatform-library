@@ -26,46 +26,59 @@ package com.gu.recipe {
     field public static final com.gu.recipe.CookTimeUtils INSTANCE;
   }
 
-  public static final class CookTimeUtils.CookDuration {
-    ctor public CookTimeUtils.CookDuration(int minutes);
+  public static final class CookTimeUtils.CookDurationRange {
+    ctor public CookTimeUtils.CookDurationRange(int minMinutes, int maxMinutes);
     method public int component1();
-    method public com.gu.recipe.CookTimeUtils.CookDuration copy(optional int minutes);
+    method public int component2();
+    method public com.gu.recipe.CookTimeUtils.CookDurationRange copy(optional int minMinutes, optional int maxMinutes);
     method public String format();
-    method @InaccessibleFromKotlin public int getMinutes();
-    property public int minutes;
+    method @InaccessibleFromKotlin public int getMaxMinutes();
+    method @InaccessibleFromKotlin public int getMinMinutes();
+    method @InaccessibleFromKotlin public boolean isFixed();
+    property public boolean isFixed;
+    property public int maxMinutes;
+    property public int minMinutes;
   }
 
   public static final class CookTimeUtils.CookTimeInfo {
-    ctor public CookTimeUtils.CookTimeInfo(com.gu.recipe.CookTimeUtils.CookDuration? primary, java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDuration>> secondary);
-    method public com.gu.recipe.CookTimeUtils.CookDuration? component1();
-    method public java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDuration>> component2();
-    method public com.gu.recipe.CookTimeUtils.CookTimeInfo copy(optional com.gu.recipe.CookTimeUtils.CookDuration? primary, optional java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDuration>> secondary);
-    method @InaccessibleFromKotlin public com.gu.recipe.CookTimeUtils.CookDuration? getPrimary();
-    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDuration>> getSecondary();
-    property public com.gu.recipe.CookTimeUtils.CookDuration? primary;
-    property public java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDuration>> secondary;
+    ctor public CookTimeUtils.CookTimeInfo(com.gu.recipe.CookTimeUtils.CookDurationRange? primary, java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDurationRange>> secondary);
+    method public com.gu.recipe.CookTimeUtils.CookDurationRange? component1();
+    method public java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDurationRange>> component2();
+    method public com.gu.recipe.CookTimeUtils.CookTimeInfo copy(optional com.gu.recipe.CookTimeUtils.CookDurationRange? primary, optional java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDurationRange>> secondary);
+    method @InaccessibleFromKotlin public com.gu.recipe.CookTimeUtils.CookDurationRange? getPrimary();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDurationRange>> getSecondary();
+    property public com.gu.recipe.CookTimeUtils.CookDurationRange? primary;
+    property public java.util.List<kotlin.Pair<java.lang.String,com.gu.recipe.CookTimeUtils.CookDurationRange>> secondary;
   }
 
   public static final class CookTimeUtils.LabeledCookDuration {
-    ctor public CookTimeUtils.LabeledCookDuration(String label, com.gu.recipe.CookTimeUtils.CookDuration duration);
+    ctor public CookTimeUtils.LabeledCookDuration(String label, com.gu.recipe.CookTimeUtils.CookDurationRange duration, optional boolean isPassive);
     method public String component1();
-    method public com.gu.recipe.CookTimeUtils.CookDuration component2();
-    method public com.gu.recipe.CookTimeUtils.LabeledCookDuration copy(optional String label, optional com.gu.recipe.CookTimeUtils.CookDuration duration);
-    method @InaccessibleFromKotlin public com.gu.recipe.CookTimeUtils.CookDuration getDuration();
+    method public com.gu.recipe.CookTimeUtils.CookDurationRange component2();
+    method public boolean component3();
+    method public com.gu.recipe.CookTimeUtils.LabeledCookDuration copy(optional String label, optional com.gu.recipe.CookTimeUtils.CookDurationRange duration, optional boolean isPassive);
+    method @InaccessibleFromKotlin public String getCapitalizedLabel();
+    method @InaccessibleFromKotlin public com.gu.recipe.CookTimeUtils.CookDurationRange getDuration();
     method @InaccessibleFromKotlin public String getLabel();
-    property public com.gu.recipe.CookTimeUtils.CookDuration duration;
+    method @InaccessibleFromKotlin public boolean isPassive();
+    property public String capitalizedLabel;
+    property public com.gu.recipe.CookTimeUtils.CookDurationRange duration;
+    property public boolean isPassive;
     property public String label;
   }
 
   public static final class CookTimeUtils.StructuredIndividualInfo {
-    ctor public CookTimeUtils.StructuredIndividualInfo(java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> primary, com.gu.recipe.CookTimeUtils.LabeledCookDuration? fallback, java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> secondary);
+    ctor public CookTimeUtils.StructuredIndividualInfo(java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> primary, com.gu.recipe.CookTimeUtils.LabeledCookDuration? fallback, java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> secondary, optional java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> all);
     method public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> component1();
     method public com.gu.recipe.CookTimeUtils.LabeledCookDuration? component2();
     method public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> component3();
-    method public com.gu.recipe.CookTimeUtils.StructuredIndividualInfo copy(optional java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> primary, optional com.gu.recipe.CookTimeUtils.LabeledCookDuration? fallback, optional java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> secondary);
+    method public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> component4();
+    method public com.gu.recipe.CookTimeUtils.StructuredIndividualInfo copy(optional java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> primary, optional com.gu.recipe.CookTimeUtils.LabeledCookDuration? fallback, optional java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> secondary, optional java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> all);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> getAll();
     method @InaccessibleFromKotlin public com.gu.recipe.CookTimeUtils.LabeledCookDuration? getFallback();
     method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> getPrimary();
     method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> getSecondary();
+    property public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> all;
     property public com.gu.recipe.CookTimeUtils.LabeledCookDuration? fallback;
     property public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> primary;
     property public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> secondary;
