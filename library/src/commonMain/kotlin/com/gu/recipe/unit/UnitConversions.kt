@@ -36,14 +36,25 @@ object UnitConversions {
         10f to Units.CENTIMETRE,
     )
 
+    //Butter is just.... special. Sigh.
+    val BUTTER_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
+        0f to Units.STICK,
+    )
+
     val US_CUSTOMARY_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
         0f to Units.OUNCE,
         16f * Units.OUNCE.quantity to Units.POUND,
 
+        //This layout reflects requests from editorial to display partial tablespoon as a full number of teaspoon
+        //up to 1/4 cup
         0f to Units.US_TEASPOON,
         3f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        4f * Units.US_TEASPOON.quantity to Units.US_TEASPOON,
+        6f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        7f * Units.US_TEASPOON.quantity to Units.US_TEASPOON,
+        9f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
+        10f * Units.US_TEASPOON.quantity to Units.US_TEASPOON,
         12f * Units.US_TEASPOON.quantity to Units.US_CUP,
-        192 * Units.US_TEASPOON.quantity to Units.US_QUART,
         768f * Units.US_TEASPOON.quantity to Units.US_GALLON,
 
         0f to Units.INCH,
@@ -114,9 +125,13 @@ object UnitConversions {
                 US_CUSTOMARY_CONVERSION_LADDER
 
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
+            MeasuringSystem.Butter -> BUTTER_CONVERSION_LADDER
         }
 
-        val amountToConvert = if(amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT) {
+        val amountToConvert = if(
+            (target== MeasuringSystem.Butter && density !=null) ||
+            (amount.usCust==true && target== MeasuringSystem.USCustomary && density!=null && amount.unit?.unitType== UnitType.WEIGHT)
+        ) {
             //convert from g to ml. Metric -> US unit conversion is done below.
             // Assume that incoming weight here is in g (smallest unit in metric set)
             //density is in g/ml, so divide by density to go g -> ml

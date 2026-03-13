@@ -6,6 +6,7 @@ sealed interface MeasuringSystem {
     object Imperial : MeasuringSystemInternal
     object Metric : MeasuringSystemInternal
     object USCustomary: MeasuringSystemInternal
+    object Butter: MeasuringSystemInternal
 
     object USCustomaryWithMetric: MeasuringSystem
     object USCustomaryWithImperial: MeasuringSystem
@@ -29,6 +30,16 @@ data class MeasurementUnit(
 )
 
 object Units {
+    val STICK = MeasurementUnit(
+        singular = "stick",
+        plural = "sticks",
+        symbolPlural = "sticks",
+        symbol = "sticks",
+        unitType = UnitType.VOLUME,
+        measuringSystems = setOf(MeasuringSystem.USCustomary, MeasuringSystem.Imperial),
+        quantity = 118.294f,    //in ml
+    )
+
     val GRAM = MeasurementUnit(
         singular = "gram",
         plural = "grams",
@@ -230,6 +241,7 @@ object Units {
     )
 
     val ALL_UNITS = listOf(
+        STICK,
         GRAM,
         KILOGRAM,
         OUNCE,
