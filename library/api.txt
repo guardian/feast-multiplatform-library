@@ -381,7 +381,7 @@ package com.gu.recipe.js {
   public final class ScaleRecipeJsContractKt {
     method public static com.gu.recipe.TemplateSession createTemplateSession(String? rawDensityData);
     method public static java.util.List<com.gu.recipe.template.TemplateElement> parseTemplate(String templateString);
-    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements, com.gu.recipe.TemplateSession session);
+    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements, com.gu.recipe.TemplateSession session, String unit);
     method public static String scaleRecipe(String recipe, float factor, String unit, com.gu.recipe.TemplateSession session);
   }
 
