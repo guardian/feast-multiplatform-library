@@ -18,3 +18,8 @@ updates:
     labels:
       - "dependencies"
       - "kotlin"
+    ignore:
+      - dependency-name: "gradle/actions/setup-gradle"
+        versions: [ ">=6.0.0" ]
+      - dependency-name: "gradle/actions"
+        versions: [ ">=6.0.0" ]
