@@ -34,7 +34,7 @@ object Units {
         singular = "stick",
         plural = "sticks",
         symbolPlural = "sticks",
-        symbol = "sticks",
+        symbol = "stick",
         unitType = UnitType.VOLUME,
         measuringSystems = setOf(MeasuringSystem.USCustomary, MeasuringSystem.Imperial),
         quantity = 118.294f,    //in ml

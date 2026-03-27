@@ -90,11 +90,10 @@ class TemplateSession(private val densityTable: DensityTable) {
             else -> true
         }
         val unitString = if (amount.unit != null) {
-            val value = max(amount.min, amount.max ?: amount.min)
-            if (value >= 1.0f && value < 1.5f) { // Treat values between 1.0 and 1.5 as singular
-                " ${amount.unit.symbol}"
-            } else { // Treat other values as plural
+            if (max(amount.min, amount.max ?: amount.min) > 1.1f) { //need to offset from exactly one, so that when rounding a value below 1/8 we don't get "1 cups
                 " ${amount.unit.symbolPlural}"
+            } else {
+                " ${amount.unit.symbol}"
             }
         } else ""
 
