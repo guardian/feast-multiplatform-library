@@ -91,10 +91,10 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
         val unitString = if (amount.unit != null) {
             val value = max(amount.min, amount.max ?: amount.min)
-            if (value > 1.05f) { // Treat values greater than 1.05 as plural
-                " ${amount.unit.symbolPlural}"
-            } else { // Treat values close to 1 (e.g., 0.95 to 1.05) as singular
+            if (value >= 1.0f && value < 1.5f) { // Treat values between 1.0 and 1.5 as singular
                 " ${amount.unit.symbol}"
+            } else { // Treat other values as plural
+                " ${amount.unit.symbolPlural}"
             }
         } else ""
 
