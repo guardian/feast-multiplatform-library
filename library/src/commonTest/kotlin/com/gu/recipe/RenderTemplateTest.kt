@@ -638,7 +638,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("118 g (1 sticks • ½ cup) of butter", result)
+        assertEquals("118 g (1 stick • ½ cup) of butter", result)
     }
 }
 
