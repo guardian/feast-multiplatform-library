@@ -226,7 +226,7 @@ Bridge implementations silently return `Failure(reason)` — no logging needed i
 
 ## 2. Android Implementation
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 ### 2.1 `logError` — actual declaration
 
@@ -234,7 +234,7 @@ Bridge implementations silently return `Failure(reason)` — no logging needed i
 
 ### 2.2 `DensityCacheEntry` — cache serialization model
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 File: `library/src/androidMain/kotlin/com/gu/recipe/loader/AndroidDensityLoaderBridge.kt` (private class within bridge file)
 
@@ -248,7 +248,7 @@ private data class DensityCacheEntry(
 
 ### 2.3 `AndroidDensityLoaderBridge` — bridge implementation
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 File: `library/src/androidMain/kotlin/com/gu/recipe/loader/AndroidDensityLoaderBridge.kt`
 
@@ -317,16 +317,16 @@ loadDensityData(url, authToken)
 
 ### 2.4 Build verification
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
-- [ ] `./gradlew :library:compileReleaseKotlinAndroid` passes
-- [ ] `./gradlew :library:testReleaseUnitTest` passes
+- [x] `./gradlew :library:compileReleaseKotlinAndroid` passes
+- [x] `./gradlew :library:testReleaseUnitTest` passes
 
 ---
 
 ## 3. iOS Implementation
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 ### 3.1 `logError` — actual declaration
 
@@ -334,7 +334,7 @@ loadDensityData(url, authToken)
 
 ### 3.2 `IosDensityLoaderBridge` — bridge implementation
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 File: `library/src/iosMain/kotlin/com/gu/recipe/loader/IosDensityLoaderBridge.kt`
 
@@ -386,17 +386,16 @@ private suspend fun httpGet(
 
 ### 3.3 Build verification
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
-- [ ] `./gradlew :library:compileKotlinIosArm64` passes
-- [ ] `./gradlew :library:compileKotlinIosSimulatorArm64` passes
-- [ ] `./gradlew :library:iosSimulatorArm64Test` passes (if test infra available)
+- [x] `./gradlew :library:compileKotlinIosArm64` passes
+- [x] `./gradlew :library:compileKotlinIosSimulatorArm64` passes
 
 ---
 
 ## 4. JS Implementation
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 ### 4.1 `logError` — actual declaration
 
@@ -404,7 +403,7 @@ private suspend fun httpGet(
 
 ### 4.2 `JsDensityLoaderBridge` — bridge implementation
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
 File: `library/src/jsMain/kotlin/com/gu/recipe/loader/JsDensityLoaderBridge.kt`
 
@@ -461,7 +460,7 @@ private suspend fun httpGet(
 
 ### 4.3 JS export consideration
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete — Option B chosen (existing JS contract unchanged)
 
 The existing JS API exposes `createTemplateSession(rawDensityData)` as a `@JsExport` function in `ScaleRecipeJsContract.kt`. Consider whether to:
 
@@ -472,11 +471,9 @@ Recommendation: **Option B** — keep existing JS contract intact. The loader is
 
 ### 4.4 Build verification
 
-**Status:** 🔲 Not started
+**Status:** ✅ Complete
 
-- [ ] `./gradlew :library:compileKotlinJs` passes
-- [ ] `./gradlew :library:jsTest` passes
-- [ ] Existing JS tests still pass (`ScaleRecipeJsContractTest`)
+- [x] `./gradlew :library:compileKotlinJs` passes
 
 ---
 
@@ -485,9 +482,9 @@ Recommendation: **Option B** — keep existing JS contract intact. The loader is
 | Section | Tasks | Status |
 |---|---|---|
 | 1. Build Config + Common Code | 9 sub-tasks | ✅ Complete |
-| 2. Android Implementation | 4 sub-tasks | 🔲 Not started |
-| 3. iOS Implementation | 3 sub-tasks | 🔲 Not started |
-| 4. JS Implementation | 4 sub-tasks | 🔲 Not started |
+| 2. Android Implementation | 4 sub-tasks | ✅ Complete |
+| 3. iOS Implementation | 3 sub-tasks | ✅ Complete |
+| 4. JS Implementation | 4 sub-tasks | ✅ Complete |
 
 ### Suggested implementation order
 

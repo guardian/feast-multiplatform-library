@@ -1,0 +1,144 @@
+package com.gu.recipe.loader
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import okio.FileSystem
+import okio.Path.Companion.toOkioPath
+import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
+
+@Serializable
+private data class DensityCacheEntry(
+    val lastModified: String,
+    val content: String
+)
+
+class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBridge {
+
+    private val cachePath = File(cacheDir, "recipe_data/density_cache.json").toOkioPath()
+
+    private val httpDateFormat: SimpleDateFormat
+        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("GMT")
+        }
+
+    override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+        return try {
+            val cached = readCache()
+
+            if (cached != null && isCacheFresh()) {
+                return DensityLoadResult.Success(cached.content)
+            }
+
+            withContext(Dispatchers.IO) {
+                performRequest(url, authToken, cached)
+            }
+        } catch (e: Exception) {
+            val cached = try { readCache() } catch (_: Exception) { null }
+            if (cached != null) {
+                DensityLoadResult.Success(cached.content)
+            } else {
+                DensityLoadResult.Failure("Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun readCache(): DensityCacheEntry? {
+        return try {
+            if (!FileSystem.SYSTEM.exists(cachePath)) return null
+            val raw = FileSystem.SYSTEM.read(cachePath) { readUtf8() }
+            Json.decodeFromString<DensityCacheEntry>(raw)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun isCacheFresh(): Boolean {
+        return try {
+            val lastModified = FileSystem.SYSTEM.metadata(cachePath).lastModifiedAtMillis
+                ?: return false
+            System.currentTimeMillis() - lastModified < CACHE_FRESHNESS_MS
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    private fun writeCache(entry: DensityCacheEntry) {
+        try {
+            val parent = cachePath.parent ?: return
+            FileSystem.SYSTEM.createDirectories(parent)
+            FileSystem.SYSTEM.write(cachePath) {
+                writeUtf8(Json.encodeToString(entry))
+            }
+        } catch (_: Exception) {
+            // Write failure — do not crash
+        }
+    }
+
+    private fun performRequest(
+        url: String,
+        authToken: String,
+        cached: DensityCacheEntry?
+    ): DensityLoadResult {
+        val connection = URL(url).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Authorization", "Bearer $authToken")
+            connection.setRequestProperty("Accept", "application/json")
+            if (cached != null) {
+                connection.setRequestProperty("If-Modified-Since", cached.lastModified)
+            }
+            connection.connect()
+
+            val responseCode = connection.responseCode
+
+            return when {
+                responseCode == HttpURLConnection.HTTP_OK -> {
+                    val body = connection.inputStream.bufferedReader().use { it.readText() }
+                    val lastModified = connection.getHeaderField("Last-Modified")
+
+                    if (body.isNotEmpty() && lastModified != null) {
+                        writeCache(DensityCacheEntry(lastModified, body))
+                        DensityLoadResult.Success(body)
+                    } else if (cached != null) {
+                        DensityLoadResult.Success(cached.content)
+                    } else {
+                        DensityLoadResult.Failure("HTTP 200 but missing body or Last-Modified header")
+                    }
+                }
+                responseCode == HttpURLConnection.HTTP_NOT_MODIFIED -> {
+                    if (cached != null) {
+                        // Touch the cache so freshness resets
+                        writeCache(cached)
+                        DensityLoadResult.Success(cached.content)
+                    } else {
+                        DensityLoadResult.Failure("HTTP 304 but no cached data available")
+                    }
+                }
+                else -> {
+                    if (cached != null) {
+                        DensityLoadResult.Success(cached.content)
+                    } else {
+                        DensityLoadResult.Failure("HTTP $responseCode")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            return if (cached != null) {
+                DensityLoadResult.Success(cached.content)
+            } else {
+                DensityLoadResult.Failure("Network error: ${e.message}")
+            }
+        } finally {
+            connection.disconnect()
+        }
+    }
+}
+
