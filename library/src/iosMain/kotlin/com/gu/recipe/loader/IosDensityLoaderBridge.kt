@@ -80,9 +80,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
         authToken: String,
         cached: DensityCacheEntry?
     ): DensityLoadResult {
-        val result = httpGet(url, authToken, cached?.lastModified)
-
-        return when (result) {
+        return when (val result = httpGet(url, authToken, cached?.lastModified)) {
             is HttpResult.Success -> {
                 when {
                     result.statusCode == 200 && result.body.isNotEmpty() && result.lastModified != null -> {

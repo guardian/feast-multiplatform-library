@@ -79,6 +79,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
+        val androidMain by getting
     }
 }
 
