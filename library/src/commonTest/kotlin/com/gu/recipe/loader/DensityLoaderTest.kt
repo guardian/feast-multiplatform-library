@@ -17,7 +17,7 @@ class DensityLoaderTest {
     private val invalidJson = "not valid json at all"
 
     private class FakeBridge(private val result: DensityLoadResult) : DensityLoaderBridge {
-        override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+        override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
             return result
         }
     }

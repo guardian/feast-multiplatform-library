@@ -14,7 +14,7 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
 
     private val cachePath = File(cacheDir, "recipe_data/density_cache.json").toOkioPath()
 
-    override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+    override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
         return withContext(Dispatchers.IO) {
             val cached = readCache()
             try {
@@ -67,7 +67,7 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
 
     private fun performRequest(
         url: String,
-        authToken: String,
+        authToken: String?,
         cached: DensityCacheEntry?
     ): DensityLoadResult {
         val connection = URL(url).openConnection() as HttpURLConnection
@@ -75,7 +75,9 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
             connection.connectTimeout = 10_000
             connection.readTimeout = 10_000
             connection.requestMethod = "GET"
-            connection.setRequestProperty("Authorization", "Bearer $authToken")
+            if (authToken != null) {
+                connection.setRequestProperty("Authorization", "Bearer $authToken")
+            }
             connection.setRequestProperty("Accept", "application/json")
             if (cached != null) {
                 connection.setRequestProperty("If-Modified-Since", cached.lastModified)

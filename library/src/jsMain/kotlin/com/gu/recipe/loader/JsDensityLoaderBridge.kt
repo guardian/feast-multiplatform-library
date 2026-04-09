@@ -5,10 +5,12 @@ import kotlin.js.Promise
 
 class JsDensityLoaderBridge : DensityLoaderBridge {
 
-    override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+    override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
         return try {
             val headers = js("({})")
-            headers["Authorization"] = "Bearer $authToken"
+            if (authToken != null) {
+                headers["Authorization"] = "Bearer $authToken"
+            }
             headers["Accept"] = "application/json"
 
             val init = js("({})")

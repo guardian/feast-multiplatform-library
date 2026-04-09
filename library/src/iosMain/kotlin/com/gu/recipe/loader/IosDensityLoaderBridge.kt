@@ -13,7 +13,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
 
     private val cachePath = "$cachesDirectory/recipe_data/density_cache.json".toPath()
 
-    override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+    override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
         val cached = readCache()
         return try {
             if (cached != null && isCacheFresh()) {
@@ -65,7 +65,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
 
     private suspend fun performRequest(
         url: String,
-        authToken: String,
+        authToken: String?,
         cached: DensityCacheEntry?
     ): DensityLoadResult {
         return when (val result = httpGet(url, authToken, cached?.lastModified)) {
@@ -107,7 +107,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
 
     private suspend fun httpGet(
         url: String,
-        authToken: String,
+        authToken: String?,
         ifModifiedSince: String?
     ): HttpResult = suspendCancellableCoroutine { cont ->
         val nsUrl = NSURL.URLWithString(url)
@@ -118,7 +118,9 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
 
         val request = NSMutableURLRequest.requestWithURL(nsUrl).apply {
             setHTTPMethod("GET")
-            setValue("Bearer $authToken", forHTTPHeaderField = "Authorization")
+            if (authToken != null) {
+                setValue("Bearer $authToken", forHTTPHeaderField = "Authorization")
+            }
             setValue("application/json", forHTTPHeaderField = "Accept")
             if (ifModifiedSince != null) {
                 setValue(ifModifiedSince, forHTTPHeaderField = "If-Modified-Since")

@@ -15,7 +15,7 @@ class DensityLoader(
      */
     suspend fun initialiseConversionSession(
         url: String,
-        authToken: String
+        authToken: String? = null
     ): TemplateSession {
         return try {
             when (val result = bridge.loadDensityData(url, authToken)) {
