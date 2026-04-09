@@ -1,9 +1,7 @@
 package com.gu.recipe.loader
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.usePinned
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okio.FileSystem
@@ -11,7 +9,6 @@ import okio.Path.Companion.toPath
 import platform.Foundation.*
 import kotlin.coroutines.resume
 
-@OptIn(ExperimentalForeignApi::class)
 class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoaderBridge {
 
     private val cachePath = "$cachesDirectory/recipe_data/density_cache.json".toPath()
@@ -151,12 +148,8 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
         task.resume()
     }
 
+    @OptIn(BetaInteropApi::class)
     private fun NSData.toKString(): String {
-        if (length.toInt() == 0) return ""
-        val bytes = ByteArray(length.toInt())
-        bytes.usePinned { pinned ->
-            platform.posix.memcpy(pinned.addressOf(0), this.bytes, this.length)
-        }
-        return bytes.decodeToString()
+        return NSString.create(data = this, encoding = NSUTF8StringEncoding)?.toString() ?: ""
     }
 }
