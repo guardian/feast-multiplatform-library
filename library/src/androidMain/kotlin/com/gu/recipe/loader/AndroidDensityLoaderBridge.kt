@@ -15,20 +15,20 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
     private val cachePath = File(cacheDir, "recipe_data/density_cache.json").toOkioPath()
 
     override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
-        val cached = readCache()
-        return try {
-            if (cached != null && isCacheFresh()) {
-                return DensityLoadResult.Success(cached.content)
-            }
+        return withContext(Dispatchers.IO) {
+            val cached = readCache()
+            try {
+                if (cached != null && isCacheFresh()) {
+                    return@withContext DensityLoadResult.Success(cached.content)
+                }
 
-            withContext(Dispatchers.IO) {
                 performRequest(url, authToken, cached)
-            }
-        } catch (e: Exception) {
-            if (cached != null) {
-                DensityLoadResult.Success(cached.content)
-            } else {
-                DensityLoadResult.Failure("Exception: ${e.message}")
+            } catch (e: Exception) {
+                if (cached != null) {
+                    DensityLoadResult.Success(cached.content)
+                } else {
+                    DensityLoadResult.Failure("Exception: ${e.message}")
+                }
             }
         }
     }
@@ -72,6 +72,8 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
     ): DensityLoadResult {
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
+            connection.connectTimeout = 10_000
+            connection.readTimeout = 10_000
             connection.requestMethod = "GET"
             connection.setRequestProperty("Authorization", "Bearer $authToken")
             connection.setRequestProperty("Accept", "application/json")

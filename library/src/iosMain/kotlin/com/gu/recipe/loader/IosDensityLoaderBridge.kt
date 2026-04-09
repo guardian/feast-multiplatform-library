@@ -126,6 +126,8 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
         }
 
         val task = NSURLSession.sharedSession.dataTaskWithRequest(request) { data, response, error ->
+            if (!cont.isActive) return@dataTaskWithRequest
+
             if (error != null) {
                 cont.resume(HttpResult.Error("Network error: ${error.localizedDescription}"))
                 return@dataTaskWithRequest

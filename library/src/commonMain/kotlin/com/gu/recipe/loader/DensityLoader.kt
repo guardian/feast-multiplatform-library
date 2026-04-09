@@ -17,17 +17,22 @@ class DensityLoader(
         url: String,
         authToken: String
     ): TemplateSession {
-        return when (val result = bridge.loadDensityData(url, authToken)) {
-            is DensityLoadResult.Success -> {
-                newTemplateSession(result.content).getOrElse {
-                    onError?.invoke("Remote data failed validation: ${it.message}")
+        return try {
+            when (val result = bridge.loadDensityData(url, authToken)) {
+                is DensityLoadResult.Success -> {
+                    newTemplateSession(result.content).getOrElse {
+                        onError?.invoke("Remote data failed validation: ${it.message}")
+                        fallbackSession()
+                    }
+                }
+                is DensityLoadResult.Failure -> {
+                    result.reason?.let { onError?.invoke(it) }
                     fallbackSession()
                 }
             }
-            is DensityLoadResult.Failure -> {
-                result.reason?.let { onError?.invoke(it) }
-                fallbackSession()
-            }
+        } catch (e: Exception) {
+            onError?.invoke("Bridge exception: ${e.message}")
+            fallbackSession()
         }
     }
 
