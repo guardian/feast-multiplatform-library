@@ -65,12 +65,13 @@ kotlin {
         }
     }
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.okio)
             }
         }
         val commonTest by getting {
@@ -79,7 +80,16 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.okio)
+            }
+        }
+        val iosMain by getting {
+            dependencies {
+                implementation(libs.okio)
+            }
+        }
     }
 }
 

@@ -2,7 +2,6 @@ package com.gu.recipe.loader
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okio.FileSystem
@@ -10,29 +9,14 @@ import okio.Path.Companion.toOkioPath
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-
-@Serializable
-private data class DensityCacheEntry(
-    val lastModified: String,
-    val content: String
-)
 
 class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBridge {
 
     private val cachePath = File(cacheDir, "recipe_data/density_cache.json").toOkioPath()
 
-    private val httpDateFormat: SimpleDateFormat
-        get() = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("GMT")
-        }
-
     override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+        val cached = readCache()
         return try {
-            val cached = readCache()
-
             if (cached != null && isCacheFresh()) {
                 return DensityLoadResult.Success(cached.content)
             }
@@ -41,7 +25,6 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
                 performRequest(url, authToken, cached)
             }
         } catch (e: Exception) {
-            val cached = try { readCache() } catch (_: Exception) { null }
             if (cached != null) {
                 DensityLoadResult.Success(cached.content)
             } else {
@@ -141,4 +124,3 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
         }
     }
 }
-

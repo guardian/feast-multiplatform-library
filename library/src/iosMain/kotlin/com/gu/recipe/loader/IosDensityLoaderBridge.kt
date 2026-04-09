@@ -4,7 +4,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okio.FileSystem
@@ -12,28 +11,20 @@ import okio.Path.Companion.toPath
 import platform.Foundation.*
 import kotlin.coroutines.resume
 
-@Serializable
-private data class DensityCacheEntry(
-    val lastModified: String,
-    val content: String
-)
-
 @OptIn(ExperimentalForeignApi::class)
 class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoaderBridge {
 
     private val cachePath = "$cachesDirectory/recipe_data/density_cache.json".toPath()
 
     override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
+        val cached = readCache()
         return try {
-            val cached = readCache()
-
             if (cached != null && isCacheFresh()) {
                 return DensityLoadResult.Success(cached.content)
             }
 
             performRequest(url, authToken, cached)
         } catch (e: Exception) {
-            val cached = try { readCache() } catch (_: Exception) { null }
             if (cached != null) {
                 DensityLoadResult.Success(cached.content)
             } else {
@@ -169,12 +160,3 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
         return bytes.decodeToString()
     }
 }
-
-
-
-
-
-
-
-
-

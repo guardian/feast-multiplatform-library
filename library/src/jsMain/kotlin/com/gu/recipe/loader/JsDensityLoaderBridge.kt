@@ -1,20 +1,22 @@
 package com.gu.recipe.loader
 
-import kotlin.js.Promise
 import kotlinx.coroutines.await
+import kotlin.js.Promise
 
 class JsDensityLoaderBridge : DensityLoaderBridge {
 
     override suspend fun loadDensityData(url: String, authToken: String): DensityLoadResult {
         return try {
-            val init = js("({})")
-            init.method = "GET"
             val headers = js("({})")
             headers["Authorization"] = "Bearer $authToken"
             headers["Accept"] = "application/json"
+
+            val init = js("({})")
+            init.method = "GET"
             init.headers = headers
 
-            val response: dynamic = (js("fetch(url, init)") as Promise<dynamic>).await()
+            val fetchFn: dynamic = js("globalThis.fetch")
+            val response: dynamic = (fetchFn(url, init) as Promise<dynamic>).await()
             val status = (response.status as Number).toInt()
             val ok = response.ok as Boolean
 
@@ -33,4 +35,3 @@ class JsDensityLoaderBridge : DensityLoaderBridge {
         }
     }
 }
-

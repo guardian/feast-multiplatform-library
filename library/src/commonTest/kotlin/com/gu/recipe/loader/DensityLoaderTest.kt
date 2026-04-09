@@ -8,6 +8,8 @@ import kotlin.test.assertEquals
 
 class DensityLoaderTest {
 
+    // Uses a distinct prepared_at and a limited ingredient set (only 2 items)
+    // so we can distinguish remote-data sessions from bundled fallback sessions.
     private val validDensityJson = """
         {"prepared_at":"2026-01-01T00:00:00","key":["id","name","normalised_name","density"],"values":[[1,"Olive oil","olive oil",0.47],[2,"Salt (fine sea salt)","salt",0.36]]}
     """.trimIndent()
@@ -22,24 +24,28 @@ class DensityLoaderTest {
 
     @Test
     fun `bridge returns Success with valid density JSON - session uses remote data`() = runTest {
+        val errors = mutableListOf<String>()
         val bridge = FakeBridge(DensityLoadResult.Success(validDensityJson))
-        val loader = DensityLoader(bridge)
+        val loader = DensityLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/data", "token123")
 
-        // Session should be created from the remote data
         assertNotNull(session)
+        // onError must NOT be called — proves remote data was used, not fallback
+        assertTrue(errors.isEmpty(), "Expected no errors when remote data is valid")
     }
 
     @Test
     fun `bridge returns Success with invalid JSON - falls back to bundled internal data`() = runTest {
+        val errors = mutableListOf<String>()
         val bridge = FakeBridge(DensityLoadResult.Success(invalidJson))
-        val loader = DensityLoader(bridge)
+        val loader = DensityLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/data", "token123")
 
-        // Should fall back to bundled internal data (which has Olive oil = 0.47)
         assertNotNull(session)
+        assertEquals(1, errors.size, "Expected exactly one error for invalid remote data")
+        assertTrue(errors[0].contains("Remote data failed validation"))
     }
 
     @Test
@@ -49,7 +55,6 @@ class DensityLoaderTest {
 
         val session = loader.initialiseConversionSession("https://example.com/data", "token123")
 
-        // Should fall back to bundled internal data
         assertNotNull(session)
     }
 
@@ -60,19 +65,20 @@ class DensityLoaderTest {
 
         val session = loader.initialiseConversionSession("https://example.com/data", "token123")
 
-        // Should fall back to bundled internal data
         assertNotNull(session)
     }
 
     @Test
     fun `bridge returns Success with empty string - falls back to bundled internal data`() = runTest {
+        val errors = mutableListOf<String>()
         val bridge = FakeBridge(DensityLoadResult.Success(""))
-        val loader = DensityLoader(bridge)
+        val loader = DensityLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/data", "token123")
 
-        // Empty string is invalid JSON, should fall back to bundled internal data
         assertNotNull(session)
+        assertEquals(1, errors.size, "Expected onError for invalid empty data")
+        assertTrue(errors[0].contains("Remote data failed validation"))
     }
 
     @Test
@@ -123,4 +129,3 @@ class DensityLoaderTest {
         assertTrue(errors.isEmpty())
     }
 }
-
