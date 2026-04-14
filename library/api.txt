@@ -387,6 +387,54 @@ package com.gu.recipe.js {
 
 }
 
+package com.gu.recipe.loader {
+
+  public final class AndroidDensityLoaderBridge implements com.gu.recipe.loader.DensityLoaderBridge {
+    ctor public AndroidDensityLoaderBridge(java.io.File cacheDir);
+    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  }
+
+  public sealed exhaustive interface DensityLoadResult {
+  }
+
+  public static final class DensityLoadResult.Failure implements com.gu.recipe.loader.DensityLoadResult {
+    ctor public DensityLoadResult.Failure();
+    ctor public DensityLoadResult.Failure(optional String? reason);
+    method public String? component1();
+    method public com.gu.recipe.loader.DensityLoadResult.Failure copy(optional String? reason);
+    method @InaccessibleFromKotlin public String? getReason();
+    property public String? reason;
+  }
+
+  public static final class DensityLoadResult.Success implements com.gu.recipe.loader.DensityLoadResult {
+    ctor public DensityLoadResult.Success(String content);
+    method public String component1();
+    method public com.gu.recipe.loader.DensityLoadResult.Success copy(optional String content);
+    method @InaccessibleFromKotlin public String getContent();
+    property public String content;
+  }
+
+  public final class DensityLoader {
+    ctor public DensityLoader(com.gu.recipe.loader.DensityLoaderBridge bridge, optional kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit>? onError);
+    method public suspend Object? initialiseConversionSession(String url, optional String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.TemplateSession>);
+  }
+
+  public interface DensityLoaderBridge {
+    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  }
+
+  public final class IosDensityLoaderBridge implements com.gu.recipe.loader.DensityLoaderBridge {
+    ctor public IosDensityLoaderBridge(String cachesDirectory);
+    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  }
+
+  public final class JsDensityLoaderBridge implements com.gu.recipe.loader.DensityLoaderBridge {
+    ctor public JsDensityLoaderBridge();
+    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  }
+
+}
+
 package com.gu.recipe.template {
 
   @kotlinx.serialization.Serializable public final class OvenTemperaturePlaceholder implements com.gu.recipe.template.TemplateElement {
