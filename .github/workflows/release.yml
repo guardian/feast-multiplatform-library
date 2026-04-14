@@ -112,8 +112,8 @@ jobs:
               repo: context.repo.repo,
               tag_name: version,
               name: `Release ${version}`,
-              draft: false,
-              prerelease: true,
+              draft: true,
+              prerelease: false,
               generate_release_notes: false
             });
             
