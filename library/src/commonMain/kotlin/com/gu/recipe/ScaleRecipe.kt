@@ -19,22 +19,46 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.math.max
 
-private fun splitBeforeSuffix(value: String): Pair<String, String?> {
-    val separators = charArrayOf(',', ';', '(')
-    val index = value.indexOfAny(separators)
+private val BRACKET_GROUP_REGEX = Regex("""\([^()]*\)""")
 
+private fun splitBeforeSuffix(value: String): Pair<String, String?> {
+    val index = value.indexOfAny(charArrayOf(',', ';', '('))
     return if (index != -1) {
-        val before = value.take(index)
-        val after = value.drop(index)
-        before to after
+        value.take(index) to value.drop(index)
     } else {
         value.trim() to null
     }
 }
 
 internal fun wrapWithStrongTag(value: String): String {
-    val (before, after) = splitBeforeSuffix(value)
-    return "<strong>$before</strong>${after.orEmpty()}"
+    // Rule: once comma/semicolon appears, everything after it is plain text.
+    val suffixStart = value.indexOfAny(charArrayOf(',', ';'))
+    val boldPart = if (suffixStart >= 0) value.take(suffixStart) else value
+    val plainSuffix = if (suffixStart >= 0) value.drop(suffixStart) else ""
+
+    val matches = BRACKET_GROUP_REGEX.findAll(boldPart).toList()
+    if (matches.isEmpty()) return "<strong>$boldPart</strong>$plainSuffix"
+
+    val stringBuilder = StringBuilder()
+    var cursor = 0
+
+    fun appendWrappedChunk(chunk: String) {
+        if (chunk.isEmpty()) return
+        if (chunk.isBlank()) {
+            stringBuilder.append(chunk)
+        } else {
+            stringBuilder.append("<strong>").append(chunk).append("</strong>")
+        }
+    }
+
+    for (match in matches) {
+        appendWrappedChunk(boldPart.substring(cursor, match.range.first))
+        stringBuilder.append(match.value) // Append the bracketed part without strong tags
+        cursor = match.range.last + 1
+    }
+
+    appendWrappedChunk(boldPart.substring(cursor))
+    return stringBuilder.toString() + plainSuffix
 }
 
 @OptIn(ExperimentalJsExport::class)
