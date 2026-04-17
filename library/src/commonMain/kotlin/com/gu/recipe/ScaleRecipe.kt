@@ -126,7 +126,7 @@ class TemplateSession(private val densityTable: DensityTable) {
                             } else {
                                 //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
                                 //only works on JVM; therefore we can't use it here
-                                metricPart + " (" + cupsPart + ")"
+                                cupsPart + " (" + metricPart + ")"
                             }
                         }
                     }
@@ -140,7 +140,7 @@ class TemplateSession(private val densityTable: DensityTable) {
                             if (cupsPart == imperialPart) {
                                 cupsPart
                             } else {
-                                imperialPart + " (" + cupsPart + ")"
+                                cupsPart + " (" + imperialPart + ")"
                             }
                         }
                     }
@@ -164,9 +164,9 @@ class TemplateSession(private val densityTable: DensityTable) {
                             if (cupsPart == metricPart && cupsPart == imperialPart) {
                                 metricPart
                             } else if (cupsPart == imperialPart) {
-                                metricPart + " (" + cupsPart + ")"
+                                cupsPart + " (" + metricPart + ")"
                             } else {
-                                metricPart + " (" + imperialPart + " • " + cupsPart + ")"
+                                imperialPart + " • " + cupsPart + " (" + metricPart + ")"
                             }
                         }
                     }
