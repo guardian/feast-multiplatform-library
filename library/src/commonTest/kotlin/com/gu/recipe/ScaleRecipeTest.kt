@@ -88,7 +88,7 @@ class ScaleRecipeTest {
     }
 
     @Test
-    fun `wrapWithStrongTag should wrap text before first punctuation`() {
+    fun `wrapWithStrongTag should wrap everything except bracket groups and comma or semicolon suffix`() {
         assertEquals("<strong>100 ml kefir</strong>", wrapWithStrongTag("100 ml kefir"))
         assertEquals("<strong>1/2 cup </strong>(100 ml)<strong> kefir</strong>", wrapWithStrongTag("1/2 cup (100 ml) kefir"))
         assertEquals("<strong>1-2 of something</strong>", wrapWithStrongTag("1-2 of something"))

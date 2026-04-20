@@ -31,7 +31,9 @@ private fun splitBeforeSuffix(value: String): Pair<String, String?> {
 }
 
 internal fun wrapWithStrongTag(value: String): String {
-    // Rule: once comma/semicolon appears, everything after it is plain text.
+    // Rule: bold text runs until the first comma/semicolon; anything after that stays plain text,
+    // and any parenthesized groups within the boldable portion also remain plain while surrounding
+    // text may still be bold.
     val suffixStart = value.indexOfAny(charArrayOf(',', ';'))
     val boldPart = if (suffixStart >= 0) value.take(suffixStart) else value
     val plainSuffix = if (suffixStart >= 0) value.drop(suffixStart) else ""
