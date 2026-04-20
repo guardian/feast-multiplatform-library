@@ -19,22 +19,38 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.math.max
 
-private fun splitBeforeSuffix(value: String): Pair<String, String?> {
-    val separators = charArrayOf(',', ';', '(')
-    val index = value.indexOfAny(separators)
+private val NON_BOLD_REGEX = Regex("""\([^()]*\)| • """)
+private const val MARKER = "\u0000"
 
+private fun splitBeforeSuffix(value: String): Pair<String, String?> {
+    val index = value.indexOfAny(charArrayOf(',', ';', '('))
     return if (index != -1) {
-        val before = value.take(index)
-        val after = value.drop(index)
-        before to after
+        value.take(index) to value.drop(index)
     } else {
         value.trim() to null
     }
 }
 
 internal fun wrapWithStrongTag(value: String): String {
-    val (before, after) = splitBeforeSuffix(value)
-    return "<strong>$before</strong>${after.orEmpty()}"
+    // Rule: bold text runs until the first comma/semicolon; anything after that stays plain text,
+    // and any parenthesized groups within the boldable portion also remain plain while surrounding
+    // text may still be bold.
+    val suffixStart = value.indexOfAny(charArrayOf(',', ';'))
+    val boldPart = if (suffixStart >= 0) value.take(suffixStart) else value
+    val plainSuffix = if (suffixStart >= 0) value.drop(suffixStart) else ""
+
+    val result = NON_BOLD_REGEX.replace(boldPart) { "$MARKER${it.value}$MARKER" }
+        .split(MARKER)
+        .joinToString("") { chunk ->
+            when {
+                chunk.isEmpty() -> ""
+                chunk.startsWith("(") -> chunk
+                chunk.isBlank() || chunk == " • " -> chunk
+                else -> "<strong>$chunk</strong>"
+            }
+        }
+
+    return result + plainSuffix
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -126,7 +142,7 @@ class TemplateSession(private val densityTable: DensityTable) {
                             } else {
                                 //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
                                 //only works on JVM; therefore we can't use it here
-                                metricPart + " (" + cupsPart + ")"
+                                cupsPart + " (" + metricPart + ")"
                             }
                         }
                     }
@@ -140,7 +156,7 @@ class TemplateSession(private val densityTable: DensityTable) {
                             if (cupsPart == imperialPart) {
                                 cupsPart
                             } else {
-                                imperialPart + " (" + cupsPart + ")"
+                                cupsPart + " (" + imperialPart + ")"
                             }
                         }
                     }
@@ -164,9 +180,9 @@ class TemplateSession(private val densityTable: DensityTable) {
                             if (cupsPart == metricPart && cupsPart == imperialPart) {
                                 metricPart
                             } else if (cupsPart == imperialPart) {
-                                metricPart + " (" + cupsPart + ")"
+                                cupsPart + " (" + metricPart + ")"
                             } else {
-                                metricPart + " (" + imperialPart + " • " + cupsPart + ")"
+                                imperialPart + " • " + cupsPart + " (" + metricPart + ")"
                             }
                         }
                     }
