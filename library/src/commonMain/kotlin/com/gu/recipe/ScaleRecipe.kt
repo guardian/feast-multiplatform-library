@@ -19,7 +19,7 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.math.max
 
-private val BRACKET_GROUP_REGEX = Regex("""\([^()]*\)""")
+private val BRACKET_GROUP_REGEX = Regex("""\([^()]*\)|•""")
 
 private fun splitBeforeSuffix(value: String): Pair<String, String?> {
     val index = value.indexOfAny(charArrayOf(',', ';', '('))
