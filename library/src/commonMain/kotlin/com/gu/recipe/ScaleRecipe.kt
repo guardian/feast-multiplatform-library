@@ -19,7 +19,8 @@ import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import kotlin.math.max
 
-private val BRACKET_GROUP_REGEX = Regex("""\([^()]*\)|•""")
+private val NON_BOLD_REGEX = Regex("""\([^()]*\)| • """)
+private const val MARKER = "\u0000"
 
 private fun splitBeforeSuffix(value: String): Pair<String, String?> {
     val index = value.indexOfAny(charArrayOf(',', ';', '('))
@@ -38,29 +39,18 @@ internal fun wrapWithStrongTag(value: String): String {
     val boldPart = if (suffixStart >= 0) value.take(suffixStart) else value
     val plainSuffix = if (suffixStart >= 0) value.drop(suffixStart) else ""
 
-    val matches = BRACKET_GROUP_REGEX.findAll(boldPart).toList()
-    if (matches.isEmpty()) return "<strong>$boldPart</strong>$plainSuffix"
-
-    val stringBuilder = StringBuilder()
-    var cursor = 0
-
-    fun appendWrappedChunk(chunk: String) {
-        if (chunk.isEmpty()) return
-        if (chunk.isBlank()) {
-            stringBuilder.append(chunk)
-        } else {
-            stringBuilder.append("<strong>").append(chunk).append("</strong>")
+    val result = NON_BOLD_REGEX.replace(boldPart) { "$MARKER${it.value}$MARKER" }
+        .split(MARKER)
+        .joinToString("") { chunk ->
+            when {
+                chunk.isEmpty() -> ""
+                chunk.startsWith("(") -> chunk
+                chunk.isBlank() || chunk == " • " -> chunk
+                else -> "<strong>$chunk</strong>"
+            }
         }
-    }
 
-    for (match in matches) {
-        appendWrappedChunk(boldPart.substring(cursor, match.range.first))
-        stringBuilder.append(match.value) // Append the bracketed part without strong tags
-        cursor = match.range.last + 1
-    }
-
-    appendWrappedChunk(boldPart.substring(cursor))
-    return stringBuilder.toString() + plainSuffix
+    return result + plainSuffix
 }
 
 @OptIn(ExperimentalJsExport::class)
