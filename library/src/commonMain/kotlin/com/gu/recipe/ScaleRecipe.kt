@@ -170,7 +170,9 @@ class TemplateSession(private val densityTable: DensityTable) {
                                 renderQuantity(element, factor, MeasuringSystem.USCustomary)
                         } else {
                             val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                            val imperialPart = if(unit.unitType==UnitType.VOLUME) {    //don't show extra volumes in US
+                            val imperialPart = if (unit == Units.FLUID_OUNCE) { // Skip rendering fluid ounces
+                                null
+                            } else if (unit.unitType == UnitType.VOLUME) { //don't show extra volumes in US
                                 cupsPart
                             } else {
                                 renderQuantity(element, factor, MeasuringSystem.Imperial)
