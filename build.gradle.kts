@@ -9,7 +9,7 @@ plugins {
 allprojects {
     configurations.all {
         resolutionStrategy {
-            force("io.netty:netty-codec-http2:4.1.132.Final")
+            force("io.netty:netty-codec-http2:${libs.versions.netty.codec.http2.get()}")
         }
     }
 }
