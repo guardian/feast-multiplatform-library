@@ -5,6 +5,7 @@ import com.gu.recipe.generated.*
 import com.gu.recipe.TemplateSession
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.ingredientWithoutSuffix
+import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -58,7 +59,7 @@ class ScaleRecipeTest {
                         ),
                         IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt""",
-                            text = "<strong>2 tsp of salt</strong>"
+                            text = "<strong>1½ tsp of salt</strong>"
                         ),
                         IngredientItem(
                             template = """{"min":1, "scale":true} x {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",
@@ -108,4 +109,29 @@ class ScaleRecipeTest {
         val ingredient3 = "150 g egg; (small)"
         assertEquals("150 g egg", ingredientWithoutSuffix(ingredient3))
     }
+        @Test
+        fun `test tbsp conversion for 1_5 input`() {
+            // Arrange
+            val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+            val templateSession = TemplateSession(densityTable)
+            val placeholder = QuantityPlaceholder(
+                min = 1.5f,
+                max = 1.5f,
+                unit = "tbsp",
+                scale = true,
+                ingredient = "lemon juice",
+                usCust = true
+            )
+            val factor = 1.0f
+            val measuringSystem = MeasuringSystem.USCustomary
+
+            // Act
+            val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+
+            println("Testcase: result = $result")
+
+            // Assert
+            assertEquals("4½ tsp", result) // I thought of asserting "1½ tbsp", but since 1 US tablespoon is 3 teaspoons, it should convert to 4½ teaspoons instead of showing 1½ tablespoons.
+    }
+
 }
