@@ -4,6 +4,8 @@ import com.gu.recipe.FormatUtils.applySmartPunctuation
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.density.loadDensityTable
 import com.gu.recipe.density.loadInternalDensityTable
+import com.gu.recipe.egg.EggRegion
+import com.gu.recipe.egg.convertEggSizesInText
 import com.gu.recipe.generated.*
 import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
@@ -199,7 +201,15 @@ class TemplateSession(private val densityTable: DensityTable) {
             renderTemplateElement(element, factor, measuringSystem)
         }
 
-        return applySmartPunctuation(renderedParts.joinToString(""))
+        var result = applySmartPunctuation(renderedParts.joinToString(""))
+
+        // Post-process: convert egg size labels for US audiences
+        val eggRegion = measuringSystemToEggRegion(measuringSystem)
+        if (eggRegion != null) {
+            result = convertEggSizesInText(result, eggRegion)
+        }
+
+        return result
     }
 
     /**
@@ -232,6 +242,16 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
 
         return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
+    }
+}
+
+private fun measuringSystemToEggRegion(system: MeasuringSystem): EggRegion? {
+    return when (system) {
+        is MeasuringSystem.USCustomary,
+        is MeasuringSystem.USCustomaryWithMetric,
+        is MeasuringSystem.USCustomaryWithImperial,
+        is MeasuringSystem.USCombined -> EggRegion.US
+        else -> null
     }
 }
 
