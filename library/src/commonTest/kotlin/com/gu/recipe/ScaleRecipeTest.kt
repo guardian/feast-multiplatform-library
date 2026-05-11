@@ -1,11 +1,8 @@
-package io.github.kotlin.fibonacci.com.gu.recipe
+package com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.TemplateSession
 import com.gu.recipe.density.DensityTable
-import com.gu.recipe.ingredientWithoutSuffix
-import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -107,5 +104,39 @@ class ScaleRecipeTest {
 
         val ingredient3 = "150 g egg; (small)"
         assertEquals("150 g egg", ingredientWithoutSuffix(ingredient3))
+
+        val ingredient4 = "5¾ oz • ¾ cup (165 g) short-grain white rice, or pasta if you're inclined"
+        assertEquals("5¾ oz • ¾ cup (165 g) short-grain white rice", ingredientWithoutSuffix(ingredient4))
+
+        val ingredient5 = "2 onions (large), finely chopped"
+        assertEquals("2 onions (large)", ingredientWithoutSuffix(ingredient5))
+
+        // No suffix at all
+        val ingredient6 = "3 cloves garlic"
+        assertEquals("3 cloves garlic", ingredientWithoutSuffix(ingredient6))
+
+        // Metric conversion in parens with no suffix after ingredient
+        val ingredient7 = "1 cup (240 ml) whole milk"
+        assertEquals("1 cup (240 ml) whole milk", ingredientWithoutSuffix(ingredient7))
+
+        // Multiple unit systems with bullet separator and comma suffix
+        val ingredient8 = "7 oz • 1½ cups (200 g) plain flour, plus extra for dusting"
+        assertEquals("7 oz • 1½ cups (200 g) plain flour", ingredientWithoutSuffix(ingredient8))
+
+        // Semicolon suffix with no parens
+        val ingredient9 = "500 g chicken thighs; boneless and skinless"
+        assertEquals("500 g chicken thighs", ingredientWithoutSuffix(ingredient9))
+
+        // Trailing paren qualifier with no comma
+        val ingredient10 = "2 lemons (unwaxed)"
+        assertEquals("2 lemons", ingredientWithoutSuffix(ingredient10))
+
+        // Paren descriptor followed by semicolon
+        val ingredient11 = "3 peppers (mixed colours); deseeded"
+        assertEquals("3 peppers (mixed colours)", ingredientWithoutSuffix(ingredient11))
+
+        // Just a simple ingredient with parens in the middle followed by more text and comma
+        val ingredient12 = "14 oz • 3 cups (400g) banana shallots (about 6), peeled and sliced"
+        assertEquals("14 oz • 3 cups (400g) banana shallots (about 6)", ingredientWithoutSuffix(ingredient12))
     }
 }

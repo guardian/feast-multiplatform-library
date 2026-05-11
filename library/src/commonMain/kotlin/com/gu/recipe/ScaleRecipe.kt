@@ -22,14 +22,9 @@ import kotlin.math.max
 private val NON_BOLD_REGEX = Regex("""\([^()]*\)| • """)
 private const val MARKER = "\u0000"
 
-private fun splitBeforeSuffix(value: String): Pair<String, String?> {
-    val index = value.indexOfAny(charArrayOf(',', ';', '('))
-    return if (index != -1) {
-        value.take(index) to value.drop(index)
-    } else {
-        value.trim() to null
-    }
-}
+// Matches a parenthesized group at the end of the string, e.g. "(homemade or shop-bought)"
+private val TRAILING_PAREN = Regex("""\s*\([^)]*\)\s*$""")
+
 
 internal fun wrapWithStrongTag(value: String): String {
     // Rule: bold text runs until the first comma/semicolon; anything after that stays plain text,
@@ -249,7 +244,21 @@ fun noCustomaryTemplateSession(): TemplateSession {
     return TemplateSession(densityTable)
 }
 
+/**
+ * Extracts the main ingredient name from a rendered ingredient string, stripping any suffix.
+ * A suffix starts at the first comma or semicolon. If neither is found, a trailing
+ * parenthetical group (e.g. "(homemade or shop-bought)") is stripped instead.
+ * Mid-string parentheticals like "(165 g)" or "(large)" that precede a delimiter are preserved.
+ */
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
-    val (before, _) = splitBeforeSuffix(renderedTemplate)
-    return before.trim()
+    // Rule 1: comma/semicolon always wins — take everything before it
+    val delimiterIndex = renderedTemplate.indexOfAny(charArrayOf(',', ';'))
+    if (delimiterIndex != -1) return renderedTemplate.take(delimiterIndex).trim()
+
+    // Rule 2: no delimiter found — strip a trailing parenthetical if present
+    val match = TRAILING_PAREN.find(renderedTemplate)
+    if (match != null) return renderedTemplate.take(match.range.first).trim()
+
+    // No suffix found — the entire string is the ingredient
+    return renderedTemplate.trim()
 }
