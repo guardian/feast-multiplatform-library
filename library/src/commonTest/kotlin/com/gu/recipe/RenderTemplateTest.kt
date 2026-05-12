@@ -486,7 +486,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `USCombined renders only US customary units for volumes`() {
+    fun `USCombined renders only US customary units for volumes means imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
