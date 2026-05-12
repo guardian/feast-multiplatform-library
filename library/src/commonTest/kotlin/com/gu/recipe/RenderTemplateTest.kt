@@ -570,7 +570,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `USCombined does not duplicate non-standard units`() {
+    fun `USCombined does not duplicate non-standard units in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
