@@ -534,7 +534,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `USCustomaryWithImperial does not duplicate weight measurements`() {
+    fun `USCustomaryWithImperial does not duplicate weight measurements in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
