@@ -510,7 +510,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `USCustomaryWithImperial renders only US customary units`() {
+    fun `USCustomaryWithImperial renders only US customary units in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
