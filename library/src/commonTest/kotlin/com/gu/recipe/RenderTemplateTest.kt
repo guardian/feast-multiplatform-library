@@ -462,7 +462,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `render hybrid metric + cups when requested`() {
+    fun `USCustomaryWithMetric renders only US customary units`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -486,7 +486,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `render hybrid metric + imperial + cups when requested`() {
+    fun `USCombined renders only US customary units for volumes`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -510,7 +510,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `render hybrid imperial + cups when requested`() {
+    fun `USCustomaryWithImperial renders only US customary units`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -534,7 +534,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `not duplicate weight measurements in imperial + cups`() {
+    fun `USCustomaryWithImperial does not duplicate weight measurements`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -552,7 +552,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `not duplicate weight measurements in imperial + cups + metric`() {
+    fun `USCombined does not duplicate weight measurements`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -570,7 +570,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `not duplicate non-standard units in imperial + cups + metric`() {
+    fun `USCombined does not duplicate non-standard units`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -588,7 +588,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `render more than 6 tbsp as cups`() {
+    fun `USCombined renders more than 6 tbsp as cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -605,7 +605,7 @@ class RenderTemplateTest {
         assertEquals("½ cup of oil", result)
     }
     @Test
-    fun `correctly show weight measurements in metric + cups`() {
+    fun `USCustomaryWithMetric renders weight as US customary only`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -623,7 +623,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `display butter differently to everything else`() {
+    fun `USCombined renders butter as stick and cup without metric bracket`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
