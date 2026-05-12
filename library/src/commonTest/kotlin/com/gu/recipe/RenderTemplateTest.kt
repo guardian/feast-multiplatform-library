@@ -605,7 +605,7 @@ class RenderTemplateTest {
         assertEquals("½ cup of oil", result)
     }
     @Test
-    fun `USCustomaryWithMetric renders weight as US customary only`() {
+    fun `USCustomaryWithMetric renders weight as US customary only in cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
