@@ -462,7 +462,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `USCustomaryWithMetric renders only US customary units`() {
+    fun `USCustomaryWithMetric renders only US customary units in cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
