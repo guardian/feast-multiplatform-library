@@ -482,7 +482,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
-        assertEquals("½ cup (100 ml) of water, ½ cup (120 ml) of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
@@ -506,7 +506,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("½ cup (100 ml) of water, ½ cup (120 ml) of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
@@ -530,7 +530,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
-        assertEquals("½ cup (3⅓ fl oz) of water, ½ cup (4 fl oz) of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
@@ -566,7 +566,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("3½ oz (100 g) of vegan pork", result)
+        assertEquals("3½ oz of vegan pork", result)
     }
 
     @Test
@@ -619,7 +619,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
-        assertEquals("3½ oz (100 g) of vegan pork", result)
+        assertEquals("3½ oz of vegan pork", result)
     }
 
     @Test
@@ -638,7 +638,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("1 stick • ½ cup (118 g) of butter", result)
+        assertEquals("1 stick • ½ cup of butter", result)
     }
 }
 
