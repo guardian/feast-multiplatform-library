@@ -462,7 +462,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `render hybrid metric + cups when requested`() {
+    fun `USCustomaryWithMetric renders only US customary units in cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -482,11 +482,11 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
-        assertEquals("½ cup (100 ml) of water, ½ cup (120 ml) of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
-    fun `render hybrid metric + imperial + cups when requested`() {
+    fun `USCombined renders only US customary units for volumes means imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -506,11 +506,11 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("½ cup (100 ml) of water, ½ cup (120 ml) of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
-    fun `render hybrid imperial + cups when requested`() {
+    fun `USCustomaryWithImperial renders only US customary units in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -530,11 +530,11 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
-        assertEquals("½ cup (3⅓ fl oz) of water, ½ cup (4 fl oz) of oil", result)
+        assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
     @Test
-    fun `not duplicate weight measurements in imperial + cups`() {
+    fun `USCustomaryWithImperial does not duplicate weight measurements in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -552,7 +552,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `not duplicate weight measurements in imperial + cups + metric`() {
+    fun `USCombined does not duplicate weight measurements in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -566,11 +566,11 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("3½ oz (100 g) of vegan pork", result)
+        assertEquals("3½ oz of vegan pork", result)
     }
 
     @Test
-    fun `not duplicate non-standard units in imperial + cups + metric`() {
+    fun `USCombined does not duplicate non-standard units in imperial + cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -588,7 +588,7 @@ class RenderTemplateTest {
     }
 
     @Test
-    fun `render more than 6 tbsp as cups`() {
+    fun `USCombined renders more than 6 tbsp as cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -605,7 +605,7 @@ class RenderTemplateTest {
         assertEquals("½ cup of oil", result)
     }
     @Test
-    fun `correctly show weight measurements in metric + cups`() {
+    fun `USCustomaryWithMetric renders weight as US customary only in cups`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -619,11 +619,11 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
-        assertEquals("3½ oz (100 g) of vegan pork", result)
+        assertEquals("3½ oz of vegan pork", result)
     }
 
     @Test
-    fun `display butter differently to everything else`() {
+    fun `USCombined renders butter as stick and cup without metric bracket`() {
         val template = ParsedTemplate(
             listOf(
                 QuantityPlaceholder(
@@ -638,7 +638,7 @@ class RenderTemplateTest {
             )
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
-        assertEquals("1 stick • ½ cup (118 g) of butter", result)
+        assertEquals("1 stick • ½ cup of butter", result)
     }
 }
 

@@ -130,35 +130,13 @@ class TemplateSession(private val densityTable: DensityTable) {
             is QuantityPlaceholder -> {
 
                 when (measuringSystem) {
-                    is MeasuringSystem.Metric, is MeasuringSystem.Imperial, is MeasuringSystem.USCustomary, is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem)
-                    is MeasuringSystem.USCustomaryWithMetric -> {
-                        if(element.unit.isNullOrBlank()) {
-                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                        } else {
-                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                            val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
-                            if (cupsPart == metricPart) {
-                                cupsPart
-                            } else {
-                                //NOTE - according to https://kotlinlang.org/docs/strings.html#string-formatting String.format()
-                                //only works on JVM; therefore we can't use it here
-                                cupsPart + " (" + metricPart + ")"
-                            }
-                        }
-                    }
+                    is MeasuringSystem.Metric,
+                    is MeasuringSystem.Imperial,
+                    is MeasuringSystem.USCustomary,
+                    is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem)
+                    is MeasuringSystem.USCustomaryWithMetric,
                     is MeasuringSystem.USCustomaryWithImperial -> {
-                        if(element.unit.isNullOrBlank()) {
-                            renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                        } else {
-                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
-                            val imperialPart = renderQuantity(element, factor, MeasuringSystem.Imperial)
-
-                            if (cupsPart == imperialPart) {
-                                cupsPart
-                            } else {
-                                cupsPart + " (" + imperialPart + ")"
-                            }
-                        }
+                        renderQuantity(element, factor, MeasuringSystem.USCustomary)
                     }
                     is MeasuringSystem.USCombined -> {
                         val unit = element.unit?.let { Units.findRecipeUnit(it) }
@@ -169,22 +147,19 @@ class TemplateSession(private val densityTable: DensityTable) {
                             unit==Units.US_TABLESPOON) {
                                 renderQuantity(element, factor, MeasuringSystem.USCustomary)
                         } else {
-                            val cupsPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val usCustomaryPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
                             val imperialPart = if (unit == Units.FLUID_OUNCE) { // Skip rendering fluid ounces
                                 null
-                            } else if (unit.unitType == UnitType.VOLUME) { //don't show extra volumes in US
-                                cupsPart
+                            } else if (unit.unitType == UnitType.VOLUME) {
+                                usCustomaryPart
                             } else {
                                 renderQuantity(element, factor, MeasuringSystem.Imperial)
                             }
-                            val metricPart = renderQuantity(element, factor, MeasuringSystem.Metric)
 
-                            if (cupsPart == metricPart && cupsPart == imperialPart) {
-                                metricPart
-                            } else if (cupsPart == imperialPart) {
-                                cupsPart + " (" + metricPart + ")"
+                            if (usCustomaryPart == imperialPart || imperialPart == null) {
+                                usCustomaryPart
                             } else {
-                                imperialPart + " • " + cupsPart + " (" + metricPart + ")"
+                                imperialPart + " • " + usCustomaryPart
                             }
                         }
                     }
