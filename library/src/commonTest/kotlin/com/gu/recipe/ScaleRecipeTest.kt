@@ -128,10 +128,8 @@ class ScaleRecipeTest {
             // Act
             val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
 
-            println("Testcase: result = $result")
-
             // Assert
-            assertEquals("4½ tsp", result) // I thought of asserting "1½ tbsp", but since 1 US tablespoon is 3 teaspoons, it should convert to 4½ teaspoons instead of showing 1½ tablespoons.
+            assertEquals("1½ tbsp", result)
     }
 
 }
