@@ -41,24 +41,6 @@ object UnitConversions {
         0f to Units.STICK,
     )
 
-    val US_CUSTOMARY_CONVERSION_LADDER = listOf<Pair<Float, MeasurementUnit>>(
-        0f to Units.OUNCE,
-        16f * Units.OUNCE.quantity to Units.POUND,
-
-        // Updated logic: Avoid tbsp conversion until the quantity reaches 4 tbsp, agreed by Editorial to avoid clunky conversions like 1.5 tbsp -> 4.5 tsp.
-        0f to Units.US_TEASPOON,
-        3f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        4f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        6f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        7f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        9f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        10f * Units.US_TEASPOON.quantity to Units.US_TABLESPOON,
-        12f * Units.US_TEASPOON.quantity to Units.US_CUP,
-        768f * Units.US_TEASPOON.quantity to Units.US_GALLON,
-
-        0f to Units.INCH,
-    )
-
     val US_TABLESPOON_CONVERSIONS = listOf(3f, 4f, 6f, 7f, 9f, 10f).map {// To Avoid tbsp conversion until the quantity reaches 4 tbsp
         it * Units.US_TEASPOON.quantity to Units.US_TABLESPOON
     }
