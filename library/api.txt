@@ -574,6 +574,7 @@ package com.gu.recipe.unit {
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVERSION_LADDER();
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_CONVERSION_LADDER();
     method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_DRY_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_TABLESPOON_CONVERSIONS();
     method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> BUTTER_CONVERSION_LADDER;
     property public java.util.Set<com.gu.recipe.unit.MeasurementUnit> CONVENIENCE_UNITS;
@@ -582,6 +583,7 @@ package com.gu.recipe.unit {
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVERSION_LADDER;
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_CONVERSION_LADDER;
     property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_DRY_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_TABLESPOON_CONVERSIONS;
     field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
   }
 
