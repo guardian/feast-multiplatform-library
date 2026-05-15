@@ -102,9 +102,9 @@ class TemplateSession(private val densityTable: DensityTable) {
 
         val fraction = when (amount.unit) {
             Units.CENTILITRE, Units.MILLILITRE, Units.CENTIMETRE, Units.GRAM, Units.KILOGRAM, Units.MILLIMETRE -> false
-            Units.METRIC_TEASPOON, Units.METRIC_TABLESPOON, Units.US_TABLESPOON, Units.US_TEASPOON -> amount.min < 1f
-            else -> true
+            else -> true // generally for Units.METRIC_TEASPOON, Units.METRIC_TABLESPOON, Units.US_TABLESPOON, Units.US_TEASPOON
         }
+
         val unitString = if (amount.unit != null) {
             if (max(amount.min, amount.max ?: amount.min) > 1.1f) { //need to offset from exactly one, so that when rounding a value below 1/8 we don't get "1 cups
                 " ${amount.unit.symbolPlural}"

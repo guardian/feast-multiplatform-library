@@ -185,20 +185,19 @@ class UnitConversionTest {
     }
 
     @Test
-    fun `scales US teaspoons to tablespoons and cup at expected thresholds`() {
+    fun `scales US teaspoons to tablespoons and cup at expected thresholds with both whole or float values`() {
         val cases = listOf(
             Triple(0f, 0f, Units.US_TEASPOON),
             Triple(1f, 1f, Units.US_TEASPOON),
             Triple(2f, 2f, Units.US_TEASPOON),
             Triple(3f, 1f, Units.US_TABLESPOON),
-            Triple(4f, 4f, Units.US_TEASPOON),
-            Triple(5f, 5f, Units.US_TEASPOON),
+            Triple(4.5f, 1.5f, Units.US_TABLESPOON),
             Triple(6f, 2f, Units.US_TABLESPOON),
-            Triple(7f, 7f, Units.US_TEASPOON),
-            Triple(8f, 8f, Units.US_TEASPOON),
+            Triple(7.5f, 2.5f, Units.US_TABLESPOON),
+            Triple(8f, 2.6666667f, Units.US_TABLESPOON),//these long values are just for testing the precision of the conversion, they are expected to be shown to users as formatted way
             Triple(9f, 3f, Units.US_TABLESPOON),
-            Triple(10f, 10f, Units.US_TEASPOON),
-            Triple(11f, 11f, Units.US_TEASPOON),
+            Triple(10.5f, 3.5f, Units.US_TABLESPOON),
+            Triple(11f, 3.6666665f, Units.US_TABLESPOON),
             Triple(12f, 0.25f, Units.US_CUP),
         )
 
