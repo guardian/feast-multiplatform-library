@@ -11,6 +11,8 @@ import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
+import com.gu.recipe.terminology.TerminologyTable
+import com.gu.recipe.terminology.loadInternalTerminologyTable
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.unit.UnitConversions
 import com.gu.recipe.unit.UnitType
@@ -190,24 +192,49 @@ class TemplateSession(private val densityTable: DensityTable) {
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
             IngredientsList(
                 ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
+
                     val scaledText = templateIngredient.template?.let { template ->
-                        wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem))
-                    } ?: templateIngredient.text
+                        wrapWithStrongTag(
+                            applyTerminologyConversion(
+                                renderTemplate(parseTemplate(template), factor, measuringSystem)
+                            ) ?: ""
+                        )
+                    } ?: applyTerminologyConversion(templateIngredient.text ?: "")
 
                     templateIngredient.copy(text = scaledText)
                 },
-                recipeSection = ingredientSection.recipeSection
+                recipeSection = applyTerminologyConversion(ingredientSection.recipeSection ?: "")
             )
         }
         val scaledInstructions = recipe.instructions?.map { instruction ->
             val description = instruction.descriptionTemplate?.let { template ->
-                renderTemplate(parseTemplate(template), factor, measuringSystem)
-            }
-            instruction.copy(description = description ?: instruction.description)
+                applyTerminologyConversion(
+                    renderTemplate(parseTemplate(template), factor, measuringSystem)
+                )
+            } ?: applyTerminologyConversion(instruction.description) ?: ""
+            instruction.copy(description = description)
         }
 
-        return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
+        return recipe.copy(
+            //title = applyTerminologyConversion(recipe.title),
+            //serves = applyTerminologyConversion(recipe.serves),
+            ingredients = scaledIngredients,
+            instructions = scaledInstructions
+        )
     }
+}
+
+private val terminologyTable: TerminologyTable? = loadInternalTerminologyTable().getOrNull()
+
+private fun applyTerminologyConversion(text: String): String? {
+    println("---Incoming text: $text") // Print the incoming text
+    var convertedText: String? = text
+    terminologyTable?.let { table ->
+        convertedText = text.split(" ").joinToString(" ") { word ->
+            table.convertTerm(word) ?: word
+        }.takeIf { it != text } // Return null if no conversion occurred
+    }
+    return convertedText
 }
 
 fun newTemplateSession(rawDensityData: String? = null):Result<TemplateSession> {
@@ -228,3 +255,4 @@ fun ingredientWithoutSuffix(renderedTemplate: String): String {
     val (before, _) = splitBeforeSuffix(renderedTemplate)
     return before.trim()
 }
+
