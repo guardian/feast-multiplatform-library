@@ -18,9 +18,11 @@ This document breaks the work into small steps so GraphQL support can be added t
 
 ### Task 0.1 — Keep public API stable
 - Continue exposing consumer-facing APIs from `:library`.
+- Keep a clear distinction between consumer-facing API and internal module-to-module API.
 - Do not expose Retrofit service interfaces in public APIs.
 - Do not expose Apollo generated models in public APIs.
 - Return stable library-owned models or repository interfaces from `:library`.
+- It is acceptable for internal-only types to live in `:core:networking` or `:core:graphql` when consuming apps will not import them directly.
 
 ### Task 0.2 — Use internal module boundaries
 - Put transport/infrastructure code in `:core:networking`.
@@ -35,6 +37,10 @@ This document breaks the work into small steps so GraphQL support can be added t
 - Consumers should keep depending on the existing published `library` artifact.
 - Consumers should not need to know whether data comes from Retrofit or Apollo.
 - Any new setup needed by consumers should be limited to a small config/factory API.
+
+Implementation note:
+- if a type is only used between modules inside this repository and is never imported by consuming apps, it does not need to be promoted into `:library`
+- only types that are part of the true external SDK surface should be treated as long-term public API
 
 ---
 
