@@ -3,11 +3,12 @@ package com.gu.recipe.core.graphql
 import com.apollographql.apollo.ApolloClient
 import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
 import com.gu.recipe.core.networking.NetworkConfig
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import org.koin.core.context.stopKoin
-import org.koin.core.module.Module
+import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
 
 class GraphQlConfigTest {
@@ -49,6 +50,7 @@ class GraphQlConfigTest {
             val koin = application.koin
             assertNotNull(koin.get<GraphQlConfig>())
             assertNotNull(koin.get<GraphQlServerUrlProvider>())
+            assertNotNull(koin.get<CoroutineDispatcher>(named(GraphQlQualifiers.IoDispatcher)))
             assertNotNull(koin.get<ApolloClient>())
             assertNotNull(koin.get<FeastGraphQlClient>())
         } finally {
