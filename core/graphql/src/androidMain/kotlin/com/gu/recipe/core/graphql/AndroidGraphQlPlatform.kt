@@ -1,4 +1,4 @@
 package com.gu.recipe.core.graphql
 
-internal object AndroidGraphQlPlatform
+// Android-specific GraphQL wiring lives in GraphQlAndroidHiltBridgeModule and GraphQlAndroidModule.
 
