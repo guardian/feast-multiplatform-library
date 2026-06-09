@@ -6,6 +6,7 @@ This document breaks the work into small steps so GraphQL support can be added t
 
 - Keep `:library` as the only module most consumer apps need to depend on.
 - Keep Retrofit and Apollo implementation details out of the public API.
+- Use Koin internally for dependency wiring while keeping DI details hidden from consuming apps.
 - Keep the networking layer structured so Retrofit can be replaced by Ktor later with minimal downstream impact.
 - Add a `:core:networking` module first as the internal foundation.
 - Add a fully working `:core:graphql` module second.
@@ -174,6 +175,8 @@ Recommended structure inside `:core:graphql`:
 
 ### Task 3.4 — Implement a thin GraphQL client wrapper
 Create a small wrapper around Apollo so the rest of the project does not depend directly on Apollo APIs.
+
+Use Koin inside `:core:graphql` for wiring the Apollo client, GraphQL wrapper, and related configuration so dependency setup remains consistent across platforms without leaking DI decisions into the public SDK.
 
 Suggested responsibilities:
 - create the Apollo client
