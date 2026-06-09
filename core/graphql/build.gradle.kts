@@ -6,6 +6,8 @@ plugins {
 	alias(libs.plugins.kotlinMultiplatform)
 	alias(libs.plugins.androidLibrary)
 	alias(libs.plugins.apollo)
+	alias(libs.plugins.hiltAndroid)
+	alias(libs.plugins.ksp)
 }
 
 val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
@@ -105,8 +107,18 @@ kotlin {
 				implementation(libs.koin.core)
 			}
 		}
-		val androidMain by getting
+		val androidMain by getting {
+			dependencies {
+				implementation(libs.koin.android)
+				implementation(libs.hilt.android)
+			}
+		}
+		val iosMain by getting
 	}
+}
+
+dependencies {
+	add("kspAndroid", libs.hilt.compiler)
 }
 
 android {
