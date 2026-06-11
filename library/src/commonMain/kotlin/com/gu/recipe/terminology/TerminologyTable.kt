@@ -19,6 +19,8 @@ class TerminologyTable(
     val preparedAt: String,
     private val terminologyMap: Map<String, String>
 ) {
+    // Expose the keys so the Trie knows what words to build structures for
+    val keys: Set<String> get() = terminologyMap.keys
     fun convertTerm(term: String): String? {
         return terminologyMap[term]
     }
@@ -41,12 +43,10 @@ fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
                 it[1].jsonPrimitive.content, // UK Term
                 it[2].jsonPrimitive.content // US Term
             )
-            println("Processed entry: $entry")
             entry
         }
 
         val terminologyMap = entries.associate { it.ukTerm to it.usTerm }
-        println("Terminology map: $terminologyMap")
 
         val table = TerminologyTable(data.preparedAt, terminologyMap)
         println("Created TerminologyTable: $table")
