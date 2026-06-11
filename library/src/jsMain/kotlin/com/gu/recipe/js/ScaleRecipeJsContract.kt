@@ -1,9 +1,8 @@
 package com.gu.recipe.js
 
-import com.gu.recipe.TemplateSession
+import com.gu.recipe.*
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
-import com.gu.recipe.newTemplateSession
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
 import kotlinx.serialization.json.Json
@@ -16,7 +15,7 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
  * Scales the given recipe by a given factor and optionally converts between measuring systems.
  * `session` is a TemplateSession object which can be obtained by calling `createTemplateSession`
  */
-fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSession): String {
+fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSession): RecipeV3 {
     val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
@@ -28,10 +27,9 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSe
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
     val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)
-    return Json.encodeToString(scaledRecipe)
+    return scaledRecipe
+    //return Json.encodeToString(scaledRecipe)//Now we will need only RecipeV3 data and not string for terminology purpose
 }
-
-
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport

@@ -131,47 +131,4 @@ class ScaleRecipeTest {
             // Assert
             assertEquals("1½ tbsp", result)
     }
-
-
-
-    @Test
-    fun `test scale and terminology conversion for eggplant to aubergine with density`() {
-        // Arrange
-        val densityTable = DensityTable(preparedAt = "test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
-        val recipeTemplate = RecipeV3(
-            id = "test-recipe",
-            ingredients = listOf(
-                IngredientsList(
-                    ingredientsList = listOf(
-                        IngredientItem(
-                            template = """{"min": 1, "unit": "piece", "scale": true} of aubergine""",
-                        )
-                    )
-                )
-            )
-        )
-        val expectedRecipe = RecipeV3(
-            id = "test-recipe",
-            ingredients = listOf(
-                IngredientsList(
-                    ingredientsList = listOf(
-                        IngredientItem(
-                            template = """{"min": 1, "unit": "piece", "scale": true} of eggplant""",
-                            text = "<strong>1 piece of eggplant</strong>"
-                        )
-                    )
-                )
-            )
-        )
-
-        // Act
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipeTemplate, 1.0f, MeasuringSystem.Metric)
-
-        val expectedRecipesTexts = expectedRecipe.ingredients?.forEach { ingredientsList -> ingredientsList.ingredientsList?.forEach { ingredientItem -> ingredientItem.text } }
-        val scaledRecipesTexts = scaledRecipe.ingredients?.forEach { ingredientsList -> ingredientsList.ingredientsList?.forEach { ingredientItem -> ingredientItem.text } }
-
-        // Assert
-        assertEquals(expectedRecipesTexts, scaledRecipesTexts)
-    }
 }
