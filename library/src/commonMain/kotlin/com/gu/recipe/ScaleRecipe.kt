@@ -11,8 +11,8 @@ import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
+import com.gu.recipe.terminology.TerminologyConverter
 import com.gu.recipe.terminology.TerminologyTable
-import com.gu.recipe.terminology.loadInternalTerminologyTable
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.unit.UnitConversions
 import com.gu.recipe.unit.UnitType
@@ -201,10 +201,12 @@ class TemplateSession(private val densityTable: DensityTable) {
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
             IngredientsList(
                 ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
+
                     val scaledText = templateIngredient.template?.let { template ->
                         wrapWithStrongTag(
-                            applyTerminologyConversion(renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem)
-                        ) ?: ""
+                            applyTerminologyConversion(
+                                renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem)
+                            ) ?: ""
                         )
                     } ?: applyTerminologyConversion(templateIngredient.text ?: "")
 
@@ -258,7 +260,14 @@ fun noCustomaryTemplateSession(): TemplateSession {
     return TemplateSession(densityTable)
 }
 
+fun noCustomaryTerminologySession(): TerminologyConverter {
+    val terminologyTable = TerminologyTable(preparedAt = "none", HashMap())
+    return TerminologyConverter(terminologyTable)
+}
+
+
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
     val (before, _) = splitBeforeSuffix(renderedTemplate)
     return before.trim()
 }
+
