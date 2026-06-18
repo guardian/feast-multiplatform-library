@@ -132,4 +132,29 @@ class ScaleRecipeTest {
             assertEquals("1½ tbsp", result)
     }
 
+    @Test
+    fun `test conversion for chicken thigh`() {
+        // Arrange
+        val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+        val templateSession = TemplateSession(densityTable)
+
+        val placeholder = QuantityPlaceholder(
+            min = 500f,
+            max = 500f,
+            unit = "g",
+            scale = true,
+            ingredient = "chicken or vegetable stock",
+            usCust = true
+        )
+        val factor = 1.0f
+        val measuringSystem2 = MeasuringSystem.USCustomary
+
+        // Act
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem2)
+
+        // Assert
+        assertEquals("1 lb", result)
+    }
+
+
 }

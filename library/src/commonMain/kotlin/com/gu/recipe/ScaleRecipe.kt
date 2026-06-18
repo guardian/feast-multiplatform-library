@@ -106,7 +106,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
 
         val unitString = if (amount.unit != null) {
-            if (max(amount.min, amount.max ?: amount.min) > 1.1f) { //need to offset from exactly one, so that when rounding a value below 1/8 we don't get "1 cups
+            if (max(amount.min, amount.max ?: amount.min) >= 1.125f) { //need to offset from exactly one, so that when rounding a value below 1/8 we don't get "1 cups
                 " ${amount.unit.symbolPlural}"
             } else {
                 " ${amount.unit.symbol}"
