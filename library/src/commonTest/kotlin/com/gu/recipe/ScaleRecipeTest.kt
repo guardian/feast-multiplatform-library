@@ -133,7 +133,7 @@ class ScaleRecipeTest {
     }
 
     @Test
-    fun `test conversion for chicken thigh`() {
+    fun `test conversion for chicken thigh for grams conversion to nearly 1 pound`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
         val templateSession = TemplateSession(densityTable)
@@ -147,13 +147,61 @@ class ScaleRecipeTest {
             usCust = true
         )
         val factor = 1.0f
-        val measuringSystem2 = MeasuringSystem.USCustomary
+        val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem2)
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
 
         // Assert
         assertEquals("1 lb", result)
+    }
+
+    @Test
+    fun `test conversion for chicken thigh for grams conversion to 1 with a quarter more`() {
+        // Arrange
+        val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+        val templateSession = TemplateSession(densityTable)
+
+        val placeholder = QuantityPlaceholder(
+            min = 580f,
+            max = 580f,
+            unit = "g",
+            scale = true,
+            ingredient = "chicken or vegetable stock",
+            usCust = true
+        )
+        val factor = 1.0f
+        val measuringSystem = MeasuringSystem.USCustomary
+
+        // Act
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+
+        // Assert
+        assertEquals("1¼ lbs", result)
+    }
+
+    @Test
+    fun `test conversion for chicken thigh for grams conversion to 2`() {
+        // Arrange
+        val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+        val templateSession = TemplateSession(densityTable)
+
+        val placeholder = QuantityPlaceholder(
+            min = 900f,
+            max = 900f,
+            unit = "g",
+            scale = true,
+            ingredient = "chicken or vegetable stock",
+            usCust = true
+        )
+        val factor = 1.0f
+        val measuringSystem = MeasuringSystem.USCustomary
+
+        // Act
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+
+        // Assert
+        assertEquals("2 lbs", result)
     }
 
 
