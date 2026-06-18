@@ -4,6 +4,7 @@ import com.gu.recipe.generated.RecipeV3
 import kotlinx.serialization.json.Json
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import kotlinx.serialization.json.jsonObject
 
 
 @OptIn(ExperimentalJsExport::class)
@@ -20,61 +21,48 @@ private class JsonTrieNode {
      * text-replacement pass, and returns the updated JSON String.
      */
     fun replaceWordsInJson(inputJson: String): String {
-
-        // 1. Build the search Trie using the keys from terminologyTable
-        val root = JsonTrieNode()
-        for (word in terminologyTable.keys.orEmpty()) {
-            var current = root
-            for (char in word) {
-                current = current.children.getOrPut(char) { JsonTrieNode() }
-            }
-            current.word = word
+        // 1. Validate the terminologyTable keys and values
+        val validKeys = terminologyTable.keys.orEmpty().filter { key ->
+            key.all { it.isLetterOrDigit() || it.isWhitespace() } // Allow only alphanumeric and spaces
+        }
+        val validTerminologyTable = validKeys.associateWith { key ->
+            terminologyTable.convertTerm(key)?.replace(Regex("[\"\\\\]")) { "\\${it.value}" } // Escape special characters
         }
 
-        // 2. Pre-allocate StringBuilder capacity
-        val result = StringBuilder(inputJson.length)
-        var i = 0
-        val length = inputJson.length
+        // 2. Parse the JSON into a tree structure
+        val jsonElement = Json.parseToJsonElement(inputJson)
 
-        // 3. Scan through the JSON string
-        while (i < length) {
-            var current = root
-            var longestMatchLength = 0
-            var bestWord: String? = null
-
-            var j = i
-            while (j < length) {
-                val nextNode = current.children[inputJson[j]]
-                if (nextNode != null) {
-                    current = nextNode
-                    j++
-                    if (current.word != null) {
-                        longestMatchLength = j - i
-                        bestWord = current.word
+        // 3. Replace words only in string values
+        fun replaceInJsonElement(element: kotlinx.serialization.json.JsonElement): kotlinx.serialization.json.JsonElement {
+            return when (element) {
+                is kotlinx.serialization.json.JsonPrimitive -> {
+                    if (element.isString) {
+                        val content = element.content
+                        val replacedContent = validTerminologyTable.entries.fold(content) { acc, (key, value) ->
+                            acc.replace(key, value ?: key)
+                        }
+                        kotlinx.serialization.json.JsonPrimitive(replacedContent)
+                    } else {
+                        element
                     }
-                } else {
-                    break
+                }
+                is kotlinx.serialization.json.JsonObject -> {
+                    kotlinx.serialization.json.JsonObject(element.mapValues { (_, value) -> replaceInJsonElement(value) })
+                }
+                is kotlinx.serialization.json.JsonArray -> {
+                    kotlinx.serialization.json.JsonArray(element.map { replaceInJsonElement(it) })
                 }
             }
-
-            // If a word matches, pass it to your terminologyTable lookup system
-            if (bestWord != null) {
-                // Dynamic execution triggers your class's internal println logs!
-                val replacement = terminologyTable.convertTerm(bestWord) ?: bestWord
-                result.append(replacement)
-                i += longestMatchLength
-            } else {
-                // No match found, preserve the structural JSON character
-                result.append(inputJson[i])
-                i++
-            }
         }
 
-        return result.toString()
+        val modifiedJsonElement = replaceInJsonElement(jsonElement)
+
+        // 4. Return the modified JSON as a string
+        return Json.encodeToString(modifiedJsonElement)
     }
 
     fun replaceWordsInRecipeObject(recipe: RecipeV3): RecipeV3 {
-        println("---replaceWordsInRecipeObject called with recipe: $recipe")
+        //println("---replaceWordsInRecipeObject called with recipe: $recipe")
 
         // 1. Configure Json parser (IgnoreUnknownKeys helps keep things fast/flexible)
         val jsonFormat = Json { ignoreUnknownKeys = true }
