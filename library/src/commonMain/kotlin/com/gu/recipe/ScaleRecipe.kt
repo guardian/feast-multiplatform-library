@@ -72,11 +72,11 @@ class TemplateSession(private val densityTable: DensityTable) {
         ).joinToString("")
     }
 
-    internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
+    internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal, originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
         var amount = Amount(
             min = element.min,
             max = if (element.min != element.max) element.max else null,
-            unit = element.unit?.let { Units.findRecipeUnit(it) },
+            unit = element.unit?.let { Units.findRecipeUnit(it, originalMeasuringSystem) },
             //Specific override for butter - this should definitely be in cups but CMS data usually indicates it should be in oz.
             //We will fix the upstream CMS but need to move ahead with testing now.
             usCust = if(element.ingredient=="butter") true else element.usCust,
@@ -123,7 +123,8 @@ class TemplateSession(private val densityTable: DensityTable) {
     internal fun renderTemplateElement(
         element: TemplateElement,
         factor: Float,
-        measuringSystem: MeasuringSystem
+        measuringSystem: MeasuringSystem,
+        originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal,
     ): String {
         return when (element) {
             is TemplateConst -> element.value
@@ -133,27 +134,27 @@ class TemplateSession(private val densityTable: DensityTable) {
                     is MeasuringSystem.Metric,
                     is MeasuringSystem.Imperial,
                     is MeasuringSystem.USCustomary,
-                    is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem)
+                    is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem, originalMeasuringSystem)
                     is MeasuringSystem.USCustomaryWithMetric,
                     is MeasuringSystem.USCustomaryWithImperial -> {
-                        renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                     }
                     is MeasuringSystem.USCombined -> {
-                        val unit = element.unit?.let { Units.findRecipeUnit(it) }
+                        val unit = element.unit?.let { Units.findRecipeUnit(it, originalMeasuringSystem) }
                         if( unit==null ||
                             unit==Units.METRIC_TEASPOON ||
                             unit==Units.METRIC_TABLESPOON ||
                             unit==Units.US_TEASPOON ||
                             unit==Units.US_TABLESPOON) {
-                                renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                                renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                         } else {
-                            val usCustomaryPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val usCustomaryPart = renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                             val imperialPart = if (unit == Units.FLUID_OUNCE) { // Skip rendering fluid ounces
                                 null
                             } else if (unit.unitType == UnitType.VOLUME) {
                                 usCustomaryPart
                             } else {
-                                renderQuantity(element, factor, MeasuringSystem.Imperial)
+                                renderQuantity(element, factor, MeasuringSystem.Imperial, originalMeasuringSystem)
                             }
 
                             if (usCustomaryPart == imperialPart || imperialPart == null) {
@@ -169,9 +170,9 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
     }
 
-    internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSystem: MeasuringSystem): String {
+    internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSystem: MeasuringSystem, originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
         val renderedParts = template.elements.map { element ->
-            renderTemplateElement(element, factor, measuringSystem)
+            renderTemplateElement(element, factor, measuringSystem, originalMeasuringSystem)
         }
 
         return applySmartPunctuation(renderedParts.joinToString(""))
@@ -187,11 +188,20 @@ class TemplateSession(private val densityTable: DensityTable) {
      * @param measuringSystem The target unit system for ingredient measurements (e.g., Metric or Imperial)
      */
     fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
+        val sourceMeasuringSystem: MeasuringSystem.MeasuringSystemInternal = when(recipe.originalMeasuringSystem) {
+            is "metric" -> MeasuringSystem.Metric
+            is "us" -> MeasuringSystem.USCustomary
+            is "aus-cup" -> MeasuringSystem.Metric
+            is "imperial" -> MeasuringSystem.Imperial
+            is null -> MeasuringSystem.Metric
+            else -> throw IllegalArgumentException("invalid original measuringSystem: " + recipe.originalMeasuringSystem)
+        }
+
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
             IngredientsList(
                 ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                     val scaledText = templateIngredient.template?.let { template ->
-                        wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem))
+                        wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem))
                     } ?: templateIngredient.text
 
                     templateIngredient.copy(text = scaledText)
@@ -201,7 +211,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
         val scaledInstructions = recipe.instructions?.map { instruction ->
             val description = instruction.descriptionTemplate?.let { template ->
-                renderTemplate(parseTemplate(template), factor, measuringSystem)
+                renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem)
             }
             instruction.copy(description = description ?: instruction.description)
         }
