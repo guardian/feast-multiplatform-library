@@ -24,3 +24,18 @@ To avoid any error and make evolving these models easier, we generate the kotlin
 see `./generate-models.sh` for the script that does this.
 
 The generated file is commit to github, making the build deterministic.
+
+## To update api.txt
+
+If kotlin code is changed, we should update api.txt file with the following command:
+This is to avoid any breaking changes errors when running 'gradle build' locally due to out of sync api.txt file.
+
+Execute 
+`./gradlew :library:metalavaCheckCompatibilityDebug`
+`gradle build`
+
+If you find Task :kotlinStoreYarnLock FAILED then delete the folder `kotlin-js-store` from your project 
+and execute
+`./gradlew clean` 
+`gradle build`
+
