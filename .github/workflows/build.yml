@@ -27,6 +27,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    # --- ADD THE CHECK HERE FOR api.txt ---
+        # The 'if' condition ensures it only runs ONCE on an Ubuntu runner,
+        # rather than duplicating on every single matrix OS/target leg.
+    - name: Check API Compatibility (Metalava)
+      if: matrix.target == 'testDebugUnitTest'
+      run: ./gradlew :library:metalavaCheckCompatibilityDebug
+
     - name: Validate Gradle Wrapper
       uses: gradle/actions/wrapper-validation@v3
       continue-on-error: true
