@@ -1,4 +1,4 @@
-package com.gu.recipe.core.graphql
+package com.gu.recipe.core.graphql.provider
 
 import com.gu.recipe.core.networking.NetworkConfig
 

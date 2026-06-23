@@ -1,6 +1,9 @@
 package com.gu.recipe.core.graphql
 
 import android.content.Context
+import com.gu.recipe.core.graphql.config.GraphQlConfig
+import com.gu.recipe.core.graphql.di.GraphQlQualifiers
+import com.gu.recipe.core.graphql.di.graphQlModule
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors

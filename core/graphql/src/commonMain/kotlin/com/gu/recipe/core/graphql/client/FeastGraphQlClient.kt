@@ -1,4 +1,4 @@
-package com.gu.recipe.core.graphql
+package com.gu.recipe.core.graphql.client
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
@@ -6,6 +6,8 @@ import com.apollographql.apollo.api.Mutation
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.exception.ApolloException
+import com.gu.recipe.core.graphql.GraphQlError
+import com.gu.recipe.core.graphql.GraphQlResult
 
 class FeastGraphQlClient(
     private val apolloClient: ApolloClient,
@@ -45,6 +47,3 @@ class FeastGraphQlClient(
         return GraphQlResult.Success(data)
     }
 }
-
-
-

@@ -1,38 +1,36 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import java.net.URI
 
-plugins {
-	alias(libs.plugins.kotlinMultiplatform)
-	alias(libs.plugins.androidLibrary)
-	alias(libs.plugins.apollo)
-	alias(libs.plugins.hiltAndroid)
-	alias(libs.plugins.ksp)
+object Config {
+	const val GROUP_ID = "com.gu"
+	const val MAVEN_ARTIFACT_ID = "feast-multiplatform-library"
+	const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibrary"
+	const val BUNDLE_ID = "com.gu.feast.shared"
+	const val GITHUB_REPO = "guardian/feast-multiplatform-library"
+	const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library to handle recipe templates"
 }
 
-val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
-val localSchemaFile = schemaDirectory.file("schema.graphqls")
-val schemaDownloadUrl = providers.gradleProperty("graphql.schema.download.url")
-	.orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_URL"))
-val schemaHeaders = providers.gradleProperty("graphql.schema.download.headers")
-	.orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_HEADERS"))
-val strictSchemaRefresh = providers.gradleProperty("graphql.schema.strict")
-	.map(String::toBooleanStrictOrNull)
-	.orElse(false)
+abstract class DownloadGraphQlSchemaTask : DefaultTask() {
+	@get:OutputFile
+	abstract val schemaFile: RegularFileProperty
 
-val downloadGraphQlSchema by tasks.registering {
-	group = "graphql"
-	description = "Refreshes the Feast GraphQL schema before Apollo code generation."
-	outputs.file(localSchemaFile)
-	inputs.property("schemaDownloadUrl", schemaDownloadUrl.orNull ?: "")
-	inputs.property("schemaDownloadHeaders", schemaHeaders.orNull ?: "")
-	outputs.upToDateWhen { false }
+	@get:Input
+	abstract val schemaDownloadUrl: Property<String>
 
-	doLast {
-		val schemaTarget = localSchemaFile.asFile
+	@get:Input
+	abstract val schemaDownloadHeaders: Property<String>
+
+	@get:Input
+	abstract val strictSchemaRefresh: Property<Boolean>
+
+	@TaskAction
+	fun refreshSchema() {
+		val schemaTarget = schemaFile.get().asFile
 		schemaTarget.parentFile.mkdirs()
 
-		val downloadUrl = schemaDownloadUrl.orNull?.trim().orEmpty()
+		val downloadUrl = schemaDownloadUrl.get().trim()
 		if (downloadUrl.isBlank()) {
 			if (strictSchemaRefresh.get()) {
 				throw GradleException(
@@ -41,17 +39,17 @@ val downloadGraphQlSchema by tasks.registering {
 				)
 			}
 			logger.lifecycle("No GraphQL schema download URL configured. Using the checked-in schema at ${schemaTarget.path}.")
-			return@doLast
+			return
 		}
 
 		val connection = URI(downloadUrl).toURL().openConnection().apply {
 			connectTimeout = 15_000
 			readTimeout = 30_000
-			schemaHeaders.orNull
-				?.split(';')
-				?.map(String::trim)
-				?.filter(String::isNotBlank)
-				?.forEach { rawHeader ->
+			schemaDownloadHeaders.get()
+				.split(';')
+				.map(String::trim)
+				.filter(String::isNotBlank)
+				.forEach { rawHeader ->
 					val separatorIndex = rawHeader.indexOf(':')
 					require(separatorIndex > 0) {
 						"Invalid GraphQL schema header '$rawHeader'. Use 'Header-Name: value;Other-Header: value'."
@@ -71,6 +69,35 @@ val downloadGraphQlSchema by tasks.registering {
 		schemaTarget.writeText(schemaContents)
 		logger.lifecycle("GraphQL schema refreshed at ${schemaTarget.path}")
 	}
+}
+
+plugins {
+	alias(libs.plugins.kotlinMultiplatform)
+	alias(libs.plugins.androidLibrary)
+	alias(libs.plugins.apollo)
+	alias(libs.plugins.hiltAndroid)
+	alias(libs.plugins.ksp)
+}
+
+val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
+val localSchemaFile = schemaDirectory.file("schema.graphqls")
+val graphQlSchemaDownloadUrl = providers.gradleProperty("graphql.schema.download.url")
+	.orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_URL"))
+val graphQlSchemaHeaders = providers.gradleProperty("graphql.schema.download.headers")
+	.orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_HEADERS"))
+val graphQlStrictSchemaRefresh = providers.gradleProperty("graphql.schema.strict")
+	.map(String::toBooleanStrictOrNull)
+	.orElse(false)
+
+
+val downloadGraphQlSchema by tasks.registering(DownloadGraphQlSchemaTask::class) {
+	group = "graphql"
+	description = "Refreshes the Feast GraphQL schema before Apollo code generation."
+	outputs.upToDateWhen { false }
+	schemaFile.set(localSchemaFile)
+	schemaDownloadUrl.set(graphQlSchemaDownloadUrl.orElse(""))
+	schemaDownloadHeaders.set(graphQlSchemaHeaders.orElse(""))
+	strictSchemaRefresh.set(graphQlStrictSchemaRefresh)
 }
 
 kotlin {
@@ -98,6 +125,7 @@ kotlin {
 				implementation(libs.apollo.runtime)
 				implementation(libs.koin.core)
 				implementation(libs.kotlinx.coroutines.core)
+				implementation(libs.kotlinx.datetime)
 			}
 		}
 		val commonTest by getting {
@@ -140,6 +168,10 @@ apollo {
 		packageName.set("com.gu.recipe.core.graphql.generated")
 		srcDir("src/commonMain/graphql")
 		schemaFile.set(localSchemaFile)
+		introspection {
+			endpointUrl.set("https://unified-recipes-test.code.dev-gutools.co.uk/graphql")
+			schemaFile.set(file("src/main/graphql/schema.graphqls"))
+		}
 	}
 }
 

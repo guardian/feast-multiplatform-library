@@ -1,6 +1,13 @@
 package com.gu.recipe.core.graphql
 
 import com.apollographql.apollo.ApolloClient
+import com.gu.recipe.core.graphql.client.FeastGraphQlClient
+import com.gu.recipe.core.graphql.config.GraphQlConfig
+import com.gu.recipe.core.graphql.di.GraphQlQualifiers
+import com.gu.recipe.core.graphql.di.graphQlModule
+import com.gu.recipe.core.graphql.provider.FixedGraphQlServerUrlProvider
+import com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider
+import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
 import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
 import com.gu.recipe.core.networking.NetworkConfig
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,7 +26,7 @@ class GraphQlConfigTest {
         )
 
         assertEquals(
-            expected = "https://recipes.code.dev-guardianapis.com/graphql",
+            expected = "https://unified-recipes-test.code.dev-gutools.co.uk/graphql",
             actual = config.serverUrl,
         )
     }
@@ -53,6 +60,7 @@ class GraphQlConfigTest {
             assertNotNull(koin.get<CoroutineDispatcher>(named(GraphQlQualifiers.IoDispatcher)))
             assertNotNull(koin.get<ApolloClient>())
             assertNotNull(koin.get<FeastGraphQlClient>())
+            assertNotNull(koin.get<RecipeGraphQlDataSource>())
         } finally {
             stopKoin()
         }

@@ -1,5 +1,6 @@
 package com.gu.recipe.core.graphql
 
+import com.gu.recipe.core.graphql.di.GraphQlQualifiers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
