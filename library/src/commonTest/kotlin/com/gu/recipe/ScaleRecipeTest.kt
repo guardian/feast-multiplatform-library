@@ -431,7 +431,7 @@ class ScaleRecipeTest {
     }
 
     @Test
-    fun `should convert imperial cups into imperial cups (not change)`() {
+    fun `should convert imperial cups into imperial cups - passthrough`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
         val templateSession = TemplateSession(densityTable)
 
