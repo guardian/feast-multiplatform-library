@@ -92,7 +92,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         } else {
             measuringSystem
         }
-        amount = UnitConversions.convertUnitSystemAndScale(amount, targetSystem, factorToUse, density)
+        amount = UnitConversions.convertUnitSystemAndScale(amount, targetSystem, factorToUse, density, originalMeasuringSystem)
 
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE, Units.US_TEASPOON, Units.METRIC_TEASPOON, Units.US_TABLESPOON, Units.METRIC_TABLESPOON -> 0

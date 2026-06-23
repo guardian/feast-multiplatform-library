@@ -1,6 +1,7 @@
 package com.gu.recipe.unit
 
 import com.gu.recipe.Amount
+import com.gu.recipe.generated.OriginalMeasuringSystem
 
 object UnitConversions {
     private val CUPS_PER_ML = 0.00422675f
@@ -100,15 +101,17 @@ object UnitConversions {
         }
     }
 
-    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem.MeasuringSystemInternal, factor: Float = 1f, density: Float?): Amount {
+    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem.MeasuringSystemInternal, factor: Float = 1f, density: Float?, originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): Amount {
         val scaledAmount = amount.copy(min = amount.min * factor, max = amount.max?.let { it * factor })
 
-        if (scaledAmount.unit == null || (target == MeasuringSystem.Metric && factor == 1f)) {
+        if (scaledAmount.unit == null || (target == originalMeasuringSystem && factor == 1f)) {
             return scaledAmount
         }
 
+        println("applying scaling")
         val smallestUnitAmount = toSmallestUnit(scaledAmount)
 
+        println("smallestAmount: $smallestUnitAmount")
         val ladder = when (target) {
             MeasuringSystem.Metric -> if (CONVENIENCE_UNITS.contains(amount.unit))
                 METRIC_CONVENIENCE_LADDER
@@ -123,6 +126,8 @@ object UnitConversions {
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
             MeasuringSystem.Butter -> BUTTER_CONVERSION_LADDER
         }
+
+        println("ladder: $ladder")
 
         val amountToConvert = if(
             (target== MeasuringSystem.Butter && density !=null) ||
@@ -140,10 +145,13 @@ object UnitConversions {
             smallestUnitAmount
         }
 
+        println("amountToConvert: $amountToConvert")
+
         val mostRelevantUnit = ladder
             .filter { it.second.unitType == amountToConvert.unit?.unitType }
             .lastOrNull { amountToConvert.min >= it.first }?.second
 
+        println("mostRelevantUnit: $mostRelevantUnit")
         return mostRelevantUnit?.let {
             Amount(
                 min = amountToConvert.min / it.quantity,

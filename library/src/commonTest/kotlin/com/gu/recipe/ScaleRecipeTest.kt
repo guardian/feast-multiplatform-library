@@ -204,5 +204,75 @@ class ScaleRecipeTest {
         assertEquals("2 lbs", result)
     }
 
+    @Test
+    fun `should convert metric cups into imperial cups`() {
+        val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+        val templateSession = TemplateSession(densityTable)
 
+        val placeholder = QuantityPlaceholder(
+            min = 3f,
+            max = 4f,
+            unit = "cups",
+            scale = true,
+            ingredient = "milk",
+            usCust = true
+        )
+
+        val result = templateSession.renderQuantity(
+            placeholder,
+            1.0f,
+            MeasuringSystem.USCustomary,
+            MeasuringSystem.Metric
+        )
+
+        assertEquals("3¼-4¼ cups", result)
+    }
+
+    @Test
+    fun `should convert imperial cups into imperial cups (not change)`() {
+        val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+        val templateSession = TemplateSession(densityTable)
+
+        val placeholder = QuantityPlaceholder(
+            min = 3f,
+            max = 4f,
+            unit = "cups",
+            scale = true,
+            ingredient = "milk",
+            usCust = true
+        )
+
+        val result = templateSession.renderQuantity(
+            placeholder,
+            1.0f,
+            MeasuringSystem.USCustomary,
+            MeasuringSystem.USCustomary
+        )
+
+        assertEquals("3-4 cups", result)
+    }
+
+    @Test
+    fun `should convert imperial cups into metric cups`() {
+        val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
+        val templateSession = TemplateSession(densityTable)
+
+        val placeholder = QuantityPlaceholder(
+            min = 3f,
+            max = 4f,
+            unit = "cups",
+            scale = true,
+            ingredient = "milk",
+            usCust = true
+        )
+
+        val result = templateSession.renderQuantity(
+            placeholder,
+            1.0f,
+            MeasuringSystem.Metric,
+            MeasuringSystem.USCustomary
+        )
+
+        assertEquals("710-946 ml", result)
+    }
 }
