@@ -27,15 +27,9 @@ The generated file is commit to github, making the build deterministic.
 
 ## To update api.txt
 
-If kotlin code is changed, we should update api.txt file with the following command:
-This is to avoid any breaking changes errors when running 'gradle build' locally due to out of sync api.txt file.
+If CI fails on metalavaCheckCompatibilityDebug (because you added a valid public parameter or method), do not run the generate task (Do not run ./gradlew :library:metalavaGenerateSignatureDebug).
 
-Execute 
-`./gradlew :library:metalavaCheckCompatibilityDebug`
-`gradle build`
+Instead, open library/api.txt, manually type or paste the new public method signature, and ensure no ErrorType! or NonExistentClass junk slips in.
 
-If you find Task :kotlinStoreYarnLock FAILED then delete the folder `kotlin-js-store` from your project 
-and execute
-`./gradlew clean` 
-`gradle build`
+Run ./gradlew :library:metalavaCheckCompatibilityDebug locally to verify it passes, then push the changes.
 
