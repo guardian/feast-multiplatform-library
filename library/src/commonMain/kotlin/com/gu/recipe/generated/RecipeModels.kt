@@ -102,6 +102,12 @@ data class RecipeV3 (
     val mealTypeIds: List<String?>? = null,
 
     /**
+     * The original measuring system used in the recipe. This is a view hint for conversion and
+     * should not be taken as a strict source of truth.
+     */
+    val originalMeasuringSystem: OriginalMeasuringSystem? = null,
+
+    /**
      * Information about how many people the recipe serves
      */
     val serves: List<Serves>? = null,
@@ -305,6 +311,18 @@ data class Instruction (
      */
     val stepNumber: Double? = null
 )
+
+/**
+ * The original measuring system used in the recipe. This is a view hint for conversion and
+ * should not be taken as a strict source of truth.
+ */
+@Serializable
+enum class OriginalMeasuringSystem(val value: String) {
+    @SerialName("aus-cup") AusCup("aus-cup"),
+    @SerialName("imperial") Imperial("imperial"),
+    @SerialName("metric") Metric("metric"),
+    @SerialName("us") Us("us");
+}
 
 /**
  * Information about how many servings the recipe makes

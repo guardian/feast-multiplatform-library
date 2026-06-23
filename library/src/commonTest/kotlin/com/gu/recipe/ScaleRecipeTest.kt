@@ -126,7 +126,7 @@ class ScaleRecipeTest {
             val measuringSystem = MeasuringSystem.USCustomary
 
             // Act
-            val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+            val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
             // Assert
             assertEquals("1½ tbsp", result)
@@ -150,7 +150,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
         // Assert
         assertEquals("1 lb", result)
@@ -174,7 +174,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
         // Assert
         assertEquals("1¼ lbs", result)
@@ -198,7 +198,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
         // Assert
         assertEquals("2 lbs", result)

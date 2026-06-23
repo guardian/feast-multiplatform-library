@@ -189,12 +189,11 @@ class TemplateSession(private val densityTable: DensityTable) {
      */
     fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
         val sourceMeasuringSystem: MeasuringSystem.MeasuringSystemInternal = when(recipe.originalMeasuringSystem) {
-            is "metric" -> MeasuringSystem.Metric
-            is "us" -> MeasuringSystem.USCustomary
-            is "aus-cup" -> MeasuringSystem.Metric
-            is "imperial" -> MeasuringSystem.Imperial
-            is null -> MeasuringSystem.Metric
-            else -> throw IllegalArgumentException("invalid original measuringSystem: " + recipe.originalMeasuringSystem)
+            OriginalMeasuringSystem.Metric -> MeasuringSystem.Metric
+            OriginalMeasuringSystem.Us -> MeasuringSystem.USCustomary
+            OriginalMeasuringSystem.AusCup -> MeasuringSystem.Metric
+            OriginalMeasuringSystem.Imperial -> MeasuringSystem.Imperial
+            null -> MeasuringSystem.Metric
         }
 
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->

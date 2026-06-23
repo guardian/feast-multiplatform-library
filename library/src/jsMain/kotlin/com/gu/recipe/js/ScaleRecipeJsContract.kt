@@ -1,6 +1,7 @@
 package com.gu.recipe.js
 
 import com.gu.recipe.TemplateSession
+import com.gu.recipe.generated.OriginalMeasuringSystem
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
 import com.gu.recipe.newTemplateSession
@@ -42,7 +43,7 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String): String {
+fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String, originalUnits: String? = null): String {
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
         "Metric" -> MeasuringSystem.Metric
@@ -52,8 +53,16 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSes
         "Combined" -> MeasuringSystem.USCombined
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
+    val originalMeasuringSystem = when (originalUnits) {
+        "imperial" -> MeasuringSystem.Imperial
+        "aus-cups" -> MeasuringSystem.Metric
+        "metric" -> MeasuringSystem.Metric
+        "us" -> MeasuringSystem.USCustomary
+        else -> throw IllegalArgumentException("Unknown unit: $originalUnits")
+    }
+
     val template = ParsedTemplate(templateElements)
-    return session.renderTemplate(template, 1.0f, measuringSystem)
+    return session.renderTemplate(template, 1.0f, measuringSystem, originalMeasuringSystem)
 }
 
 @OptIn(ExperimentalJsExport::class)
