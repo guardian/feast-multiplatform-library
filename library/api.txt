@@ -570,87 +570,46 @@ package com.gu.recipe.unit {
   }
 
   public final class UnitConversions {
-      method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal target, optional float factor, Float? density);
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getBUTTER_CONVERSION_LADDER();
-      method @InaccessibleFromKotlin public java.util.Set<com.gu.recipe.unit.MeasurementUnit> getCONVENIENCE_UNITS();
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getIMPERIAL_CONVERSION_LADDER();
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVENIENCE_LADDER();
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVERSION_LADDER();
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_CONVERSION_LADDER();
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_DRY_CONVERSION_LADDER();
-      method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_TABLESPOON_CONVERSIONS();
-      method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> BUTTER_CONVERSION_LADDER;
-      property public java.util.Set<com.gu.recipe.unit.MeasurementUnit> CONVENIENCE_UNITS;
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> IMPERIAL_CONVERSION_LADDER;
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVENIENCE_LADDER;
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVERSION_LADDER;
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_CONVERSION_LADDER;
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_DRY_CONVERSION_LADDER;
-      property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_TABLESPOON_CONVERSIONS;
-      field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
-    }
+    method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal target, optional float factor, Float? density);
+    method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
+    property public String US_CUSTOMARY_CONVERSION_LADDER;
+    field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
+  }
 
-    public enum UnitType {
-      enum_constant public static final com.gu.recipe.unit.UnitType LENGTH;
-      enum_constant public static final com.gu.recipe.unit.UnitType VOLUME;
-      enum_constant public static final com.gu.recipe.unit.UnitType WEIGHT;
-    }
+  public enum UnitType {
+    enum_constant public static final com.gu.recipe.unit.UnitType LENGTH;
+    enum_constant public static final com.gu.recipe.unit.UnitType VOLUME;
+    enum_constant public static final com.gu.recipe.unit.UnitType WEIGHT;
+  }
 
-    public final class Units {
-      method public com.gu.recipe.unit.MeasurementUnit findRecipeUnit(String name);
-      method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.unit.MeasurementUnit> getALL_UNITS();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getCENTILITRE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getCENTIMETRE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getFLUID_OUNCE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getGRAM();
-      method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getIMPERIAL_UNIT_FROM_SYMBOL();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getINCH();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getKILOGRAM();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getLITRE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMETRIC_CUP();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMETRIC_TABLESPOON();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMETRIC_TEASPOON();
-      method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getMETRIC_UNIT_FROM_SYMBOL();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMILLILITRE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getMILLIMETRE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getOUNCE();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getPOUND();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getSTICK();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_CUP();
-      method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> getUS_CUSTOMARY_UNIT_FROM_SYMBOL();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_GALLON();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_PINT();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_QUART();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_TABLESPOON();
-      method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_TEASPOON();
-      property public java.util.List<com.gu.recipe.unit.MeasurementUnit> ALL_UNITS;
-      property public com.gu.recipe.unit.MeasurementUnit CENTILITRE;
-      property public com.gu.recipe.unit.MeasurementUnit CENTIMETRE;
-      property public com.gu.recipe.unit.MeasurementUnit FLUID_OUNCE;
-      property public com.gu.recipe.unit.MeasurementUnit GRAM;
-      property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> IMPERIAL_UNIT_FROM_SYMBOL;
-      property public com.gu.recipe.unit.MeasurementUnit INCH;
-      property public com.gu.recipe.unit.MeasurementUnit KILOGRAM;
-      property public com.gu.recipe.unit.MeasurementUnit LITRE;
-      property public com.gu.recipe.unit.MeasurementUnit METRIC_CUP;
-      property public com.gu.recipe.unit.MeasurementUnit METRIC_TABLESPOON;
-      property public com.gu.recipe.unit.MeasurementUnit METRIC_TEASPOON;
-      property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> METRIC_UNIT_FROM_SYMBOL;
-      property public com.gu.recipe.unit.MeasurementUnit MILLILITRE;
-      property public com.gu.recipe.unit.MeasurementUnit MILLIMETRE;
-      property public com.gu.recipe.unit.MeasurementUnit OUNCE;
-      property public com.gu.recipe.unit.MeasurementUnit POUND;
-      property public com.gu.recipe.unit.MeasurementUnit STICK;
-      property public com.gu.recipe.unit.MeasurementUnit US_CUP;
-      property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> US_CUSTOMARY_UNIT_FROM_SYMBOL;
-      property public com.gu.recipe.unit.MeasurementUnit US_GALLON;
-      property public com.gu.recipe.unit.MeasurementUnit US_PINT;
-      property public com.gu.recipe.unit.MeasurementUnit US_QUART;
-      property public com.gu.recipe.unit.MeasurementUnit US_TABLESPOON;
-      property public com.gu.recipe.unit.MeasurementUnit US_TEASPOON;
-      field public static final com.gu.recipe.unit.Units INSTANCE;
-    }
+  public final class Units {
+    method public com.gu.recipe.unit.MeasurementUnit findRecipeUnit(String name);
+    property public com.gu.recipe.unit.MeasurementUnit CENTILITRE;
+    property public com.gu.recipe.unit.MeasurementUnit CENTIMETRE;
+    property public com.gu.recipe.unit.MeasurementUnit FLUID_OUNCE;
+    property public com.gu.recipe.unit.MeasurementUnit GRAM;
+    property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> IMPERIAL_UNIT_FROM_SYMBOL;
+    property public com.gu.recipe.unit.MeasurementUnit INCH;
+    property public com.gu.recipe.unit.MeasurementUnit KILOGRAM;
+    property public com.gu.recipe.unit.MeasurementUnit LITRE;
+    property public com.gu.recipe.unit.MeasurementUnit METRIC_CUP;
+    property public com.gu.recipe.unit.MeasurementUnit METRIC_TABLESPOON;
+    property public com.gu.recipe.unit.MeasurementUnit METRIC_TEASPOON;
+    property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> METRIC_UNIT_FROM_SYMBOL;
+    property public com.gu.recipe.unit.MeasurementUnit MILLILITRE;
+    property public com.gu.recipe.unit.MeasurementUnit MILLIMETRE;
+    property public com.gu.recipe.unit.MeasurementUnit OUNCE;
+    property public com.gu.recipe.unit.MeasurementUnit POUND;
+    property public com.gu.recipe.unit.MeasurementUnit STICK;
+    property public com.gu.recipe.unit.MeasurementUnit US_CUP;
+    property public java.util.Map<java.lang.String,com.gu.recipe.unit.MeasurementUnit> US_CUSTOMARY_UNIT_FROM_SYMBOL;
+    property public com.gu.recipe.unit.MeasurementUnit US_GALLON;
+    property public com.gu.recipe.unit.MeasurementUnit US_PINT;
+    property public com.gu.recipe.unit.MeasurementUnit US_QUART;
+    property public com.gu.recipe.unit.MeasurementUnit US_TABLESPOON;
+    property public com.gu.recipe.unit.MeasurementUnit US_TEASPOON;
+    field public static final com.gu.recipe.unit.Units INSTANCE;
+  }
 
 }
 
