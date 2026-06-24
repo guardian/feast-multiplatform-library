@@ -10,34 +10,34 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 
-class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBridge {
+class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge {
 
     private val cachePath = File(cacheDir, "recipe_data/density_cache.json").toOkioPath()
 
-    override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
+    override suspend fun loadData(url: String, authToken: String?): DataLoadResult {
         return withContext(Dispatchers.IO) {
             val cached = readCache()
             try {
                 if (cached != null && isCacheFresh()) {
-                    return@withContext DensityLoadResult.Success(cached.content)
+                    return@withContext DataLoadResult.Success(cached.content)
                 }
 
                 performRequest(url, authToken, cached)
             } catch (e: Exception) {
                 if (cached != null) {
-                    DensityLoadResult.Success(cached.content)
+                    DataLoadResult.Success(cached.content)
                 } else {
-                    DensityLoadResult.Failure("Exception: ${e.message}")
+                    DataLoadResult.Failure("Exception: ${e.message}")
                 }
             }
         }
     }
 
-    private fun readCache(): DensityCacheEntry? {
+    private fun readCache(): DataCacheEntry? {
         return try {
             if (!FileSystem.SYSTEM.exists(cachePath)) return null
             val raw = FileSystem.SYSTEM.read(cachePath) { readUtf8() }
-            Json.decodeFromString<DensityCacheEntry>(raw)
+            Json.decodeFromString<DataCacheEntry>(raw)
         } catch (_: Exception) {
             null
         }
@@ -53,7 +53,7 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
         }
     }
 
-    private fun writeCache(entry: DensityCacheEntry) {
+    private fun writeCache(entry: DataCacheEntry) {
         try {
             val parent = cachePath.parent ?: return
             FileSystem.SYSTEM.createDirectories(parent)
@@ -68,8 +68,8 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
     private fun performRequest(
         url: String,
         authToken: String?,
-        cached: DensityCacheEntry?
-    ): DensityLoadResult {
+        cached: DataCacheEntry?
+    ): DataLoadResult {
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
             connection.connectTimeout = 10_000
@@ -92,36 +92,36 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DensityLoaderBrid
                     val lastModified = connection.getHeaderField("Last-Modified")
 
                     if (body.isNotEmpty() && lastModified != null) {
-                        writeCache(DensityCacheEntry(lastModified, body))
-                        DensityLoadResult.Success(body)
+                        writeCache(DataCacheEntry(lastModified, body))
+                        DataLoadResult.Success(body)
                     } else if (cached != null) {
-                        DensityLoadResult.Success(cached.content)
+                        DataLoadResult.Success(cached.content)
                     } else {
-                        DensityLoadResult.Failure("HTTP 200 but missing body or Last-Modified header")
+                        DataLoadResult.Failure("HTTP 200 but missing body or Last-Modified header")
                     }
                 }
                 responseCode == HttpURLConnection.HTTP_NOT_MODIFIED -> {
                     if (cached != null) {
                         // Touch the cache so freshness resets
                         writeCache(cached)
-                        DensityLoadResult.Success(cached.content)
+                        DataLoadResult.Success(cached.content)
                     } else {
-                        DensityLoadResult.Failure("HTTP 304 but no cached data available")
+                        DataLoadResult.Failure("HTTP 304 but no cached data available")
                     }
                 }
                 else -> {
                     if (cached != null) {
-                        DensityLoadResult.Success(cached.content)
+                        DataLoadResult.Success(cached.content)
                     } else {
-                        DensityLoadResult.Failure("HTTP $responseCode")
+                        DataLoadResult.Failure("HTTP $responseCode")
                     }
                 }
             }
         } catch (e: Exception) {
             return if (cached != null) {
-                DensityLoadResult.Success(cached.content)
+                DataLoadResult.Success(cached.content)
             } else {
-                DensityLoadResult.Failure("Network error: ${e.message}")
+                DataLoadResult.Failure("Network error: ${e.message}")
             }
         } finally {
             connection.disconnect()
