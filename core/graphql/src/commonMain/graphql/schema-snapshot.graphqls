@@ -1,0 +1,353 @@
+type Chef {
+    chef: ChefData!
+}
+
+type ChefBio {
+    apiUrl: String
+    bio: String
+    bylineImageUrl: String
+    bylineLargeImageUrl: String
+    contributorId: String!
+
+    "returns all recipes"
+    recipes(limit: Int!, offset: Int, sortBy: recipeSortFields, sortDirection: recipeSortDirections, celebrations: [String!], cuisines: [String!], diets: [String!], mealTypes: [String!], techniques: [String!], utensilsAppliances: [String!], bylines: [String!]): [Recipe!]!
+    webTitle: String!
+    webUrl: String!
+}
+
+type ChefData {
+    backgroundHex: String
+    bio: String
+    foregroundHex: String
+    id: String!
+    image: String
+
+    "Background information about this chef"
+    meta: ChefBio
+}
+
+"The type of this collection"
+enum CollectionTypes {
+    COOKED
+    CUSTOM
+    NOTES
+    SAVED
+}
+
+"The content held within this collection"
+enum ContentTypes {
+    COLLECTION
+    NOTES
+    RECIPE
+}
+
+type FeastAppContainer {
+    body: String
+    excludedRegions: [String!]
+    id: uuid
+    identityId: String
+    items: [item!]!
+    targetedRegions: [String!]
+    title: String!
+}
+
+"A timestamp in local format"
+scalar LocalDateTime
+
+type Palette {
+    backgroundHex: String
+    foregroundHex: String
+}
+
+type PrivateNote {
+    collectionId: String
+    firstPersistedAt: ZonedDateTime!
+    lastModified: ZonedDateTime!
+    noteText: String
+    owner: Int!
+    pk: Int!
+    recipeId: String!
+}
+
+type Query {
+    "Items saved in the current user's personal collections"
+    SavedCollections: [SavedCollection!]!
+
+    "information about a specific chef"
+    chef(id: String!): ChefBio
+
+    "returns information about our chefs"
+    chefs(limit: Int!, offset: Int): [contributor!]!
+
+    "returns curation ('fronts') information"
+    curation(region: regions!, edition: editions!, date: date): [FeastAppContainer!]!
+
+    "returns a recipe with specific checksum"
+    recipe(checksum: String!): Recipe
+
+    "returns a recipe with the specific id and version"
+    recipeById(id: String!): Recipe
+
+    "returns all recipes"
+    recipes(limit: Int!, offset: Int, sortBy: recipeSortFields, sortDirection: recipeSortDirections, celebrations: [String!], cuisines: [String!], diets: [String!], mealTypes: [String!], techniques: [String!], utensilsAppliances: [String!], contributors: [String!], bylines: [String!]): [Recipe!]!
+}
+
+"A field containing a raw JSON object"
+scalar RawJson
+
+type Recipe {
+    bookCredit: String
+    canonicalArticle: String
+
+    "Celebration IDs associated with this recipe"
+    celebrations: [String!]!
+    checksum: String!
+    checksumV2: String
+
+    "Commerce CTA payloads associated with this recipe"
+    commerceCtas: [RawJson!]!
+    composerId: String
+
+    "Information about the recipe author"
+    contributors: [ChefBio!]!
+
+    "Cuisine IDs associated with this recipe"
+    cuisines: [String!]!
+    description: String
+
+    "Diet IDs associated with this recipe"
+    diets: [String!]!
+    difficultyLevel: String
+    featuredImage: image
+    firstPublishedDate: LocalDateTime
+    id: String!
+    ingredients: [ingredientSection!]!
+    instructions: [instruction!]!
+    isAppReady: Boolean
+    lastModifiedDate: LocalDateTime
+
+    "Meal type IDs associated with this recipe"
+    mealTypes: [String!]!
+    previewImage: image
+    publishedDate: LocalDateTime
+
+    "The number of people who've saved this recipe"
+    savedByCount: Int!
+
+    "List of the collections that the current user has saved this recipe into"
+    savedIntoCollections: [SavedCollection!]!
+    serves: [serving!]!
+
+    "Sponsorship entries associated with this recipe"
+    sponsorships: [RawJson!]!
+
+    "Technique IDs associated with this recipe"
+    techniques: [String!]!
+    timings: [timing!]!
+    title: String
+
+    "Any notes that the current user has saved against this recipe"
+    userNotes: PrivateNote
+
+    "Utensil and appliance IDs associated with this recipe"
+    utensilsAppliances: [String!]!
+}
+
+type RecipeReference {
+    "the recipe data"
+    recipe: Recipe
+}
+
+type SavedCollection {
+    collectionId: String!
+    collectionType: CollectionTypes!
+    contentType: ContentTypes!
+    lastModified: ZonedDateTime!
+
+    "Extra metadata for the collection"
+    meta: String
+    owner: Int!
+    pk: Int!
+
+    "Private Notes saved to this collection"
+    privateNotes: [PrivateNote!]!
+
+    "Recipes saved to this collection"
+    recipes(limit: Int!, offset: Int): [SavedRecipe!]!
+    softDeleted: Boolean!
+    title: String!
+}
+
+type SavedRecipe {
+    collectionId: String
+    firstPersistedAt: ZonedDateTime!
+    lastModified: ZonedDateTime!
+
+    "Content of the saved recipe"
+    recipe: Recipe
+}
+
+type SubCollection {
+    collection: SubCollectionData!
+}
+
+type SubCollectionData {
+    body: String
+    byline: String
+    darkPalette: Palette
+    image: String
+    lightPalette: Palette
+
+    "The recipes that make up this collection"
+    recipes(sortBy: recipeSortFields, sortDirection: recipeSortDirections): [Recipe!]!
+    title: String!
+}
+
+"A timestamp with timezone attached"
+scalar ZonedDateTime
+
+type byline {
+    "returns all recipes"
+    recipes(limit: Int!, offset: Int, sortBy: recipeSortFields, sortDirection: recipeSortDirections, celebrations: [String!], cuisines: [String!], diets: [String!], mealTypes: [String!], techniques: [String!], utensilsAppliances: [String!], contributors: [String!], bylines: [String!]): [Recipe!]!
+
+    "name of the chef"
+    webTitle: String!
+}
+
+union contributor = ChefBio | byline
+
+scalar date
+
+"variations of the Feast curation published each day"
+enum editions {
+    "meaty and meat-free recipes"
+    all
+
+    "only meat-free recipes"
+    meatfree
+}
+
+type image {
+    "The descriptive text accompanying the image"
+    caption: String
+
+    "The identifier for the specific crop used"
+    cropId: String
+
+    "Whether it is mandatory for the credit to be displayed"
+    displayCredit: Boolean
+
+    "The height of the image in pixels"
+    height: Int!
+
+    "The API endpoint URI for the media asset"
+    mediaApiUri: String
+
+    "The unique identifier for the media"
+    mediaId: String
+
+    "The credited photographer"
+    photographer: String
+
+    "The publication or source of the image"
+    source: String
+
+    "A parameterized URL template for generating variants"
+    templateUrl: String
+
+    "The direct URL to the image"
+    url: String!
+
+    "The width of the image in pixels"
+    width: Int!
+}
+
+type ingredient {
+    "ingredient name"
+    name: String!
+
+    "is the ingredient optional to the recipe"
+    optional: Boolean!
+
+    "template text for rendering"
+    template: String
+
+    "original text"
+    text: String!
+
+    "unit abbreviation"
+    unit: String
+}
+
+type ingredientSection {
+    "list of ingredients"
+    ingredientsList: [ingredient!]!
+
+    "title for this particular ingredient set"
+    recipeSection: String
+}
+
+type instruction {
+    "the text of the method step"
+    description: String!
+
+    "the method step with convertible templates"
+    descriptionTemplate: String
+}
+
+union item = SubCollection | Chef | RecipeReference
+
+type minmax {
+    "Maximum"
+    max: Float
+
+    "Minimum"
+    min: Float
+}
+
+"valid recipe sort directions"
+enum recipeSortDirections {
+    asc
+    desc
+}
+
+"valid recipe sort fields"
+enum recipeSortFields {
+    firstPublishedDate
+    lastModifiedDate
+    publishedDate
+    title
+}
+
+"available Feast curation regions"
+enum regions {
+    "curation for the northern hemisphere"
+    northern
+
+    "curation for the southern hemisphere"
+    southern
+
+    "curation for the USA"
+    us
+}
+
+type serving {
+    "original text of the serving"
+    text: String!
+
+    "what is the quantity measuring"
+    unit: String
+}
+
+type timing {
+    "the duration"
+    durationInMins: minmax!
+
+    "the type of timing"
+    qualifier: String
+
+    "original recipe text"
+    text: String
+}
+
+scalar uuid
