@@ -13,9 +13,9 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
 @JsExport
 /**
  * Scales the given recipe by a given factor and optionally converts between measuring systems.
- * `session` is a TemplateSession object which can be obtained by calling `createTemplateSession`
+ * `session` is a RenderSession object which can be obtained by calling `createTemplateSession`
  */
-fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSession): RecipeV3 {
+fun scaleRecipe(recipe: String, factor: Float, unit: String, session: RenderSession): String {
     val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
@@ -26,9 +26,8 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSe
         "Combined" -> MeasuringSystem.USCombined
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
-    val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)
-    return scaledRecipe
-    //return Json.encodeToString(scaledRecipe)//Now we will need only RecipeV3 data and not string for terminology purpose
+    val scaledRecipe = session.scaleAndConvertUnitAndTerminologyInRecipe(parsedRecipe, factor, measuringSystem)
+    return Json.encodeToString(scaledRecipe)
 }
 
 @OptIn(ExperimentalJsExport::class)
@@ -40,7 +39,7 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String): String {
+fun renderTemplate(templateElements: List<TemplateElement>, session: RenderSession, unit: String): String {
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
         "Metric" -> MeasuringSystem.Metric
@@ -57,9 +56,9 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSes
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 /**
-* JS style factory for TemplateSession.  If the session can be created,
+* JS style factory for RenderSession.  If the session can be created,
 * it is returned; if the session cannot be created, then an exception is thrown.
 */
-fun createTemplateSession(rawDensityData: String?):TemplateSession {
-    return newTemplateSession(rawDensityData).getOrThrow()
+fun createTemplateSession(rawDensityData: String?, rawTerminologyData: String?):RenderSession {
+    return newTemplateSession(rawDensityData, rawTerminologyData).getOrThrow()
 }
