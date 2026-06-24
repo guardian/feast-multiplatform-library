@@ -9,32 +9,32 @@ import okio.Path.Companion.toPath
 import platform.Foundation.*
 import kotlin.coroutines.resume
 
-class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoaderBridge {
+class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBridge {
 
     private val cachePath = "$cachesDirectory/recipe_data/density_cache.json".toPath()
 
-    override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
+    override suspend fun loadData(url: String, authToken: String?): DataLoadResult {
         val cached = readCache()
         return try {
             if (cached != null && isCacheFresh()) {
-                return DensityLoadResult.Success(cached.content)
+                return DataLoadResult.Success(cached.content)
             }
 
             performRequest(url, authToken, cached)
         } catch (e: Exception) {
             if (cached != null) {
-                DensityLoadResult.Success(cached.content)
+                DataLoadResult.Success(cached.content)
             } else {
-                DensityLoadResult.Failure("Exception: ${e.message}")
+                DataLoadResult.Failure("Exception: ${e.message}")
             }
         }
     }
 
-    private fun readCache(): DensityCacheEntry? {
+    private fun readCache(): DataCacheEntry? {
         return try {
             if (!FileSystem.SYSTEM.exists(cachePath)) return null
             val raw = FileSystem.SYSTEM.read(cachePath) { readUtf8() }
-            Json.decodeFromString<DensityCacheEntry>(raw)
+            Json.decodeFromString<DataCacheEntry>(raw)
         } catch (_: Exception) {
             null
         }
@@ -51,7 +51,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
         }
     }
 
-    private fun writeCache(entry: DensityCacheEntry) {
+    private fun writeCache(entry: DataCacheEntry) {
         try {
             val parent = cachePath.parent ?: return
             FileSystem.SYSTEM.createDirectories(parent)
@@ -66,36 +66,36 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DensityLoade
     private suspend fun performRequest(
         url: String,
         authToken: String?,
-        cached: DensityCacheEntry?
-    ): DensityLoadResult {
+        cached: DataCacheEntry?
+    ): DataLoadResult {
         return when (val result = httpGet(url, authToken, cached?.lastModified)) {
             is HttpResult.Success -> {
                 when {
                     result.statusCode == 200 && result.body.isNotEmpty() && result.lastModified != null -> {
-                        writeCache(DensityCacheEntry(result.lastModified, result.body))
-                        DensityLoadResult.Success(result.body)
+                        writeCache(DataCacheEntry(result.lastModified, result.body))
+                        DataLoadResult.Success(result.body)
                     }
                     result.statusCode == 200 -> {
-                        if (cached != null) DensityLoadResult.Success(cached.content)
-                        else DensityLoadResult.Failure("HTTP 200 but missing body or Last-Modified header")
+                        if (cached != null) DataLoadResult.Success(cached.content)
+                        else DataLoadResult.Failure("HTTP 200 but missing body or Last-Modified header")
                     }
                     result.statusCode == 304 -> {
                         if (cached != null) {
                             writeCache(cached)
-                            DensityLoadResult.Success(cached.content)
+                            DataLoadResult.Success(cached.content)
                         } else {
-                            DensityLoadResult.Failure("HTTP 304 but no cached data available")
+                            DataLoadResult.Failure("HTTP 304 but no cached data available")
                         }
                     }
                     else -> {
-                        if (cached != null) DensityLoadResult.Success(cached.content)
-                        else DensityLoadResult.Failure("HTTP ${result.statusCode}")
+                        if (cached != null) DataLoadResult.Success(cached.content)
+                        else DataLoadResult.Failure("HTTP ${result.statusCode}")
                     }
                 }
             }
             is HttpResult.Error -> {
-                if (cached != null) DensityLoadResult.Success(cached.content)
-                else DensityLoadResult.Failure(result.reason)
+                if (cached != null) DataLoadResult.Success(cached.content)
+                else DataLoadResult.Failure(result.reason)
             }
         }
     }
