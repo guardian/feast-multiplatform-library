@@ -2,7 +2,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.TemplateSession
+import com.gu.recipe.RenderSession
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.template.QuantityPlaceholder
@@ -81,8 +81,8 @@ class ScaleRecipeTest {
             )
         )
         val densityTable = DensityTable("test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
+        val session = RenderSession(densityTable)
+        val scaledRecipe = session.scaleAndConvertUnitAndTerminologyInRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe
@@ -314,7 +314,7 @@ class ScaleRecipeTest {
         fun `test tbsp conversion for 1_5 input`() {
             // Arrange
             val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-            val templateSession = TemplateSession(densityTable)
+            val templateSession = RenderSession(densityTable)
             val placeholder = QuantityPlaceholder(
                 min = 1.5f,
                 max = 1.5f,
