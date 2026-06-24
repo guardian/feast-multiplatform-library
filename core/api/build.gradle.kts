@@ -1,9 +1,20 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+object APIConfig {
+    const val GROUP_ID = "com.gu"
+    const val MAVEN_ARTIFACT_ID = "feast-multiplatform-library"
+    const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibrary"
+    const val BUNDLE_ID = "com.gu.recipe.core.api"
+    const val GITHUB_REPO = "guardian/feast-multiplatform-library"
+    const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library to handle recipe templates"
+}
+
 plugins {
+    `maven-publish`
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.metalava)
     alias(libs.plugins.kotlinSerialization)
 }
 
@@ -46,7 +57,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.gu.recipe.core.api"
+    namespace = APIConfig.BUNDLE_ID
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
