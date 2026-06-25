@@ -108,10 +108,8 @@ object UnitConversions {
             return scaledAmount
         }
 
-        println("applying scaling")
         val smallestUnitAmount = toSmallestUnit(scaledAmount)
 
-        println("smallestAmount: $smallestUnitAmount")
         val ladder = when (target) {
             MeasuringSystem.Metric -> if (CONVENIENCE_UNITS.contains(amount.unit))
                 METRIC_CONVENIENCE_LADDER
@@ -126,8 +124,6 @@ object UnitConversions {
             MeasuringSystem.Imperial -> IMPERIAL_CONVERSION_LADDER
             MeasuringSystem.Butter -> BUTTER_CONVERSION_LADDER
         }
-
-        println("ladder: $ladder")
 
         val amountToConvert = if(
             (target== MeasuringSystem.Butter && density !=null) ||
@@ -145,13 +141,10 @@ object UnitConversions {
             smallestUnitAmount
         }
 
-        println("amountToConvert: $amountToConvert")
-
         val mostRelevantUnit = ladder
             .filter { it.second.unitType == amountToConvert.unit?.unitType }
             .lastOrNull { amountToConvert.min >= it.first }?.second
 
-        println("mostRelevantUnit: $mostRelevantUnit")
         return mostRelevantUnit?.let {
             Amount(
                 min = amountToConvert.min / it.quantity,
