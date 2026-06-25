@@ -37,16 +37,11 @@ fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
         val data = Json.decodeFromString<TerminologySchema>(raw)
         println("Decoded data: $data")
 
-        val entries = data.values.map {
-            val entry = TerminologyEntry(
-                it[0].jsonPrimitive.int, // ID
-                it[1].jsonPrimitive.content, // UK Term
-                it[2].jsonPrimitive.content // US Term
-            )
-            entry
+        val terminologyMap = data.values.associate { row ->
+            val ukTerm = row[1].jsonPrimitive.content
+            val usTerm = row[2].jsonPrimitive.content
+            ukTerm to usTerm
         }
-
-        val terminologyMap = entries.associate { it.ukTerm to it.usTerm }
 
         val table = TerminologyTable(data.preparedAt, terminologyMap)
         println("Created TerminologyTable: $table")
