@@ -16,6 +16,12 @@ import kotlinx.serialization.encoding.*
 @Serializable
 data class RecipeV3 (
     /**
+     * If true, render the recipe with app-exclusive branding and styling. If not present, must
+     * be treated as false.
+     */
+    val appExclusiveBranding: Boolean? = null,
+
+    /**
      * Credit to cookbook or publication source
      */
     val bookCredit: String? = null,
@@ -318,7 +324,7 @@ data class Serves (
     /**
      * Unit for the serving amount (e.g., 'people', 'portions')
      */
-    val unit: String
+    val unit: String? = null
 )
 
 /**
