@@ -12,16 +12,17 @@ import java.net.URL
 
 class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge {
 
-    private val cachePath = File(cacheDir, "recipe_data/density_cache.json").toOkioPath()
+    private fun cachePath(url: String) = File(cacheDir, "recipe_data/${url.hashCode()}_cache.json").toOkioPath()
 
     override suspend fun loadData(url: String, authToken: String?): DataLoadResult {
         return withContext(Dispatchers.IO) {
-            val cached = readCache()
+            val cached = readCache(url)
             try {
-                if (cached != null && isCacheFresh()) {
+                if (cached != null && isCacheFresh(url)) {
                     return@withContext DataLoadResult.Success(cached.content)
                 }
 
+                performRequest(url, authToken, cached)
                 performRequest(url, authToken, cached)
             } catch (e: Exception) {
                 if (cached != null) {
@@ -33,19 +34,19 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge 
         }
     }
 
-    private fun readCache(): DataCacheEntry? {
+    private fun readCache(url: String): DataCacheEntry? {
         return try {
-            if (!FileSystem.SYSTEM.exists(cachePath)) return null
-            val raw = FileSystem.SYSTEM.read(cachePath) { readUtf8() }
+            if (!FileSystem.SYSTEM.exists(cachePath(url))) return null
+            val raw = FileSystem.SYSTEM.read(cachePath(url)) { readUtf8() }
             Json.decodeFromString<DataCacheEntry>(raw)
         } catch (_: Exception) {
             null
         }
     }
 
-    private fun isCacheFresh(): Boolean {
+    private fun isCacheFresh(url: String): Boolean {
         return try {
-            val lastModified = FileSystem.SYSTEM.metadata(cachePath).lastModifiedAtMillis
+            val lastModified = FileSystem.SYSTEM.metadata(cachePath(url)).lastModifiedAtMillis
                 ?: return false
             System.currentTimeMillis() - lastModified < CACHE_FRESHNESS_MS
         } catch (_: Exception) {
@@ -53,11 +54,11 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge 
         }
     }
 
-    private fun writeCache(entry: DataCacheEntry) {
+    private fun writeCache(url: String, entry: DataCacheEntry) {
         try {
-            val parent = cachePath.parent ?: return
+            val parent = cachePath(url).parent ?: return
             FileSystem.SYSTEM.createDirectories(parent)
-            FileSystem.SYSTEM.write(cachePath) {
+            FileSystem.SYSTEM.write(cachePath(url)) {
                 writeUtf8(Json.encodeToString(entry))
             }
         } catch (_: Exception) {
@@ -92,7 +93,7 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge 
                     val lastModified = connection.getHeaderField("Last-Modified")
 
                     if (body.isNotEmpty() && lastModified != null) {
-                        writeCache(DataCacheEntry(lastModified, body))
+                        writeCache(url, DataCacheEntry(lastModified, body))
                         DataLoadResult.Success(body)
                     } else if (cached != null) {
                         DataLoadResult.Success(cached.content)
@@ -103,7 +104,7 @@ class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge 
                 responseCode == HttpURLConnection.HTTP_NOT_MODIFIED -> {
                     if (cached != null) {
                         // Touch the cache so freshness resets
-                        writeCache(cached)
+                        writeCache(url, cached)
                         DataLoadResult.Success(cached.content)
                     } else {
                         DataLoadResult.Failure("HTTP 304 but no cached data available")

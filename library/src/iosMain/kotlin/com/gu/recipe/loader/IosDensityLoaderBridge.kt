@@ -11,12 +11,12 @@ import kotlin.coroutines.resume
 
 class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBridge {
 
-    private val cachePath = "$cachesDirectory/recipe_data/density_cache.json".toPath()
+    private fun cachePath(url: String) = "$cachesDirectory/recipe_data/${url.hashCode()}_cache.json".toPath()
 
     override suspend fun loadData(url: String, authToken: String?): DataLoadResult {
-        val cached = readCache()
+        val cached = readCache(url)
         return try {
-            if (cached != null && isCacheFresh()) {
+            if (cached != null && isCacheFresh(url)) {
                 return DataLoadResult.Success(cached.content)
             }
 
@@ -30,19 +30,19 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBr
         }
     }
 
-    private fun readCache(): DataCacheEntry? {
+    private fun readCache(url: String): DataCacheEntry? {
         return try {
-            if (!FileSystem.SYSTEM.exists(cachePath)) return null
-            val raw = FileSystem.SYSTEM.read(cachePath) { readUtf8() }
+            if (!FileSystem.SYSTEM.exists(cachePath(url))) return null
+            val raw = FileSystem.SYSTEM.read(cachePath(url)) { readUtf8() }
             Json.decodeFromString<DataCacheEntry>(raw)
         } catch (_: Exception) {
             null
         }
     }
 
-    private fun isCacheFresh(): Boolean {
+    private fun isCacheFresh(url: String): Boolean {
         return try {
-            val lastModified = FileSystem.SYSTEM.metadata(cachePath).lastModifiedAtMillis
+            val lastModified = FileSystem.SYSTEM.metadata(cachePath(url)).lastModifiedAtMillis
                 ?: return false
             val now = (NSDate().timeIntervalSince1970 * 1000).toLong()
             now - lastModified < CACHE_FRESHNESS_MS
@@ -51,11 +51,11 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBr
         }
     }
 
-    private fun writeCache(entry: DataCacheEntry) {
+    private fun writeCache(url: String, entry: DataCacheEntry) {
         try {
-            val parent = cachePath.parent ?: return
+            val parent = cachePath(url).parent ?: return
             FileSystem.SYSTEM.createDirectories(parent)
-            FileSystem.SYSTEM.write(cachePath) {
+            FileSystem.SYSTEM.write(cachePath(url)) {
                 writeUtf8(Json.encodeToString(entry))
             }
         } catch (_: Exception) {
@@ -72,7 +72,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBr
             is HttpResult.Success -> {
                 when {
                     result.statusCode == 200 && result.body.isNotEmpty() && result.lastModified != null -> {
-                        writeCache(DataCacheEntry(result.lastModified, result.body))
+                        writeCache(url, DataCacheEntry(result.lastModified, result.body))
                         DataLoadResult.Success(result.body)
                     }
                     result.statusCode == 200 -> {
@@ -81,7 +81,7 @@ class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBr
                     }
                     result.statusCode == 304 -> {
                         if (cached != null) {
-                            writeCache(cached)
+                            writeCache(url, cached)
                             DataLoadResult.Success(cached.content)
                         } else {
                             DataLoadResult.Failure("HTTP 304 but no cached data available")
