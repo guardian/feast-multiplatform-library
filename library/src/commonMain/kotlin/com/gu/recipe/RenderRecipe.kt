@@ -58,7 +58,7 @@ internal fun wrapWithStrongTag(value: String): String {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class RenderSession(private val densityTable: DensityTable, private val terminologyTable: TerminologyTable? = null) {
+class RenderSession(private val densityTable: DensityTable, private val terminologyTable: TerminologyTable? = null, private val convertTerminologies: Boolean? = null) {
     internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String {
         val fanTempC = element.temperatureFanC?.let {
             if (element.temperatureC == null) {
@@ -220,7 +220,13 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         }
 
         val scaledRecipe = recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
-        return renderRecipeForTerminology(scaledRecipe)
+
+        return if(convertTerminologies == null || convertTerminologies == false) {
+            scaledRecipe
+        } else {
+            renderRecipeForTerminology(scaledRecipe)
+        }
+
     }
 
     internal fun replaceInText(text: String?): String? {
@@ -280,12 +286,12 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 }
 
-fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String? = null): Result<RenderSession> {
+fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String? = null, convertTerminologies: Boolean? = null): Result<RenderSession> {
     val terminologyTable = setUpTerminologyTable(rawTerminologyData).getOrElse {
         return Result.failure(it)
     }
     val densityTable = if (rawDensityData != null) loadDensityTable(rawDensityData) else loadInternalDensityTable()
-    return densityTable.map { RenderSession(it, terminologyTable) }
+    return densityTable.map { RenderSession(it, terminologyTable, convertTerminologies) }
 }
 
 /**
