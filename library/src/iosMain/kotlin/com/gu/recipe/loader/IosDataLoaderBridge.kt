@@ -9,7 +9,7 @@ import okio.Path.Companion.toPath
 import platform.Foundation.*
 import kotlin.coroutines.resume
 
-class IosDensityLoaderBridge(private val cachesDirectory: String) : DataLoaderBridge {
+class IosDataLoaderBridge(private val cachesDirectory: String) : DataLoaderBridge {
 
     private fun cachePath(url: String) = "$cachesDirectory/recipe_data/${url.hashCode()}_cache.json".toPath()
 

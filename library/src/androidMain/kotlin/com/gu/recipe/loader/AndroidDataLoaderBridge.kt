@@ -10,7 +10,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 
-class AndroidDensityLoaderBridge(private val cacheDir: File) : DataLoaderBridge {
+class AndroidDataLoaderBridge(private val cacheDir: File) : DataLoaderBridge {
 
     private fun cachePath(url: String) = File(cacheDir, "recipe_data/${url.hashCode()}_cache.json").toOkioPath()
 
