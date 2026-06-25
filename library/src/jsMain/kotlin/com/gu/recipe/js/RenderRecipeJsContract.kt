@@ -15,7 +15,7 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
 @JsExport
 /**
  * Scales the given recipe by a given factor and optionally converts between measuring systems.
- * `session` is a RenderSession object which can be obtained by calling `createTemplateSession`
+ * `session` is a RenderSession object which can be obtained by calling `createRenderSession`
  */
 fun renderRecipe(recipe: String, factor: Float, unit: String, session: RenderSession): String {
     val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
@@ -69,6 +69,6 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: RenderSessi
 * JS style factory for RenderSession.  If the session can be created,
 * it is returned; if the session cannot be created, then an exception is thrown.
 */
-fun createTemplateSession(rawDensityData: String?, rawTerminologyData: String?):RenderSession {
-    return newRenderSession(rawDensityData, rawTerminologyData).getOrThrow()
+fun createRenderSession(rawDensityData: String?, rawTerminologyData: String?, convertTerminologies: Boolean?):RenderSession {
+    return newRenderSession(rawDensityData, rawTerminologyData, convertTerminologies).getOrThrow()
 }
