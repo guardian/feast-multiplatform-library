@@ -11,7 +11,7 @@ import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ScaleRecipeTest {
+class RenderRecipeTest {
     @Test
     fun `scale a recipe`() {
         val recipeTemplate = RecipeV3(
@@ -82,7 +82,7 @@ class ScaleRecipeTest {
         )
         val densityTable = DensityTable("test", HashMap(), HashMap())
         val session = RenderSession(densityTable)
-        val scaledRecipe = session.scaleAndConvertUnitAndTerminologyInRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
+        val scaledRecipe = session.renderRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe

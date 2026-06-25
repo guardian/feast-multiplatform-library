@@ -1,8 +1,8 @@
 package com.gu.recipe.loader
 
 import com.gu.recipe.RenderSession
-import com.gu.recipe.newTemplateSession
-import com.gu.recipe.noCustomaryTemplateSession
+import com.gu.recipe.newRenderSession
+import com.gu.recipe.noCustomaryRenderSession
 
 class DataLoader(
     private val bridge: DataLoaderBridge,
@@ -24,7 +24,7 @@ class DataLoader(
 
             when {
                 densityResult is DataLoadResult.Success && terminologyResult is DataLoadResult.Success -> {
-                    newTemplateSession(densityResult.content, terminologyResult.content).getOrElse {
+                    newRenderSession(densityResult.content, terminologyResult.content).getOrElse {
                         onError?.invoke("Remote data failed validation: ${it.message}")
                         fallbackSession()
                     }
@@ -46,9 +46,9 @@ class DataLoader(
     }
 
     private fun fallbackSession(): RenderSession {
-        return newTemplateSession(null, null).getOrElse {
+        return newRenderSession(null, null).getOrElse {
             onError?.invoke("Internal data also failed: ${it.message}")
-            noCustomaryTemplateSession()
+            noCustomaryRenderSession()
         }
     }
 }

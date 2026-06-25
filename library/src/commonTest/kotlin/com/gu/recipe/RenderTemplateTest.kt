@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class RenderTemplateTest {
-    val session = newTemplateSession().getOrThrow()
+    val session = newRenderSession().getOrThrow()
 
     @Test
     fun `scale template with simple quantity placeholder`() {

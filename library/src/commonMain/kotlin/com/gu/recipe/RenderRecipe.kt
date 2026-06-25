@@ -182,7 +182,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 
     /**
-     * scaleAndConvertUnitAndTerminologyInRecipe used to convert units and scale recipe and now covert terminology too
+     * renderRecipe used to convert units and scale recipe and now covert terminology too
      *
      * @param recipe The recipe as provided by the server (RecipeV3)
      * @param factor The factor applied to change the proportions of the recipe.
@@ -190,7 +190,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
      *  To calculate the factor, take the number of desired servings and divide it by the original servings.
      * @param measuringSystem The target unit system for ingredient measurements (e.g., Metric or Imperial)
      */
-    fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
+    fun renderRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
         val sourceMeasuringSystem: MeasuringSystem.MeasuringSystemInternal = when(recipe.originalMeasuringSystem) {
             OriginalMeasuringSystem.Metric -> MeasuringSystem.Metric
             OriginalMeasuringSystem.Us -> MeasuringSystem.USCustomary
@@ -280,7 +280,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 }
 
-fun newTemplateSession(rawDensityData: String? = null, rawTerminologyData: String? = null): Result<RenderSession> {
+fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String? = null): Result<RenderSession> {
     val terminologyTable = setUpTerminologyTable(rawTerminologyData).getOrElse {
         return Result.failure(it)
     }
@@ -290,9 +290,9 @@ fun newTemplateSession(rawDensityData: String? = null, rawTerminologyData: Strin
 
 /**
  * Creates a RenderSession without any density conversion data.  This is intended as a fallback
- * if newTemplateSession fails on internal data
+ * if newRenderSession fails on internal data
  */
-fun noCustomaryTemplateSession(): RenderSession {
+fun noCustomaryRenderSession(): RenderSession {
     val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
     val terminologyTable = TerminologyTable(preparedAt = "none", HashMap())
     return RenderSession(densityTable, terminologyTable)
