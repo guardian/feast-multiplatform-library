@@ -130,7 +130,6 @@ kotlin {
                 implementation(libs.apollo.runtime)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.kotlinx.datetime)
             }
         }
         val commonTest by getting {

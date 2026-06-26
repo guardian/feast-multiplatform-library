@@ -5,12 +5,6 @@ import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
-import kotlinx.datetime.LocalDate
-
-class GraphQlRecipeRepositoryTest {
-
-
-}
 
 private class FakeRecipeGraphQlDataSource(
     private val result: GraphQlResult<List<GetFrontsByRegionQuery.Front>>,
@@ -19,7 +13,6 @@ private class FakeRecipeGraphQlDataSource(
     override suspend fun getFrontByRegion(
         region: Regions,
         edition: Editions,
-        date: LocalDate,
         recipesLimit: Int
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>> = result
 }

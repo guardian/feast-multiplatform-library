@@ -1,5 +1,5 @@
-query GetFrontsByRegion($region: regions!, $edition: editions!, $date:date, $recipesLimit2: Int!) {
-    Front: curation(region: $region, edition: $edition, date: $date){
+query GetFrontsByRegion($region: regions!, $edition: editions!, $recipesLimit2: Int!) {
+    Front: curation(region: $region, edition: $edition){
         title
         items {
             ... on RecipeReference {

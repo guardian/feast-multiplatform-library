@@ -48,7 +48,6 @@ kotlin {
                 implementation(project(":core:graphql"))
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.datetime)
             }
         }
         val commonTest by getting {
