@@ -2,7 +2,7 @@ package io.github.kotlin.fibonacci.com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.TemplateSession
+import com.gu.recipe.RenderSession
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.template.QuantityPlaceholder
@@ -10,7 +10,7 @@ import com.gu.recipe.wrapWithStrongTag
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ScaleRecipeTest {
+class RenderRecipeTest {
     @Test
     fun `scale a recipe`() {
         val recipeTemplate = RecipeV3(
@@ -80,8 +80,8 @@ class ScaleRecipeTest {
             )
         )
         val densityTable = DensityTable("test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
+        val session = RenderSession(densityTable)
+        val scaledRecipe = session.renderRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe
@@ -113,7 +113,7 @@ class ScaleRecipeTest {
         fun `test tbsp conversion for 1_5 input`() {
             // Arrange
             val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-            val templateSession = TemplateSession(densityTable)
+            val renderSession = RenderSession(densityTable)
             val placeholder = QuantityPlaceholder(
                 min = 1.5f,
                 max = 1.5f,
@@ -126,7 +126,7 @@ class ScaleRecipeTest {
             val measuringSystem = MeasuringSystem.USCustomary
 
             // Act
-            val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+            val result = renderSession.renderQuantity(placeholder, factor, measuringSystem)
 
             // Assert
             assertEquals("1½ tbsp", result)
@@ -136,7 +136,7 @@ class ScaleRecipeTest {
     fun `test conversion for chicken thigh for grams conversion to nearly 1 pound`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val renderSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 500f,
@@ -150,7 +150,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+        val result = renderSession.renderQuantity(placeholder, factor, measuringSystem)
 
         // Assert
         assertEquals("1 lb", result)
@@ -160,7 +160,7 @@ class ScaleRecipeTest {
     fun `test conversion for chicken thigh for grams conversion to 1 with a quarter more`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val renderSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 580f,
@@ -174,7 +174,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+        val result = renderSession.renderQuantity(placeholder, factor, measuringSystem)
 
         // Assert
         assertEquals("1¼ lbs", result)
@@ -184,7 +184,7 @@ class ScaleRecipeTest {
     fun `test conversion for chicken thigh for grams conversion to 2`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val renderSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 900f,
@@ -198,7 +198,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem)
+        val result = renderSession.renderQuantity(placeholder, factor, measuringSystem)
 
         // Assert
         assertEquals("2 lbs", result)
