@@ -21,12 +21,21 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
 }
 
+val libraryVersion = file("../version.txt").readText().trim()
+
 kotlin {
     androidTarget {
         publishLibraryVariants("release")
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.get()))
+        }
+    }
+
+    jvm("server") {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm21.get()))
         }
     }
 
@@ -116,6 +125,12 @@ android {
 
 publishing {
     publications {
+        withType<MavenPublication>().matching { it.name == "server" }.configureEach {
+            groupId = Config.GROUP_ID
+            artifactId = "${Config.MAVEN_ARTIFACT_ID}-server"
+            version = libraryVersion
+        }
+
         register<MavenPublication>("release") {
             groupId = Config.GROUP_ID
             artifactId = Config.MAVEN_ARTIFACT_ID
