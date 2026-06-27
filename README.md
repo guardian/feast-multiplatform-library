@@ -24,3 +24,29 @@ To avoid any error and make evolving these models easier, we generate the kotlin
 see `./generate-models.sh` for the script that does this.
 
 The generated file is commit to github, making the build deterministic.
+
+## Building for serverside
+
+### JAR for Scala
+
+Run the following:
+
+```bash
+./gradlew :library:serverJar
+```
+
+There should be a JAR in library/build/libs/library-server.jar
+
+You can also use `./gradlew :library:publishServerPublicationToMavenLocal` to publish
+maven-style to a local repository
+
+### Javascript
+
+Run the following:
+
+```bash
+./gradlew :library:compileProductionExecutableKotlinJs
+```
+
+You can then use the `file://` format in your target project's package.json to point to
+library/build/js/packages/feast-multiplatform-library-library 
