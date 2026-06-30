@@ -16,7 +16,8 @@ class DataLoader(
     suspend fun initialiseConversionSession(
         densityUrl: String,
         terminologyUrl:String,
-        authToken: String? = null
+        authToken: String? = null,
+        convertTerminologies: Boolean = true
     ): RenderSession {
         return try {
             val densityResult = bridge.loadData(densityUrl, authToken)
@@ -24,7 +25,11 @@ class DataLoader(
 
             when {
                 densityResult is DataLoadResult.Success && terminologyResult is DataLoadResult.Success -> {
-                    newRenderSession(densityResult.content, terminologyResult.content).getOrElse {
+                    newRenderSession(
+                        densityResult.content,
+                        terminologyResult.content,
+                        convertTerminologies = convertTerminologies,
+                    ).getOrElse {
                         onError?.invoke("Remote data failed validation: ${it.message}")
                         fallbackSession()
                     }

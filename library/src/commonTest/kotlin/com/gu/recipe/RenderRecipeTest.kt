@@ -1,10 +1,8 @@
-package io.github.kotlin.fibonacci.com.gu.recipe
+package com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.RenderSession
 import com.gu.recipe.density.DensityTable
-import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.wrapWithStrongTag
 import kotlinx.serialization.json.Json
@@ -516,5 +514,147 @@ class RenderRecipeTest {
 
         // Assert
         assertEquals(expectedRecipesTexts, scaledRecipesTexts)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology converts only the requested enum section`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                preparedAt = "none",
+                terminologyMap = mapOf(
+                    "aubergine" to "eggplant",
+                    "icing sugar" to "powdered sugar"
+                )
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "aubergine tart",
+            description = "aubergine with icing sugar",
+            ingredients = listOf(
+                IngredientsList(
+                    recipeSection = "aubergine topping",
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            text = "1 aubergine",
+                            template = "aubergine with icing sugar"
+                        )
+                    )
+                )
+            ),
+            instructions = listOf(
+                Instruction(
+                    description = "Roast the aubergine",
+                    descriptionTemplate = "aubergine"
+                )
+            )
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.INGREDIENTS)
+
+        assertEquals("aubergine tart", rendered.title)
+        assertEquals("aubergine with icing sugar", rendered.description)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("eggplant topping", rendered.ingredients?.first()?.recipeSection)
+        assertEquals("eggplant with powdered sugar", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("Roast the aubergine", rendered.instructions?.first()?.description)
+        assertEquals("aubergine", rendered.instructions?.first()?.descriptionTemplate)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology ALL converts every section`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                preparedAt = "none",
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "aubergine tart",
+            description = "aubergine filling",
+            ingredients = listOf(
+                IngredientsList(
+                    recipeSection = "aubergine topping",
+                    ingredientsList = listOf(IngredientItem(text = "1 aubergine", template = "aubergine"))
+                )
+            ),
+            instructions = listOf(Instruction(description = "Roast the aubergine", descriptionTemplate = "aubergine"))
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.ALL)
+
+        assertEquals("eggplant tart", rendered.title)
+        assertEquals("eggplant filling", rendered.description)
+        assertEquals("eggplant topping", rendered.ingredients?.first()?.recipeSection)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("Roast the eggplant", rendered.instructions?.first()?.description)
+        assertEquals("eggplant", rendered.instructions?.first()?.descriptionTemplate)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology default section converts every section`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                preparedAt = "none",
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "aubergine tart",
+            description = "aubergine filling",
+            ingredients = listOf(
+                IngredientsList(
+                    recipeSection = "aubergine topping",
+                    ingredientsList = listOf(IngredientItem(text = "1 aubergine", template = "aubergine"))
+                )
+            ),
+            instructions = listOf(Instruction(description = "Roast the aubergine", descriptionTemplate = "aubergine"))
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe)
+
+        assertEquals("eggplant tart", rendered.title)
+        assertEquals("eggplant filling", rendered.description)
+        assertEquals("eggplant topping", rendered.ingredients?.first()?.recipeSection)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("Roast the eggplant", rendered.instructions?.first()?.description)
+        assertEquals("eggplant", rendered.instructions?.first()?.descriptionTemplate)
+    }
+
+    @Test
+    fun `replaceInText is case insensitive and only replaces whole terms`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                preparedAt = "none",
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+
+        assertEquals("Roast the eggplant", session.replaceInText("Roast the AUBERGINE"))
+        assertEquals("aubergines are great", session.replaceInText("aubergines are great"))
+    }
+
+    @Test
+    fun `replaceInText prefers longer terminology matches before shorter ones`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                preparedAt = "none",
+                terminologyMap = mapOf(
+                    "sugar" to "sweetener",
+                    "icing sugar" to "powdered sugar"
+                )
+            )
+        )
+
+        assertEquals("powdered sugar", session.replaceInText("icing sugar"))
     }
 }

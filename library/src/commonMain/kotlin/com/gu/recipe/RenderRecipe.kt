@@ -25,6 +25,16 @@ import kotlin.math.max
 private val NON_BOLD_REGEX = Regex("""\([^()]*\)| • """)
 private const val MARKER = "\u0000"
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+enum class TerminologySection {
+    ALL,
+    TITLE,
+    DESCRIPTION,
+    INGREDIENTS,
+    INSTRUCTIONS,
+}
+
 private fun splitBeforeSuffix(value: String): Pair<String, String?> {
     val index = value.indexOfAny(charArrayOf(',', ';', '('))
     return if (index != -1) {
@@ -221,7 +231,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
 
         val scaledRecipe = recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
 
-        return if(convertTerminologies == null || convertTerminologies == false) {
+        return if(convertTerminologies == false) {
             scaledRecipe
         } else {
             renderRecipeForTerminology(scaledRecipe)
@@ -229,60 +239,66 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
 
     }
 
-    internal fun replaceInText(text: String?): String? {
-        return text?.let { originalText ->
-            terminologyTable?.keys.orEmpty().fold(originalText) { acc, key ->
-                acc.replace(key, terminologyTable?.convertTerm(key) ?: key)
+    fun renderRecipeForTerminology(recipe: RecipeV3, section: TerminologySection = TerminologySection.ALL): RecipeV3 {
+        return recipe.copy(
+            title = if (shouldConvert(section, TerminologySection.TITLE)) {
+                replaceInText(recipe.title)
+            } else {
+                recipe.title
+            },
+            description = if (shouldConvert(section, TerminologySection.DESCRIPTION)) {
+                replaceInText(recipe.description)
+            } else {
+                recipe.description
+            },
+            ingredients = if (shouldConvert(section, TerminologySection.INGREDIENTS)) {
+                recipe.ingredients?.map { ingredientSection ->
+                    ingredientSection.copy(
+                        ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
+                            ingredient.copy(
+                                text = replaceInText(ingredient.text),
+                                template = replaceInText(ingredient.template)
+                            )
+                        },
+                        recipeSection = replaceInText(ingredientSection.recipeSection)
+                    )
+                }
+            } else {
+                recipe.ingredients
+            },
+            instructions = if (shouldConvert(section, TerminologySection.INSTRUCTIONS)) {
+                recipe.instructions?.map { instruction ->
+                    instruction.copy(
+                        description = replaceInText(instruction.description) ?: instruction.description,
+                        descriptionTemplate = replaceInText(instruction.descriptionTemplate)
+                    )
+                }
+            } else {
+                recipe.instructions
             }
-        }
+        )
     }
 
-    fun renderRecipeForTerminology(recipe: RecipeV3, sectionName: String? = null): RecipeV3 {
-        val updatedTitle = if (sectionName == null || sectionName == "title") {
-            replaceInText(recipe.title)
-        } else {
-            recipe.title
-        }
+    private fun shouldConvert(section: TerminologySection, currentSection: TerminologySection): Boolean {
+        return section == TerminologySection.ALL || section == currentSection
+    }
 
-        val updatedDescription = if (sectionName == null || sectionName == "description") {
-            replaceInText(recipe.description)
-        } else {
-            recipe.description
+    internal fun replaceInText(text: String?): String? {
+        val table = terminologyTable ?: return text
+        val keys = table.keys.sortedByDescending { it.length }
+        if (keys.isEmpty()) return text
+        val keysByLowercase = keys.associateBy { it.lowercase() }
+        val pattern = keys.joinToString(separator = "|", prefix = "\\b(?:", postfix = ")\\b") {
+            Regex.escape(it)
         }
+        val regex = Regex(pattern, RegexOption.IGNORE_CASE)
 
-        val updatedIngredients = if (sectionName == null || sectionName == "ingredients") {
-            recipe.ingredients?.map { ingredientSection ->
-                IngredientsList(
-                    ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
-                        ingredient.copy(
-                            text = replaceInText(ingredient.text),
-                            template = ingredient.template?.let { replaceInText(it) }
-                        )
-                    },
-                    recipeSection = replaceInText(ingredientSection.recipeSection)
-                )
+        return text?.let { originalText ->
+            originalText.replace(regex) { match ->
+                val key = keysByLowercase[match.value.lowercase()] ?: match.value
+                table.convertTerm(key) ?: match.value
             }
-        } else {
-            recipe.ingredients
         }
-
-        val updatedInstructions = if (sectionName == null || sectionName == "instructions") {
-            recipe.instructions?.map { instruction ->
-                instruction.copy(
-                    description = replaceInText(instruction.description) ?: instruction.description,
-                    descriptionTemplate = instruction.descriptionTemplate?.let { replaceInText(it) }
-                )
-            }
-        } else {
-            recipe.instructions
-        }
-
-        return recipe.copy(
-            title = updatedTitle,
-            description = updatedDescription,
-            ingredients = updatedIngredients,
-            instructions = updatedInstructions
-        )
     }
 }
 
