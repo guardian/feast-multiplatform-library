@@ -295,10 +295,19 @@ object Units {
      * Find a unit coming from a recipe.
      * Because we know it's coming from a recipe we bias it towards metric units first
      */
-    fun findRecipeUnit(name: String): MeasurementUnit {
-        val unit = METRIC_UNIT_FROM_SYMBOL[name]
-            ?: IMPERIAL_UNIT_FROM_SYMBOL[name]
-            ?: US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
+    fun findRecipeUnit(name: String, originMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): MeasurementUnit {
+        val unit = when(originMeasuringSystem) {
+            is MeasuringSystem.Metric -> METRIC_UNIT_FROM_SYMBOL[name]
+                ?: IMPERIAL_UNIT_FROM_SYMBOL[name]
+                ?: US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
+            //butter is a crazy thing to be measuring the whole recipe in but we need it to complete the enum
+            is MeasuringSystem.USCustomary, MeasuringSystem.Butter -> US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
+                ?: IMPERIAL_UNIT_FROM_SYMBOL[name]
+                ?: METRIC_UNIT_FROM_SYMBOL[name]
+            is MeasuringSystem.Imperial -> IMPERIAL_UNIT_FROM_SYMBOL[name]
+                ?: METRIC_UNIT_FROM_SYMBOL[name]
+                ?: US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
+        }
 
         if (unit != null) {
             return unit

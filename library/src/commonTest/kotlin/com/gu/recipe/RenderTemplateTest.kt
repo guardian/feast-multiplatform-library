@@ -23,7 +23,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("200 g", result)
     }
 
@@ -39,7 +39,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("200-300 g", result)
     }
 
@@ -54,7 +54,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("1 tbsp", result)
     }
 
@@ -69,7 +69,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("½ tsp", result)
     }
 
@@ -84,7 +84,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 0.5f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 0.5f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("¾ cup", result)
     }
 
@@ -98,7 +98,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 0.25f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 0.25f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("½", result)
     }
 
@@ -115,7 +115,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
+        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary, MeasuringSystem.Metric)
         assertEquals("1 cup", result)
     }
 
@@ -132,7 +132,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
+        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary, MeasuringSystem.Metric)
         assertEquals("8¾ oz", result)
     }
 
@@ -150,7 +150,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary)
+        val result = session.renderTemplate(template, 1.0f, MeasuringSystem.USCustomary, MeasuringSystem.Metric)
         assertEquals("1⅓-3¼ cups", result)
     }
 
@@ -167,7 +167,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2.0f, MeasuringSystem.USCustomary)
+        val result = session.renderTemplate(template, 2.0f, MeasuringSystem.USCustomary, MeasuringSystem.Metric)
         assertEquals("2 cups", result) //extra 1/8 due to rounding
     }
 
@@ -182,7 +182,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 1.234567f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 1.234567f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("309 ml", result)
     }
 
@@ -197,7 +197,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("100 g", result)
     }
 
@@ -211,7 +211,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("180C (160C fan)", result)
     }
 
@@ -224,7 +224,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("200C", result)
     }
 
@@ -235,7 +235,7 @@ class RenderTemplateTest {
                 TemplateConst("Add ")
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("Add ", result)
     }
 
@@ -253,7 +253,7 @@ class RenderTemplateTest {
                 TemplateConst(" of flour")
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("Add 200-240 g of flour", result)
     }
 
@@ -276,7 +276,7 @@ class RenderTemplateTest {
                 TemplateConst(".")
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("Bake at 180C (160C fan) for 30-40 minutes.", result)
     }
 
@@ -291,7 +291,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 0.5f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 0.5f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("100 g", result)
     }
 
@@ -306,7 +306,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 1.5f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 1.5f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("1.5 kg", result)
     }
 
@@ -320,7 +320,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 0.75f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 0.75f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("¾", result)
     }
 
@@ -336,7 +336,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("1-2 tsp", result)
     }
 
@@ -351,7 +351,7 @@ class RenderTemplateTest {
                 )
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("4 kg", result)
     }
 
@@ -374,7 +374,7 @@ class RenderTemplateTest {
                 ),
             )
         )
-        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 2f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("4 kg 2 kg", result)
     }
 
@@ -395,7 +395,7 @@ class RenderTemplateTest {
                 ),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("1½ cups 1½ lbs", result)
     }
 
@@ -422,7 +422,7 @@ class RenderTemplateTest {
                 ),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.Imperial)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.Imperial, MeasuringSystem.Metric)
         assertEquals("3⅓ lbs 3½ oz 1", result)
     }
 
@@ -446,7 +446,7 @@ class RenderTemplateTest {
                 TemplateConst(" of oil"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomary)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomary, MeasuringSystem.Metric)
         assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
@@ -457,7 +457,7 @@ class RenderTemplateTest {
                 TemplateConst("Use \"00\" flour and you'll get - I think - the best results."),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.Metric)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.Metric, MeasuringSystem.Metric)
         assertEquals("Use “00” flour and you’ll get – I think – the best results.", result)
     }
 
@@ -481,7 +481,7 @@ class RenderTemplateTest {
                 TemplateConst(" of oil"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric, MeasuringSystem.Metric)
         assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
@@ -505,7 +505,7 @@ class RenderTemplateTest {
                 TemplateConst(" of oil"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined, MeasuringSystem.Metric)
         assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
@@ -529,7 +529,7 @@ class RenderTemplateTest {
                 TemplateConst(" of oil"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial, MeasuringSystem.Metric)
         assertEquals("½ cup of water, ½ cup of oil", result)
     }
 
@@ -547,7 +547,7 @@ class RenderTemplateTest {
                 TemplateConst(" of vegan pork"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithImperial, MeasuringSystem.Metric)
         assertEquals("3½ oz of vegan pork", result)
     }
 
@@ -565,7 +565,7 @@ class RenderTemplateTest {
                 TemplateConst(" of vegan pork"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined, MeasuringSystem.Metric)
         assertEquals("3½ oz of vegan pork", result)
     }
 
@@ -583,7 +583,7 @@ class RenderTemplateTest {
                 TemplateConst(" of gunpowder"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined, MeasuringSystem.Metric)
         assertEquals("5 pinches of gunpowder", result)
     }
 
@@ -601,7 +601,7 @@ class RenderTemplateTest {
                 TemplateConst(" of oil"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined, MeasuringSystem.Metric)
         assertEquals("½ cup of oil", result)
     }
     @Test
@@ -618,7 +618,7 @@ class RenderTemplateTest {
                 TemplateConst(" of vegan pork"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCustomaryWithMetric, MeasuringSystem.Metric)
         assertEquals("3½ oz of vegan pork", result)
     }
 
@@ -637,7 +637,7 @@ class RenderTemplateTest {
                 TemplateConst(" of butter"),
             )
         )
-        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined)
+        val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined, MeasuringSystem.Metric)
         assertEquals("1 stick • ½ cup of butter", result)
     }
 }
