@@ -43,7 +43,7 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String, originalUnits: String? = null): String {
+fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String, originalUnits: String): String {
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
         "Metric" -> MeasuringSystem.Metric

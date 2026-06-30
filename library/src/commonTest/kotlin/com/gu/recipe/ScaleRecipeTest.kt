@@ -287,7 +287,6 @@ class ScaleRecipeTest {
 
         val metricRecipe = session.scaleAndConvertUnitRecipe(recipe, 1.0f, MeasuringSystem.Metric)
         val jsonStr = Json.encodeToString(metricRecipe)
-        println(jsonStr)
     }
 
     @Test

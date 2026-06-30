@@ -1,7 +1,6 @@
 package com.gu.recipe.unit
 
 import com.gu.recipe.Amount
-import com.gu.recipe.generated.OriginalMeasuringSystem
 
 object UnitConversions {
     private val CUPS_PER_ML = 0.00422675f
@@ -101,10 +100,10 @@ object UnitConversions {
         }
     }
 
-    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem.MeasuringSystemInternal, factor: Float = 1f, density: Float?, originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): Amount {
+    fun convertUnitSystemAndScale(amount: Amount, target: MeasuringSystem.MeasuringSystemInternal, factor: Float = 1f, density: Float?, origin: MeasuringSystem.MeasuringSystemInternal): Amount {
         val scaledAmount = amount.copy(min = amount.min * factor, max = amount.max?.let { it * factor })
 
-        if (scaledAmount.unit == null || (target == originalMeasuringSystem && factor == 1f)) {
+        if (scaledAmount.unit == null || (target == origin && factor == 1f)) {
             return scaledAmount
         }
 

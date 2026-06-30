@@ -295,8 +295,8 @@ object Units {
      * Find a unit coming from a recipe.
      * Because we know it's coming from a recipe we bias it towards metric units first
      */
-    fun findRecipeUnit(name: String, measuringSystem: MeasuringSystem.MeasuringSystemInternal): MeasurementUnit {
-        val unit = when(measuringSystem) {
+    fun findRecipeUnit(name: String, originMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): MeasurementUnit {
+        val unit = when(originMeasuringSystem) {
             is MeasuringSystem.Metric -> METRIC_UNIT_FROM_SYMBOL[name]
                 ?: IMPERIAL_UNIT_FROM_SYMBOL[name]
                 ?: US_CUSTOMARY_UNIT_FROM_SYMBOL[name]
