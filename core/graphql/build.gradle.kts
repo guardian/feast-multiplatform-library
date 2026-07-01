@@ -115,19 +115,21 @@ kotlin {
 
     /*js(IR) {
         nodejs()
-    }
+    }*/
 
     iosX64()
     iosArm64()
     iosSimulatorArm64()
 
-    applyDefaultHierarchyTemplate()*/
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(project(":core:networking"))
                 implementation(libs.apollo.runtime)
+                implementation(libs.normalised.cache)
+                implementation(libs.normalised.cache.sqlite)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.core)
             }
@@ -145,7 +147,7 @@ kotlin {
                 implementation(libs.hilt.android)
             }
         }
-        //val iosMain by getting
+        val iosMain by getting
     }
 }
 

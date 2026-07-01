@@ -32,13 +32,13 @@ kotlin {
 
 	/*js(IR) {
 		nodejs()
-	}
+	}*/
 
 	iosX64()
 	iosArm64()
 	iosSimulatorArm64()
 
-	applyDefaultHierarchyTemplate()*/
+	applyDefaultHierarchyTemplate()
 
 	sourceSets {
 		val commonMain by getting {
