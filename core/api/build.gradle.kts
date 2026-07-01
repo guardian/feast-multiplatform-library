@@ -56,6 +56,12 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.junit4)
+                implementation(libs.robolectric)
+            }
+        }
     }
 }
 
@@ -70,6 +76,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jvm.get())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jvm.get())
+    }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
     }
 
     // Create a single variant for publishing called "release". Add separate jars for javadoc

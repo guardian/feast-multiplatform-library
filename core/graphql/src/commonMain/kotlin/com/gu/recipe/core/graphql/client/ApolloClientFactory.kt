@@ -14,13 +14,16 @@ class ApolloClientFactory(
     private val dispatcher: CoroutineDispatcher,
 ) {
     @OptIn(ApolloExperimental::class)
-    fun create(config: GraphQlConfig, diskCache: NormalizedCacheFactory): ApolloClient {
+    fun create(
+        config: GraphQlConfig,
+        normalizedCacheFactory: NormalizedCacheFactory = MemoryCacheFactory(),
+    ): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(config.serverUrl)
             .dispatcher(dispatcher)
             .failFastIfOffline(true)
             .normalizedCache(
-                diskCache,
+                normalizedCacheFactory,
                 DefaultCacheKeyGenerator,
                 DefaultCacheResolver
             )

@@ -15,7 +15,9 @@ class ApolloRecipeGraphQlDataSource(
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>> {
         return when (val result = feastGraphQlClient.query(
             GetFrontsByRegionQuery(
-                region = Regions.northern, edition = Editions.all, recipesLimit2 = recipesLimit
+                region = region,
+                edition = edition,
+                recipesLimit2 = recipesLimit,
             )
         )) {
             is GraphQlResult.Success -> GraphQlResult.Success(result.value.Front)

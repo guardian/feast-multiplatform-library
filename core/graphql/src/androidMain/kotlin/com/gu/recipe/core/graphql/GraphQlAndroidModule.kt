@@ -1,6 +1,7 @@
 package com.gu.recipe.core.graphql
 
 import android.content.Context
+import com.apollographql.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.gu.recipe.core.graphql.config.GraphQlConfig
 import com.gu.recipe.core.graphql.di.GraphQlQualifiers
 import com.gu.recipe.core.graphql.di.graphQlModule
@@ -29,6 +30,10 @@ fun androidGraphQlModule(
         context.applicationContext,
         GraphQlAndroidDispatcherEntryPoint::class.java,
     ).graphQlIoDispatcher(),
+    normalizedCacheFactory = SqlNormalizedCacheFactory(
+        context = context.applicationContext,
+        name = "feast_graphql.db",
+    ),
 )
 
 @EntryPoint

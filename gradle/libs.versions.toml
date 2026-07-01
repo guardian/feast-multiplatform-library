@@ -17,6 +17,9 @@ koin = "4.2.2"
 hilt = "2.58"
 ksp = "2.3.9"
 graphql-cache = "1.0.5"
+junit4 = "4.13.2"
+robolectric = "4.16.1"
+androidx-test-core = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -35,6 +38,9 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 normalised-cache = { group = "com.apollographql.cache", name = "normalized-cache", version.ref = "graphql-cache" }
 normalised-cache-sqlite = { group = "com.apollographql.cache", name = "normalized-cache-sqlite", version.ref = "graphql-cache" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

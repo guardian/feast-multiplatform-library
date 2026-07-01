@@ -2,6 +2,7 @@ package com.gu.recipe.core.graphql.di
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.cache.normalized.api.NormalizedCacheFactory
+import com.apollographql.cache.normalized.memory.MemoryCacheFactory
 import com.gu.recipe.core.graphql.client.ApolloClientFactory
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.config.GraphQlConfig
@@ -21,12 +22,18 @@ internal object GraphQlQualifiers {
 fun graphQlModule(
     config: GraphQlConfig,
     ioDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    normalizedCacheFactory: NormalizedCacheFactory = MemoryCacheFactory(),
 ): Module = module {
     single { config }
     single<GraphQlServerUrlProvider> { get<GraphQlConfig>().serverUrlProvider }
     single<CoroutineDispatcher>(named(GraphQlQualifiers.IoDispatcher)) { ioDispatcher }
     single { ApolloClientFactory(get(named(GraphQlQualifiers.IoDispatcher))) }
-    single<ApolloClient> { get<ApolloClientFactory>().create(config = get(), diskCache = get()) }
+    single<ApolloClient> {
+        get<ApolloClientFactory>().create(
+            config = get(),
+            normalizedCacheFactory = normalizedCacheFactory,
+        )
+    }
     single { FeastGraphQlClient(get()) }
     single<RecipeGraphQlDataSource> { ApolloRecipeGraphQlDataSource(get()) }
 }
