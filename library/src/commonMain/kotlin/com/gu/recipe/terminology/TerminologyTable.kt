@@ -16,26 +16,32 @@ data class TerminologySchema constructor(
 data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String)
 
 class TerminologyTable(
-    val preparedAt: String,
-    private val terminologyMap: Map<String, String>
+    terminologyMap: Map<String, String>
 ) {
     // Expose the keys so the Trie knows what words to build structures for
-    val keys: Set<String> get() = terminologyMap.keys
-    fun convertTerm(term: String): String? {
-        return terminologyMap[term]
+    private val replacementMap = terminologyMap.mapKeys { (key, _) -> key.lowercase() }
+    private val replacementRegex = terminologyMap.keys
+        .sortedByDescending { it.length }
+        .takeIf { it.isNotEmpty() }
+        ?.joinToString(separator = "|", prefix = "\\b(?:", postfix = ")\\b") { Regex.escape(it) }
+        ?.let { Regex(it, RegexOption.IGNORE_CASE) }
+
+    internal fun convertTerm(text: String?): String? {
+        val regex = replacementRegex ?: return text
+
+        return text?.replace(regex) { match ->
+            replacementMap[match.value.lowercase()] ?: match.value
+        }
     }
 }
 
 fun loadInternalTerminologyTable(): Result<TerminologyTable> {
-    println("---loadInternalTerminologyTable")
     return loadTerminologyTable(internalTerminologyData)
 }
 
 fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
     return try {
-        println("Raw input: $raw")
         val data = Json.decodeFromString<TerminologySchema>(raw)
-        println("Decoded data: $data")
 
         val terminologyMap = data.values.associate { row ->
             val ukTerm = row[1].jsonPrimitive.content
@@ -43,20 +49,15 @@ fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
             ukTerm to usTerm
         }
 
-        val table = TerminologyTable(data.preparedAt, terminologyMap)
-        println("Created TerminologyTable: $table")
+        val table = TerminologyTable(terminologyMap)
         Result.success(table)
     } catch (e: SerializationException) {
-        println("SerializationException: ${e.message}")
         Result.failure(e)
     } catch (e: IllegalArgumentException) {
-        println("IllegalArgumentException: ${e.message}")
         Result.failure(Exception("Terminology fixture was valid JSON in an unknown shape"))
     } catch (e: ClassCastException) {
-        println("ClassCastException: ${e.message}")
         Result.failure(Exception("There was an invalid data type in the terminology fixture"))
     } catch (e: IndexOutOfBoundsException) {
-        println("IndexOutOfBoundsException: ${e.message}")
         Result.failure(Exception("There was a short row in the terminology fixture"))
     }
 }

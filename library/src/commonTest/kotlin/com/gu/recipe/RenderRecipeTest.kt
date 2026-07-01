@@ -206,7 +206,6 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                preparedAt = "none",
                 terminologyMap = mapOf(
                     "aubergine" to "eggplant",
                     "icing sugar" to "powdered sugar"
@@ -252,7 +251,6 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                preparedAt = "none",
                 terminologyMap = mapOf("aubergine" to "eggplant")
             )
         )
@@ -285,7 +283,6 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                preparedAt = "none",
                 terminologyMap = mapOf("aubergine" to "eggplant")
             )
         )
@@ -318,7 +315,6 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                preparedAt = "none",
                 terminologyMap = mapOf("aubergine" to "eggplant")
             )
         )
@@ -332,7 +328,6 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                preparedAt = "none",
                 terminologyMap = mapOf(
                     "sugar" to "sweetener",
                     "icing sugar" to "powdered sugar"
@@ -342,6 +337,4 @@ class RenderRecipeTest {
 
         assertEquals("powdered sugar", session.replaceInText("icing sugar"))
     }
-
-
 }

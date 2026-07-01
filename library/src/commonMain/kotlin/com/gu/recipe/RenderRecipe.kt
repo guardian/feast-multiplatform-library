@@ -274,21 +274,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 
     internal fun replaceInText(text: String?): String? {
-        val table = terminologyTable ?: return text
-        val keys = table.keys.sortedByDescending { it.length }
-        if (keys.isEmpty()) return text
-        val keysByLowercase = keys.associateBy { it.lowercase() }
-        val pattern = keys.joinToString(separator = "|", prefix = "\\b(?:", postfix = ")\\b") {
-            Regex.escape(it)
-        }
-        val regex = Regex(pattern, RegexOption.IGNORE_CASE)
-
-        return text?.let { originalText ->
-            originalText.replace(regex) { match ->
-                val key = keysByLowercase[match.value.lowercase()] ?: match.value
-                table.convertTerm(key) ?: match.value
-            }
-        }
+        return terminologyTable?.convertTerm(text) ?: text
     }
 }
 
@@ -306,7 +292,7 @@ fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String?
  */
 fun noCustomaryRenderSession(): RenderSession {
     val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-    val terminologyTable = TerminologyTable(preparedAt = "none", HashMap())
+    val terminologyTable = TerminologyTable(HashMap())
     return RenderSession(densityTable, terminologyTable)
 }
 
