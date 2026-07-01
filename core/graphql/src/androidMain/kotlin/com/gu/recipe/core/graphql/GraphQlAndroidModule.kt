@@ -1,7 +1,7 @@
 package com.gu.recipe.core.graphql
 
 import android.content.Context
-import com.apollographql.cache.normalized.sql.SqlNormalizedCacheFactory
+import com.gu.recipe.core.graphql.cache.platformNetworkModule
 import com.gu.recipe.core.graphql.config.GraphQlConfig
 import com.gu.recipe.core.graphql.di.GraphQlQualifiers
 import com.gu.recipe.core.graphql.di.graphQlModule
@@ -24,17 +24,19 @@ fun androidGraphQlModule(
 fun androidGraphQlModule(
     context: Context,
     config: GraphQlConfig,
-): Module = graphQlModule(
-    config = config,
-    ioDispatcher = EntryPointAccessors.fromApplication(
-        context.applicationContext,
-        GraphQlAndroidDispatcherEntryPoint::class.java,
-    ).graphQlIoDispatcher(),
-    normalizedCacheFactory = SqlNormalizedCacheFactory(
-        context = context.applicationContext,
-        name = "feast_graphql.db",
-    ),
-)
+): Module = org.koin.dsl.module {
+    single { context.applicationContext }
+    includes(
+        platformNetworkModule,
+        graphQlModule(
+            config = config,
+            ioDispatcher = EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                GraphQlAndroidDispatcherEntryPoint::class.java,
+            ).graphQlIoDispatcher(),
+        ),
+    )
+}
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)

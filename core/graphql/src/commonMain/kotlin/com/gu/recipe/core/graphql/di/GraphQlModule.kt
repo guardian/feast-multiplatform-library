@@ -22,7 +22,6 @@ internal object GraphQlQualifiers {
 fun graphQlModule(
     config: GraphQlConfig,
     ioDispatcher: CoroutineDispatcher = Dispatchers.Default,
-    normalizedCacheFactory: NormalizedCacheFactory = MemoryCacheFactory(),
 ): Module = module {
     single { config }
     single<GraphQlServerUrlProvider> { get<GraphQlConfig>().serverUrlProvider }
@@ -31,7 +30,7 @@ fun graphQlModule(
     single<ApolloClient> {
         get<ApolloClientFactory>().create(
             config = get(),
-            normalizedCacheFactory = normalizedCacheFactory,
+            normalizedCacheFactory = getOrNull<NormalizedCacheFactory>() ?: MemoryCacheFactory(),
         )
     }
     single { FeastGraphQlClient(get()) }
