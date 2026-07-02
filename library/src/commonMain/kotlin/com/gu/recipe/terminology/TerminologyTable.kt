@@ -31,7 +31,12 @@ class TerminologyTable(
         val regex = replacementRegex
 
         return text?.replace(regex) { match ->
-            replacementMap[match.value.lowercase()] ?: match.value
+            val replacement = replacementMap[match.value.lowercase()] ?: match.value
+            if (match.value.firstOrNull()?.isUpperCase() == true) {
+                replacement.replaceFirstChar { it.uppercase() }
+            } else {
+                replacement
+            }
         }
     }
 }
