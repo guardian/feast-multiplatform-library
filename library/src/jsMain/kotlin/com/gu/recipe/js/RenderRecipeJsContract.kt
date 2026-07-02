@@ -4,7 +4,7 @@ import com.gu.recipe.RenderSession
 import com.gu.recipe.generated.OriginalMeasuringSystem
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
-import com.gu.recipe.newTemplateSession
+import com.gu.recipe.newRenderSession
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
 import kotlinx.serialization.json.Json

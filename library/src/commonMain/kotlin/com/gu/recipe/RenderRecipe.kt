@@ -208,8 +208,6 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
             OriginalMeasuringSystem.Imperial -> MeasuringSystem.Imperial
             null -> MeasuringSystem.Metric
         }
-
-    fun scaleAndConvertUnitAndTerminologyInRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
             IngredientsList(
                 ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->

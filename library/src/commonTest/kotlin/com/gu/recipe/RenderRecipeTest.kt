@@ -275,15 +275,15 @@ class RenderRecipeTest {
     @Test
     fun `should render a US customary recipe`() {
         val densityTable = DensityTable("test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
+        val session = RenderSession(densityTable)
 
         val recipe: RecipeV3 = Json.decodeFromString(usCustomaryRecipeFixture)
 
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipe, 1.0f, MeasuringSystem.USCustomary)
+        val scaledRecipe = session.renderRecipe(recipe, 1.0f, MeasuringSystem.USCustomary)
         //The data we got back has some extra HTML tags for formatting. Remove these so we can compare the values (which is what matters)
         assertEquals(recipe, stripExtraHTML(scaledRecipe))
 
-        val metricRecipe = session.scaleAndConvertUnitRecipe(recipe, 1.0f, MeasuringSystem.Metric)
+        val metricRecipe = session.renderRecipe(recipe, 1.0f, MeasuringSystem.Metric)
         val jsonStr = Json.encodeToString(metricRecipe)
     }
 
@@ -406,7 +406,7 @@ class RenderRecipeTest {
     @Test
     fun `should convert metric cups into imperial cups`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val templateSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 3f,
@@ -430,7 +430,7 @@ class RenderRecipeTest {
     @Test
     fun `should convert imperial cups into imperial cups - passthrough`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val templateSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 3f,
@@ -454,7 +454,7 @@ class RenderRecipeTest {
     @Test
     fun `should convert imperial cups into metric cups`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val templateSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 3f,
@@ -479,7 +479,7 @@ class RenderRecipeTest {
     fun `test scale and terminology conversion for eggplant to aubergine with density`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
+        val session = RenderSession(densityTable)
         val recipeTemplate = RecipeV3(
             id = "test-recipe",
             ingredients = listOf(
@@ -507,7 +507,7 @@ class RenderRecipeTest {
         )
 
         // Act
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipeTemplate, 1.0f, MeasuringSystem.Metric)
+        val scaledRecipe = session.renderRecipe(recipeTemplate, 1.0f, MeasuringSystem.Metric)
 
         val expectedRecipesTexts = expectedRecipe.ingredients?.forEach { ingredientsList -> ingredientsList.ingredientsList?.forEach { ingredientItem -> ingredientItem.text } }
         val scaledRecipesTexts = scaledRecipe.ingredients?.forEach { ingredientsList -> ingredientsList.ingredientsList?.forEach { ingredientItem -> ingredientItem.text } }
@@ -634,7 +634,7 @@ class RenderRecipeTest {
             )
         )
 
-        assertEquals("Roast the eggplant", session.replaceInText("Roast the AUBERGINE"))
+        assertEquals("Roast the Eggplant", session.replaceInText("Roast the AUBERGINE"))
         assertEquals("aubergines are great", session.replaceInText("aubergines are great"))
     }
 
