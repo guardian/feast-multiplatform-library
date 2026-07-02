@@ -10,6 +10,7 @@ kotlinx-serialization-json = "1.11.0"
 kotlinx-coroutines = "1.11.0"
 okio = "3.17.0"
 netty = "4.1.135.Final"
+bouncycastle = "1.84"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
