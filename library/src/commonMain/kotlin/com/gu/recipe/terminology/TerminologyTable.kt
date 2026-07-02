@@ -27,7 +27,8 @@ class TerminologyTable(
         ?.let { Regex(it, RegexOption.IGNORE_CASE) }
 
     internal fun convertTerm(text: String?): String? {
-        val regex = replacementRegex ?: return text
+        if (replacementRegex == null) return text
+        val regex = replacementRegex
 
         return text?.replace(regex) { match ->
             replacementMap[match.value.lowercase()] ?: match.value
