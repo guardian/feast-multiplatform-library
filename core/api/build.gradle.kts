@@ -32,13 +32,19 @@ kotlin {
 
     /* js(IR) {
          nodejs()
-     }
+     } */
 
-     iosX64()
-     iosArm64()
-     iosSimulatorArm64()
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach { target ->
+        target.binaries.all {
+            linkerOpts("-lsqlite3")
+        }
+    }
 
-     applyDefaultHierarchyTemplate()*/
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val commonMain by getting {

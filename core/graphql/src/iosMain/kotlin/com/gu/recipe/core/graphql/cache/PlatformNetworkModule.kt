@@ -1,4 +1,4 @@
-package com.gu.recipe.core.graphql.ceche
+package com.gu.recipe.core.graphql.cache
 
 import com.apollographql.cache.normalized.api.NormalizedCacheFactory
 import com.apollographql.cache.normalized.sql.SqlNormalizedCacheFactory
