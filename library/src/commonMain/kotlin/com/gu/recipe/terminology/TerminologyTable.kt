@@ -12,8 +12,10 @@ data class TerminologySchema constructor(
     val values: List<List<JsonElement>>
 )
 
-@Serializable
-data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String)
+//commented out for now, as we changed to direct decoding to terminology table
+// so we don't need this data class for the current implementation but may be for future use
+//@Serializable
+//data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String)
 
 class TerminologyTable(
     terminologyMap: Map<String, String>
