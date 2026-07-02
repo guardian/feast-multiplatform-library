@@ -195,7 +195,7 @@ apollo {
         srcDir("src/commonMain/graphql")
         schemaFile.set(localSchemaFile)
         introspection {
-            endpointUrl.set("https://unified-recipes-test.code.dev-gutools.co.uk/graphql")
+            endpointUrl.set("https://recipes.code.dev-guardianapis.com/graphql")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))
         }
     }

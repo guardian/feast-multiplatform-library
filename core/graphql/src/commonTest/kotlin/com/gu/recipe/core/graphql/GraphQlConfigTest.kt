@@ -26,7 +26,7 @@ class GraphQlConfigTest {
         )
 
         assertEquals(
-            expected = "https://unified-recipes-test.code.dev-gutools.co.uk/graphql",
+            expected = "https://recipes.code.dev-guardianapis.com/graphql",
             actual = config.serverUrl,
         )
     }

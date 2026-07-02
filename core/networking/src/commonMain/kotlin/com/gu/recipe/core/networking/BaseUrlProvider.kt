@@ -12,8 +12,8 @@ enum class FeastEndpointType {
  * Enumeration of the available Feast API endpoints.
  */
 enum class FeastNetworkApiEndpoint(val value: String) {
-    CODE("https://unified-recipes-test.code.dev-gutools.co.uk"),
-    PROD("https://unified-recipes-test.code.dev-gutools.co.uk"),
+    CODE("https://recipes.code.dev-guardianapis.com"),
+    PROD("https://recipes.code.dev-guardianapis.com"),
 }
 
 fun FeastEndpointType.toNetworkType(): FeastNetworkApiEndpoint = when (this) {
