@@ -87,6 +87,9 @@ val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
 val localSchemaFile = schemaDirectory.file("schema.graphqls")
 val graphQlSchemaDownloadUrl = providers.gradleProperty("graphql.schema.download.url")
     .orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_URL"))
+val graphQlIntrospectionUrl = providers.gradleProperty("graphql.introspection.url")
+    .orElse(providers.environmentVariable("FEAST_GRAPHQL_INTROSPECTION_URL"))
+    .orElse(graphQlSchemaDownloadUrl)
 val graphQlSchemaHeaders = providers.gradleProperty("graphql.schema.download.headers")
     .orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_HEADERS"))
 val graphQlStrictSchemaRefresh = providers.gradleProperty("graphql.schema.strict")
@@ -185,7 +188,6 @@ android {
         singleVariant("release") {
             withSourcesJar()
             withJavadocJar()
-        }
     }
 }
 
@@ -194,9 +196,15 @@ apollo {
         packageName.set("com.gu.recipe.core.graphql.generated")
         srcDir("src/commonMain/graphql")
         schemaFile.set(localSchemaFile)
-        introspection {
-            endpointUrl.set("https://recipes.code.dev-guardianapis.com/graphql")
-            schemaFile.set(file("src/main/graphql/schema.graphqls"))
+        graphQlIntrospectionUrl.orNull
+            ?.trim()
+            ?.takeIf(String::isNotEmpty)
+            ?.let { introspectionUrl ->
+                introspection {
+                    endpointUrl.set(introspectionUrl)
+                    schemaFile.set(localSchemaFile)
+                }
+            }
         }
     }
 }
