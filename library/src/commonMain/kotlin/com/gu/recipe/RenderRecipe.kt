@@ -229,7 +229,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
 
         val scaledRecipe = recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
 
-        return if(convertTerminologies == false) {
+        return if(convertTerminologies == false || (measuringSystem == sourceMeasuringSystem)) {
             scaledRecipe
         } else {
             renderRecipeForTerminology(scaledRecipe)
