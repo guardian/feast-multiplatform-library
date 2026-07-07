@@ -1,10 +1,10 @@
 package com.gu.recipe.js
 
-import com.gu.recipe.TemplateSession
+import com.gu.recipe.RenderSession
 import com.gu.recipe.generated.OriginalMeasuringSystem
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.RecipeV3
-import com.gu.recipe.newTemplateSession
+import com.gu.recipe.newRenderSession
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.TemplateElement
 import kotlinx.serialization.json.Json
@@ -15,9 +15,9 @@ private val tolerantJson = Json { ignoreUnknownKeys = true }
 @JsExport
 /**
  * Scales the given recipe by a given factor and optionally converts between measuring systems.
- * `session` is a TemplateSession object which can be obtained by calling `createTemplateSession`
+ * `session` is a RenderSession object which can be obtained by calling `createRenderSession`
  */
-fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSession): String {
+fun renderRecipe(recipe: String, factor: Float, unit: String, session: RenderSession): String {
     val parsedRecipe = tolerantJson.decodeFromString<RecipeV3>(recipe)
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
@@ -28,11 +28,9 @@ fun scaleRecipe(recipe: String, factor: Float, unit: String, session: TemplateSe
         "Combined" -> MeasuringSystem.USCombined
         else -> throw IllegalArgumentException("Unknown unit: $unit")
     }
-    val scaledRecipe = session.scaleAndConvertUnitRecipe(parsedRecipe, factor, measuringSystem)
+    val scaledRecipe = session.renderRecipe(parsedRecipe, factor, measuringSystem)
     return Json.encodeToString(scaledRecipe)
 }
-
-
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -43,7 +41,7 @@ fun parseTemplate(templateString: String): List<TemplateElement> {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSession, unit: String, originalUnits: String): String {
+fun renderTemplate(templateElements: List<TemplateElement>, session: RenderSession, unit: String, originalUnits: String): String {
     val measuringSystem = when (unit) {
         "Imperial" -> MeasuringSystem.Imperial
         "Metric" -> MeasuringSystem.Metric
@@ -68,9 +66,9 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: TemplateSes
 @OptIn(ExperimentalJsExport::class)
 @JsExport
 /**
-* JS style factory for TemplateSession.  If the session can be created,
+* JS style factory for RenderSession.  If the session can be created,
 * it is returned; if the session cannot be created, then an exception is thrown.
 */
-fun createTemplateSession(rawDensityData: String?):TemplateSession {
-    return newTemplateSession(rawDensityData).getOrThrow()
+fun createRenderSession(rawDensityData: String?, rawTerminologyData: String?, convertTerminologies: Boolean?):RenderSession {
+    return newRenderSession(rawDensityData, rawTerminologyData, convertTerminologies).getOrThrow()
 }

@@ -3,9 +3,9 @@ package com.gu.recipe.loader
 import kotlinx.coroutines.await
 import kotlin.js.Promise
 
-class JsDensityLoaderBridge : DensityLoaderBridge {
+class JsDataLoaderBridge : DataLoaderBridge {
 
-    override suspend fun loadDensityData(url: String, authToken: String?): DensityLoadResult {
+    override suspend fun loadData(url: String, authToken: String?): DataLoadResult {
         return try {
             val headers = js("({})")
             if (authToken != null) {
@@ -25,15 +25,15 @@ class JsDensityLoaderBridge : DensityLoaderBridge {
             if (ok) {
                 val body = (response.text() as Promise<String>).await()
                 if (body.isNotEmpty()) {
-                    DensityLoadResult.Success(body)
+                    DataLoadResult.Success(body)
                 } else {
-                    DensityLoadResult.Failure("HTTP $status but empty body")
+                    DataLoadResult.Failure("HTTP $status but empty body")
                 }
             } else {
-                DensityLoadResult.Failure("HTTP $status")
+                DataLoadResult.Failure("HTTP $status")
             }
         } catch (e: Throwable) {
-            DensityLoadResult.Failure("Fetch failed: ${e.message}")
+            DataLoadResult.Failure("Fetch failed: ${e.message}")
         }
     }
 }

@@ -10,7 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class RenderTemplateTest {
-    val session = newTemplateSession().getOrThrow()
+    val session = newRenderSession().getOrThrow()
 
     @Test
     fun `scale template with simple quantity placeholder`() {
@@ -639,6 +639,32 @@ class RenderTemplateTest {
         )
         val result = session.renderTemplate(template, 1f, MeasuringSystem.USCombined, MeasuringSystem.Metric)
         assertEquals("1 stick • ½ cup of butter", result)
+    }
+
+    @Test
+    fun `test terminology conversion for aubergine to eggplant`() {
+        val terminologyMap = mapOf("aubergine" to "eggplant")
+        val input = "aubergine"
+        val expectedOutput = "eggplant"
+        val actualOutput = applyTerminologyConversion(input, terminologyMap)
+        assertEquals(expectedOutput, actualOutput)
+    }
+
+    @Test
+    fun `test terminology conversion for icing sugar to powdered sugar`() {
+        val terminologyMap = mapOf("icing sugar" to "powdered sugar")
+        val input = "icing sugar"
+        val expectedOutput = "powdered sugar"
+        val actualOutput = applyTerminologyConversion(input, terminologyMap)
+        assertEquals(expectedOutput, actualOutput)
+    }
+
+    private fun applyTerminologyConversion(text: String, terminologyMap: Map<String, String>): String {
+        var convertedText = text
+        terminologyMap.forEach { (ukTerm, usTerm) ->
+            convertedText = convertedText.replace(Regex("\\b$ukTerm\\b", RegexOption.IGNORE_CASE), usTerm)
+        }
+        return convertedText
     }
 }
 

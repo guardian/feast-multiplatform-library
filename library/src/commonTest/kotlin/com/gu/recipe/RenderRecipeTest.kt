@@ -1,17 +1,15 @@
-package io.github.kotlin.fibonacci.com.gu.recipe
+package com.gu.recipe
 
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
-import com.gu.recipe.TemplateSession
 import com.gu.recipe.density.DensityTable
-import com.gu.recipe.ingredientWithoutSuffix
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.wrapWithStrongTag
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ScaleRecipeTest {
+class RenderRecipeTest {
     @Test
     fun `scale a recipe`() {
         val recipeTemplate = RecipeV3(
@@ -81,8 +79,8 @@ class ScaleRecipeTest {
             )
         )
         val densityTable = DensityTable("test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
+        val session = RenderSession(densityTable)
+        val scaledRecipe = session.renderRecipe(recipeTemplate, 2.0f, measuringSystem = MeasuringSystem.Metric)
         assertEquals(
             expectedRecipe,
             scaledRecipe
@@ -277,15 +275,15 @@ class ScaleRecipeTest {
     @Test
     fun `should render a US customary recipe`() {
         val densityTable = DensityTable("test", HashMap(), HashMap())
-        val session = TemplateSession(densityTable)
+        val session = RenderSession(densityTable)
 
         val recipe: RecipeV3 = Json.decodeFromString(usCustomaryRecipeFixture)
 
-        val scaledRecipe = session.scaleAndConvertUnitRecipe(recipe, 1.0f, MeasuringSystem.USCustomary)
+        val scaledRecipe = session.renderRecipe(recipe, 1.0f, MeasuringSystem.USCustomary)
         //The data we got back has some extra HTML tags for formatting. Remove these so we can compare the values (which is what matters)
         assertEquals(recipe, stripExtraHTML(scaledRecipe))
 
-        val metricRecipe = session.scaleAndConvertUnitRecipe(recipe, 1.0f, MeasuringSystem.Metric)
+        val metricRecipe = session.renderRecipe(recipe, 1.0f, MeasuringSystem.Metric)
         val jsonStr = Json.encodeToString(metricRecipe)
     }
 
@@ -314,7 +312,7 @@ class ScaleRecipeTest {
         fun `test tbsp conversion for 1_5 input`() {
             // Arrange
             val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-            val templateSession = TemplateSession(densityTable)
+            val renderSession = RenderSession(densityTable)
             val placeholder = QuantityPlaceholder(
                 min = 1.5f,
                 max = 1.5f,
@@ -327,7 +325,7 @@ class ScaleRecipeTest {
             val measuringSystem = MeasuringSystem.USCustomary
 
             // Act
-            val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
+            val result = renderSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
             // Assert
             assertEquals("1½ tbsp", result)
@@ -337,7 +335,7 @@ class ScaleRecipeTest {
     fun `test conversion for chicken thigh for grams conversion to nearly 1 pound`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val renderSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 500f,
@@ -351,7 +349,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
+        val result = renderSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
         // Assert
         assertEquals("1 lb", result)
@@ -361,7 +359,7 @@ class ScaleRecipeTest {
     fun `test conversion for chicken thigh for grams conversion to 1 with a quarter more`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val renderSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 580f,
@@ -375,7 +373,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
+        val result = renderSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
         // Assert
         assertEquals("1¼ lbs", result)
@@ -385,7 +383,7 @@ class ScaleRecipeTest {
     fun `test conversion for chicken thigh for grams conversion to 2`() {
         // Arrange
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val renderSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 900f,
@@ -399,7 +397,7 @@ class ScaleRecipeTest {
         val measuringSystem = MeasuringSystem.USCustomary
 
         // Act
-        val result = templateSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
+        val result = renderSession.renderQuantity(placeholder, factor, measuringSystem, MeasuringSystem.Metric)
 
         // Assert
         assertEquals("2 lbs", result)
@@ -408,7 +406,7 @@ class ScaleRecipeTest {
     @Test
     fun `should convert metric cups into imperial cups`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val templateSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 3f,
@@ -432,7 +430,7 @@ class ScaleRecipeTest {
     @Test
     fun `should convert imperial cups into imperial cups - passthrough`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val templateSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 3f,
@@ -456,7 +454,7 @@ class ScaleRecipeTest {
     @Test
     fun `should convert imperial cups into metric cups`() {
         val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-        val templateSession = TemplateSession(densityTable)
+        val templateSession = RenderSession(densityTable)
 
         val placeholder = QuantityPlaceholder(
             min = 3f,
@@ -475,5 +473,245 @@ class ScaleRecipeTest {
         )
 
         assertEquals("710-946 ml", result)
+    }
+
+    @Test
+    fun `test scale and terminology conversion for eggplant to aubergine with density`() {
+        // Arrange
+        val densityTable = DensityTable(preparedAt = "test", HashMap(), HashMap())
+        val session = RenderSession(densityTable)
+        val recipeTemplate = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            template = """{"min": 1, "unit": "piece", "scale": true} of aubergine""",
+                        )
+                    )
+                )
+            )
+        )
+        val expectedRecipe = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            template = """{"min": 1, "unit": "piece", "scale": true} of eggplant""",
+                            text = "<strong>1 piece of eggplant</strong>"
+                        )
+                    )
+                )
+            )
+        )
+
+        // Act
+        val scaledRecipe = session.renderRecipe(recipeTemplate, 1.0f, MeasuringSystem.Metric)
+
+        val expectedRecipesTexts = expectedRecipe.ingredients?.forEach { ingredientsList -> ingredientsList.ingredientsList?.forEach { ingredientItem -> ingredientItem.text } }
+        val scaledRecipesTexts = scaledRecipe.ingredients?.forEach { ingredientsList -> ingredientsList.ingredientsList?.forEach { ingredientItem -> ingredientItem.text } }
+
+        // Assert
+        assertEquals(expectedRecipesTexts, scaledRecipesTexts)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology converts only the requested enum section`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf(
+                    "aubergine" to "eggplant",
+                    "icing sugar" to "powdered sugar"
+                )
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "aubergine tart",
+            description = "aubergine with icing sugar",
+            ingredients = listOf(
+                IngredientsList(
+                    recipeSection = "aubergine topping",
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            text = "1 aubergine",
+                            template = "aubergine with icing sugar"
+                        )
+                    )
+                )
+            ),
+            instructions = listOf(
+                Instruction(
+                    description = "Roast the aubergine",
+                    descriptionTemplate = "aubergine"
+                )
+            )
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.INGREDIENTS)
+
+        assertEquals("aubergine tart", rendered.title)
+        assertEquals("aubergine with icing sugar", rendered.description)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("eggplant topping", rendered.ingredients?.first()?.recipeSection)
+        assertEquals("eggplant with powdered sugar", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("Roast the aubergine", rendered.instructions?.first()?.description)
+        assertEquals("aubergine", rendered.instructions?.first()?.descriptionTemplate)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology ALL converts every section`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "aubergine tart",
+            description = "aubergine filling",
+            ingredients = listOf(
+                IngredientsList(
+                    recipeSection = "aubergine topping",
+                    ingredientsList = listOf(IngredientItem(text = "1 aubergine", template = "aubergine"))
+                )
+            ),
+            instructions = listOf(Instruction(description = "Roast the aubergine", descriptionTemplate = "aubergine"))
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.ALL)
+
+        assertEquals("eggplant tart", rendered.title)
+        assertEquals("eggplant filling", rendered.description)
+        assertEquals("eggplant topping", rendered.ingredients?.first()?.recipeSection)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("Roast the eggplant", rendered.instructions?.first()?.description)
+        assertEquals("eggplant", rendered.instructions?.first()?.descriptionTemplate)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology default section converts every section`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "aubergine tart",
+            description = "aubergine filling",
+            ingredients = listOf(
+                IngredientsList(
+                    recipeSection = "aubergine topping",
+                    ingredientsList = listOf(IngredientItem(text = "1 aubergine", template = "aubergine"))
+                )
+            ),
+            instructions = listOf(Instruction(description = "Roast the aubergine", descriptionTemplate = "aubergine"))
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe)
+
+        assertEquals("eggplant tart", rendered.title)
+        assertEquals("eggplant filling", rendered.description)
+        assertEquals("eggplant topping", rendered.ingredients?.first()?.recipeSection)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("Roast the eggplant", rendered.instructions?.first()?.description)
+        assertEquals("eggplant", rendered.instructions?.first()?.descriptionTemplate)
+    }
+
+    @Test
+    fun `replaceInText is case now sensitive and replaces whole terms with captilization of 1st letter if found so`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+
+        assertEquals("Roast the Eggplant", session.replaceInText("Roast the AUBERGINE"))
+        assertEquals("aubergines are great", session.replaceInText("aubergines are great"))
+    }
+
+    @Test
+    fun `replaceInText prefers longer terminology matches before shorter ones`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf(
+                    "sugar" to "sweetener",
+                    "icing sugar" to "powdered sugar"
+                )
+            )
+        )
+
+        assertEquals("powdered sugar", session.replaceInText("icing sugar"))
+    }
+
+    @Test
+    fun `should return scaledRecipe when measuringSystem equals sourceMeasuringSystem`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+        val scaledRecipe = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(text = "1 aubergine")
+                    )
+                )
+            )
+        )
+        val result = session.renderRecipe(
+            scaledRecipe,
+            1.0f,
+            MeasuringSystem.Metric
+        )
+        assertEquals(scaledRecipe, result)
+    }
+
+    @Test
+    fun `should convert terminology when measuringSystem does not equal sourceMeasuringSystem`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+        val scaledRecipe = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(text = "1 aubergine")
+                    )
+                )
+            )
+        )
+        val expectedRecipe = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(text = "1 eggplant")
+                    )
+                )
+            )
+        )
+        val result = session.renderRecipe(
+            scaledRecipe,
+            1.0f,
+            MeasuringSystem.USCustomary
+        )
+        assertEquals(expectedRecipe, result)
     }
 }
