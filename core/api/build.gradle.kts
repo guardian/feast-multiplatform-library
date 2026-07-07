@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 object APIConfig {
     const val GROUP_ID = "com.gu"
-    const val MAVEN_ARTIFACT_ID = "feast-multiplatform-library.core.api"
-    const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibraryCoreAPI"
-    const val BUNDLE_ID = "com.gu.recipe.core.api"
+    const val MAVEN_ARTIFACT_ID = "feast-multiplatform-api"
+    const val SPM_FRAMEWORK_NAME = "FeastMultiplatformAPI"
+    const val BUNDLE_ID = "com.gu.recipe.kmp.api"
     const val GITHUB_REPO = "guardian/feast-multiplatform-library"
     const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library to call graphql APIs"
 }
