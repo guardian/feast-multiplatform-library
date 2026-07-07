@@ -84,15 +84,25 @@ package com.gu.recipe {
     property public java.util.List<com.gu.recipe.CookTimeUtils.LabeledCookDuration> secondary;
   }
 
-  public final class ScaleRecipeKt {
+  public final class RenderRecipeKt {
     method public static String ingredientWithoutSuffix(String renderedTemplate);
-    method @KotlinOnly public static kotlin.Result<com.gu.recipe.TemplateSession> newTemplateSession(optional String? rawDensityData);
-    method public static com.gu.recipe.TemplateSession noCustomaryTemplateSession();
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.RenderSession> newRenderSession(optional String? rawDensityData, optional String? rawTerminologyData, optional Boolean? convertTerminologies);
+    method public static com.gu.recipe.RenderSession noCustomaryRenderSession();
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.terminology.TerminologyTable> setUpTerminologyTable(optional String? rawTerminologyData);
   }
 
-  public final class TemplateSession {
-    ctor public TemplateSession(com.gu.recipe.density.DensityTable densityTable);
-    method public com.gu.recipe.generated.RecipeV3 scaleAndConvertUnitRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
+  public final class RenderSession {
+    ctor public RenderSession(com.gu.recipe.density.DensityTable densityTable, optional com.gu.recipe.terminology.TerminologyTable? terminologyTable, optional Boolean? convertTerminologies);
+    method public com.gu.recipe.generated.RecipeV3 renderRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
+    method public com.gu.recipe.generated.RecipeV3 renderRecipeForTerminology(com.gu.recipe.generated.RecipeV3 recipe, optional com.gu.recipe.TerminologySection section);
+  }
+
+  public enum TerminologySection {
+    enum_constant public static final com.gu.recipe.TerminologySection ALL;
+    enum_constant public static final com.gu.recipe.TerminologySection DESCRIPTION;
+    enum_constant public static final com.gu.recipe.TerminologySection INGREDIENTS;
+    enum_constant public static final com.gu.recipe.TerminologySection INSTRUCTIONS;
+    enum_constant public static final com.gu.recipe.TerminologySection TITLE;
   }
 
 }
@@ -375,6 +385,11 @@ package com.gu.recipe.generated {
     property public String? unit;
   }
 
+  public final class TerminologyFixtureKt {
+    method @InaccessibleFromKotlin public static String getInternalTerminologyData();
+    property public static String internalTerminologyData;
+  }
+
   @kotlinx.serialization.Serializable public final class Timing {
     ctor public Timing();
     ctor public Timing(optional com.gu.recipe.generated.Range? durationInMins, optional String? qualifier, optional String? text);
@@ -394,59 +409,59 @@ package com.gu.recipe.generated {
 
 package com.gu.recipe.js {
 
-  public final class ScaleRecipeJsContractKt {
-    method public static com.gu.recipe.TemplateSession createTemplateSession(String? rawDensityData);
+  public final class RenderRecipeJsContractKt {
+    method public static com.gu.recipe.RenderSession createRenderSession(String? rawDensityData, String? rawTerminologyData, Boolean? convertTerminologies);
     method public static java.util.List<com.gu.recipe.template.TemplateElement> parseTemplate(String templateString);
-    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements, com.gu.recipe.TemplateSession session, String unit, String originalUnits);
-    method public static String scaleRecipe(String recipe, float factor, String unit, com.gu.recipe.TemplateSession session);
+    method public static String renderRecipe(String recipe, float factor, String unit, com.gu.recipe.RenderSession session);
+    method public static String renderTemplate(java.util.List<? extends com.gu.recipe.template.TemplateElement> templateElements, com.gu.recipe.RenderSession session, String unit, String originalUnits);
   }
 
 }
 
 package com.gu.recipe.loader {
 
-  public final class AndroidDensityLoaderBridge implements com.gu.recipe.loader.DensityLoaderBridge {
-    ctor public AndroidDensityLoaderBridge(java.io.File cacheDir);
-    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  public final class AndroidDataLoaderBridge implements com.gu.recipe.loader.DataLoaderBridge {
+    ctor public AndroidDataLoaderBridge(java.io.File cacheDir);
+    method public suspend Object? loadData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DataLoadResult>);
   }
 
-  public sealed exhaustive interface DensityLoadResult {
+  public sealed exhaustive interface DataLoadResult {
   }
 
-  public static final class DensityLoadResult.Failure implements com.gu.recipe.loader.DensityLoadResult {
-    ctor public DensityLoadResult.Failure();
-    ctor public DensityLoadResult.Failure(optional String? reason);
+  public static final class DataLoadResult.Failure implements com.gu.recipe.loader.DataLoadResult {
+    ctor public DataLoadResult.Failure();
+    ctor public DataLoadResult.Failure(optional String? reason);
     method public String? component1();
-    method public com.gu.recipe.loader.DensityLoadResult.Failure copy(optional String? reason);
+    method public com.gu.recipe.loader.DataLoadResult.Failure copy(optional String? reason);
     method @InaccessibleFromKotlin public String? getReason();
     property public String? reason;
   }
 
-  public static final class DensityLoadResult.Success implements com.gu.recipe.loader.DensityLoadResult {
-    ctor public DensityLoadResult.Success(String content);
+  public static final class DataLoadResult.Success implements com.gu.recipe.loader.DataLoadResult {
+    ctor public DataLoadResult.Success(String content);
     method public String component1();
-    method public com.gu.recipe.loader.DensityLoadResult.Success copy(optional String content);
+    method public com.gu.recipe.loader.DataLoadResult.Success copy(optional String content);
     method @InaccessibleFromKotlin public String getContent();
     property public String content;
   }
 
-  public final class DensityLoader {
-    ctor public DensityLoader(com.gu.recipe.loader.DensityLoaderBridge bridge, optional kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit>? onError);
-    method public suspend Object? initialiseConversionSession(String url, optional String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.TemplateSession>);
+  public final class DataLoader {
+    ctor public DataLoader(com.gu.recipe.loader.DataLoaderBridge bridge, optional kotlin.jvm.functions.Function1<? super java.lang.String,kotlin.Unit>? onError);
+    method public suspend Object? initialiseConversionSession(String densityUrl, String terminologyUrl, optional String? authToken, optional boolean convertTerminologies, kotlin.coroutines.Continuation<? super com.gu.recipe.RenderSession>);
   }
 
-  public interface DensityLoaderBridge {
-    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  public interface DataLoaderBridge {
+    method public suspend Object? loadData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DataLoadResult>);
   }
 
-  public final class IosDensityLoaderBridge implements com.gu.recipe.loader.DensityLoaderBridge {
-    ctor public IosDensityLoaderBridge(String cachesDirectory);
-    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  public final class IosDataLoaderBridge implements com.gu.recipe.loader.DataLoaderBridge {
+    ctor public IosDataLoaderBridge(String cachesDirectory);
+    method public suspend Object? loadData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DataLoadResult>);
   }
 
-  public final class JsDensityLoaderBridge implements com.gu.recipe.loader.DensityLoaderBridge {
-    ctor public JsDensityLoaderBridge();
-    method public suspend Object? loadDensityData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DensityLoadResult>);
+  public final class JsDataLoaderBridge implements com.gu.recipe.loader.DataLoaderBridge {
+    ctor public JsDataLoaderBridge();
+    method public suspend Object? loadData(String url, String? authToken, kotlin.coroutines.Continuation<? super com.gu.recipe.loader.DataLoadResult>);
   }
 
 }
@@ -519,6 +534,33 @@ package com.gu.recipe.template {
 
 }
 
+package com.gu.recipe.terminology {
+
+  @kotlinx.serialization.Serializable public final class TerminologySchema {
+    ctor public TerminologySchema(String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
+    method public String component1();
+    method public java.util.List<java.lang.String> component2();
+    method public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> component3();
+    method public com.gu.recipe.terminology.TerminologySchema copy(optional String preparedAt, optional java.util.List<java.lang.String> key, optional java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getKey();
+    method @InaccessibleFromKotlin public String getPreparedAt();
+    method @InaccessibleFromKotlin public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> getValues();
+    property public java.util.List<java.lang.String> key;
+    property @kotlinx.serialization.SerialName("prepared_at") public String preparedAt;
+    property public java.util.List<java.util.List<kotlinx.serialization.json.JsonElement>> values;
+  }
+
+  public final class TerminologyTable {
+    ctor public TerminologyTable(java.util.Map<java.lang.String,java.lang.String> terminologyMap);
+  }
+
+  public final class TerminologyTableKt {
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.terminology.TerminologyTable> loadInternalTerminologyTable();
+    method @KotlinOnly public static kotlin.Result<com.gu.recipe.terminology.TerminologyTable> loadTerminologyTable(String raw);
+  }
+
+}
+
 package com.gu.recipe.unit {
 
   public final class MeasurementUnit {
@@ -583,23 +625,23 @@ package com.gu.recipe.unit {
 
   public final class UnitConversions {
     method public com.gu.recipe.Amount convertUnitSystemAndScale(com.gu.recipe.Amount amount, com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal target, optional float factor, Float? density, com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal origin);
-    method @InaccessibleFromKotlin public error.NonExistentClass getBUTTER_CONVERSION_LADDER();
-    method @InaccessibleFromKotlin public error.NonExistentClass getCONVENIENCE_UNITS();
-    method @InaccessibleFromKotlin public error.NonExistentClass getIMPERIAL_CONVERSION_LADDER();
-    method @InaccessibleFromKotlin public error.NonExistentClass getMETRIC_CONVENIENCE_LADDER();
-    method @InaccessibleFromKotlin public error.NonExistentClass getMETRIC_CONVERSION_LADDER();
-    method @InaccessibleFromKotlin public String getUS_CUSTOMARY_CONVERSION_LADDER();
-    method @InaccessibleFromKotlin public error.NonExistentClass getUS_CUSTOMARY_DRY_CONVERSION_LADDER();
-    method @InaccessibleFromKotlin public error.NonExistentClass getUS_TABLESPOON_CONVERSIONS();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getBUTTER_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.Set<com.gu.recipe.unit.MeasurementUnit> getCONVENIENCE_UNITS();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getIMPERIAL_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVENIENCE_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getMETRIC_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_CUSTOMARY_DRY_CONVERSION_LADDER();
+    method @InaccessibleFromKotlin public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> getUS_TABLESPOON_CONVERSIONS();
     method public com.gu.recipe.Amount toSmallestUnit(com.gu.recipe.Amount amount);
-    property public ErrorType! BUTTER_CONVERSION_LADDER;
-    property public ErrorType! CONVENIENCE_UNITS;
-    property public ErrorType! IMPERIAL_CONVERSION_LADDER;
-    property public ErrorType! METRIC_CONVENIENCE_LADDER;
-    property public ErrorType! METRIC_CONVERSION_LADDER;
-    property public String US_CUSTOMARY_CONVERSION_LADDER;
-    property public ErrorType! US_CUSTOMARY_DRY_CONVERSION_LADDER;
-    property public ErrorType! US_TABLESPOON_CONVERSIONS;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> BUTTER_CONVERSION_LADDER;
+    property public java.util.Set<com.gu.recipe.unit.MeasurementUnit> CONVENIENCE_UNITS;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> IMPERIAL_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVENIENCE_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> METRIC_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_CUSTOMARY_DRY_CONVERSION_LADDER;
+    property public java.util.List<kotlin.Pair<java.lang.Float,com.gu.recipe.unit.MeasurementUnit>> US_TABLESPOON_CONVERSIONS;
     field public static final com.gu.recipe.unit.UnitConversions INSTANCE;
   }
 
@@ -611,7 +653,7 @@ package com.gu.recipe.unit {
 
   public final class Units {
     method public com.gu.recipe.unit.MeasurementUnit findRecipeUnit(String name, com.gu.recipe.unit.MeasuringSystem.MeasuringSystemInternal originMeasuringSystem);
-    method @InaccessibleFromKotlin public error.NonExistentClass getALL_UNITS();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.unit.MeasurementUnit> getALL_UNITS();
     method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getCENTILITRE();
     method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getCENTIMETRE();
     method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getFLUID_OUNCE();
@@ -636,7 +678,7 @@ package com.gu.recipe.unit {
     method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_QUART();
     method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_TABLESPOON();
     method @InaccessibleFromKotlin public com.gu.recipe.unit.MeasurementUnit getUS_TEASPOON();
-    property public ErrorType! ALL_UNITS;
+    property public java.util.List<com.gu.recipe.unit.MeasurementUnit> ALL_UNITS;
     property public com.gu.recipe.unit.MeasurementUnit CENTILITRE;
     property public com.gu.recipe.unit.MeasurementUnit CENTIMETRE;
     property public com.gu.recipe.unit.MeasurementUnit FLUID_OUNCE;
@@ -665,3 +707,4 @@ package com.gu.recipe.unit {
   }
 
 }
+
