@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 object NetworkingConfig {
 	const val GROUP_ID = "com.gu"
-	const val MAVEN_ARTIFACT_ID = "feast-multiplatform-library.core.networking"
-	const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibraryCoreNetworking"
-	const val BUNDLE_ID = "com.gu.recipe.core.networking"
+	const val MAVEN_ARTIFACT_ID = "feast-multiplatform-networking"
+	const val SPM_FRAMEWORK_NAME = "FeastMultiplatformNetworking"
+	const val BUNDLE_ID = "com.gu.recipe.kmp.networking"
 	const val GITHUB_REPO = "guardian/feast-multiplatform-library"
 	const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library to hold nwtworking urls"
 }

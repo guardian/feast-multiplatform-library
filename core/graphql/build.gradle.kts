@@ -1,12 +1,13 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import java.net.URI
 
 object GraphQLConfig {
     const val GROUP_ID = "com.gu"
-    const val MAVEN_ARTIFACT_ID = "feast-multiplatform-library.core.graphql"
-    const val SPM_FRAMEWORK_NAME = "FeastMultiplatformLibraryCoreGraphQL"
-    const val BUNDLE_ID = "com.gu.recipe.core.graphql"
+    const val MAVEN_ARTIFACT_ID = "feast-multiplatform-graphql"
+    const val SPM_FRAMEWORK_NAME = "FeastMultiplatformGraphQL"
+    const val BUNDLE_ID = "com.gu.recipe.kmp.graphql"
     const val GITHUB_REPO = "guardian/feast-multiplatform-library"
     const val PACKAGE_DESCRIPTION = "A Kotlin Multiplatform library that holds graphql impl"
 }

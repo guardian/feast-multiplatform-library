@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 object APIConfig {
     const val GROUP_ID = "com.gu"
@@ -30,9 +31,7 @@ kotlin {
         }
     }
 
-    /* js(IR) {
-         nodejs()
-     } */
+    val xcf = XCFramework(APIConfig.SPM_FRAMEWORK_NAME)
 
     listOf(
         iosX64(),
@@ -41,6 +40,14 @@ kotlin {
     ).forEach { target ->
         target.binaries.all {
             linkerOpts("-lsqlite3")
+        }
+        target.binaries.framework {
+            baseName = APIConfig.SPM_FRAMEWORK_NAME
+
+            // Specify CFBundleIdentifier to uniquely identify the framework
+            binaryOption("bundleId", APIConfig.BUNDLE_ID)
+            xcf.add(this)
+            isStatic = true
         }
     }
 
@@ -68,6 +75,7 @@ kotlin {
                 implementation(libs.robolectric)
             }
         }
+        val iosMain by getting
     }
 }
 
