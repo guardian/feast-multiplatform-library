@@ -117,9 +117,7 @@ kotlin {
         }
     }
 
-    /*js(IR) {
-        nodejs()
-    }*/
+    val xcf = XCFramework(GraphQLConfig.SPM_FRAMEWORK_NAME)
 
     listOf(
         iosX64(),
@@ -128,6 +126,14 @@ kotlin {
     ).forEach { target ->
         target.binaries.all {
             linkerOpts("-lsqlite3")
+        }
+        target.binaries.framework {
+            baseName = GraphQLConfig.SPM_FRAMEWORK_NAME
+
+            // Specify CFBundleIdentifier to uniquely identify the framework
+            binaryOption("bundleId", GraphQLConfig.BUNDLE_ID)
+            xcf.add(this)
+            isStatic = true
         }
     }
 

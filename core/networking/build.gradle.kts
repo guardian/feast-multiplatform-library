@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 object NetworkingConfig {
 	const val GROUP_ID = "com.gu"
@@ -30,13 +31,22 @@ kotlin {
 		}
 	}
 
-	/*js(IR) {
-		nodejs()
-	}*/
+	val xcf = XCFramework(NetworkingConfig.SPM_FRAMEWORK_NAME)
 
-	iosX64()
-	iosArm64()
-	iosSimulatorArm64()
+	listOf(
+		iosX64(),
+		iosArm64(),
+		iosSimulatorArm64(),
+	).forEach { target ->
+		target.binaries.framework {
+			baseName = NetworkingConfig.SPM_FRAMEWORK_NAME
+
+			// Specify CFBundleIdentifier to uniquely identify the framework
+			binaryOption("bundleId", NetworkingConfig.BUNDLE_ID)
+			xcf.add(this)
+			isStatic = true
+		}
+	}
 
 	applyDefaultHierarchyTemplate()
 
