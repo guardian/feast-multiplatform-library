@@ -11,6 +11,9 @@ import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.template.TemplateElement
 import com.gu.recipe.template.parseTemplate
+import com.gu.recipe.terminology.TerminologyTable
+import com.gu.recipe.terminology.loadInternalTerminologyTable
+import com.gu.recipe.terminology.loadTerminologyTable
 import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.unit.UnitConversions
 import com.gu.recipe.unit.UnitType
@@ -21,6 +24,16 @@ import kotlin.math.max
 
 private val NON_BOLD_REGEX = Regex("""\([^()]*\)| • """)
 private const val MARKER = "\u0000"
+
+@OptIn(ExperimentalJsExport::class)
+@JsExport
+enum class TerminologySection {
+    ALL,
+    TITLE,
+    DESCRIPTION,
+    INGREDIENTS,
+    INSTRUCTIONS,
+}
 
 private fun splitBeforeSuffix(value: String): Pair<String, String?> {
     val index = value.indexOfAny(charArrayOf(',', ';', '('))
@@ -55,7 +68,7 @@ internal fun wrapWithStrongTag(value: String): String {
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
-class TemplateSession(private val densityTable: DensityTable) {
+class RenderSession(private val densityTable: DensityTable, private val terminologyTable: TerminologyTable? = null, private val convertTerminologies: Boolean? = null) {
     internal fun renderOvenTemperature(element: OvenTemperaturePlaceholder): String {
         val fanTempC = element.temperatureFanC?.let {
             if (element.temperatureC == null) {
@@ -72,11 +85,11 @@ class TemplateSession(private val densityTable: DensityTable) {
         ).joinToString("")
     }
 
-    internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
+    internal fun renderQuantity(element: QuantityPlaceholder, factor: Float, measuringSystem: MeasuringSystem.MeasuringSystemInternal, originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
         var amount = Amount(
             min = element.min,
             max = if (element.min != element.max) element.max else null,
-            unit = element.unit?.let { Units.findRecipeUnit(it) },
+            unit = element.unit?.let { Units.findRecipeUnit(it, originalMeasuringSystem) },
             //Specific override for butter - this should definitely be in cups but CMS data usually indicates it should be in oz.
             //We will fix the upstream CMS but need to move ahead with testing now.
             usCust = if(element.ingredient=="butter") true else element.usCust,
@@ -92,7 +105,7 @@ class TemplateSession(private val densityTable: DensityTable) {
         } else {
             measuringSystem
         }
-        amount = UnitConversions.convertUnitSystemAndScale(amount, targetSystem, factorToUse, density)
+        amount = UnitConversions.convertUnitSystemAndScale(amount, targetSystem, factorToUse, density, originalMeasuringSystem)
 
         val decimals = when (amount.unit) {
             Units.GRAM, Units.MILLILITRE, Units.MILLIMETRE, Units.US_TEASPOON, Units.METRIC_TEASPOON, Units.US_TABLESPOON, Units.METRIC_TABLESPOON -> 0
@@ -123,7 +136,8 @@ class TemplateSession(private val densityTable: DensityTable) {
     internal fun renderTemplateElement(
         element: TemplateElement,
         factor: Float,
-        measuringSystem: MeasuringSystem
+        measuringSystem: MeasuringSystem,
+        originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal,
     ): String {
         return when (element) {
             is TemplateConst -> element.value
@@ -133,27 +147,27 @@ class TemplateSession(private val densityTable: DensityTable) {
                     is MeasuringSystem.Metric,
                     is MeasuringSystem.Imperial,
                     is MeasuringSystem.USCustomary,
-                    is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem)
+                    is MeasuringSystem.Butter -> renderQuantity(element, factor, measuringSystem, originalMeasuringSystem)
                     is MeasuringSystem.USCustomaryWithMetric,
                     is MeasuringSystem.USCustomaryWithImperial -> {
-                        renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                        renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                     }
                     is MeasuringSystem.USCombined -> {
-                        val unit = element.unit?.let { Units.findRecipeUnit(it) }
+                        val unit = element.unit?.let { Units.findRecipeUnit(it, originalMeasuringSystem) }
                         if( unit==null ||
                             unit==Units.METRIC_TEASPOON ||
                             unit==Units.METRIC_TABLESPOON ||
                             unit==Units.US_TEASPOON ||
                             unit==Units.US_TABLESPOON) {
-                                renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                                renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                         } else {
-                            val usCustomaryPart = renderQuantity(element, factor, MeasuringSystem.USCustomary)
+                            val usCustomaryPart = renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                             val imperialPart = if (unit == Units.FLUID_OUNCE) { // Skip rendering fluid ounces
                                 null
                             } else if (unit.unitType == UnitType.VOLUME) {
                                 usCustomaryPart
                             } else {
-                                renderQuantity(element, factor, MeasuringSystem.Imperial)
+                                renderQuantity(element, factor, MeasuringSystem.Imperial, originalMeasuringSystem)
                             }
 
                             if (usCustomaryPart == imperialPart || imperialPart == null) {
@@ -169,16 +183,16 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
     }
 
-    internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSystem: MeasuringSystem): String {
+    internal fun renderTemplate(template: ParsedTemplate, factor: Float, measuringSystem: MeasuringSystem, originalMeasuringSystem: MeasuringSystem.MeasuringSystemInternal): String {
         val renderedParts = template.elements.map { element ->
-            renderTemplateElement(element, factor, measuringSystem)
+            renderTemplateElement(element, factor, measuringSystem, originalMeasuringSystem)
         }
 
         return applySmartPunctuation(renderedParts.joinToString(""))
     }
 
     /**
-     * scaleAndConvertUnitRecipe used to convert units and scale recipe
+     * renderRecipe used to convert units and scale recipe and now covert terminology too
      *
      * @param recipe The recipe as provided by the server (RecipeV3)
      * @param factor The factor applied to change the proportions of the recipe.
@@ -186,12 +200,19 @@ class TemplateSession(private val densityTable: DensityTable) {
      *  To calculate the factor, take the number of desired servings and divide it by the original servings.
      * @param measuringSystem The target unit system for ingredient measurements (e.g., Metric or Imperial)
      */
-    fun scaleAndConvertUnitRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
+    fun renderRecipe(recipe: RecipeV3, factor: Float, measuringSystem: MeasuringSystem): RecipeV3 {
+        val sourceMeasuringSystem: MeasuringSystem.MeasuringSystemInternal = when(recipe.originalMeasuringSystem) {
+            OriginalMeasuringSystem.Metric -> MeasuringSystem.Metric
+            OriginalMeasuringSystem.Us -> MeasuringSystem.USCustomary
+            OriginalMeasuringSystem.AusCup -> MeasuringSystem.Metric
+            OriginalMeasuringSystem.Imperial -> MeasuringSystem.Imperial
+            null -> MeasuringSystem.Metric
+        }
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
             IngredientsList(
                 ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
                     val scaledText = templateIngredient.template?.let { template ->
-                        wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem))
+                        wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem))
                     } ?: templateIngredient.text
 
                     templateIngredient.copy(text = scaledText)
@@ -201,30 +222,95 @@ class TemplateSession(private val densityTable: DensityTable) {
         }
         val scaledInstructions = recipe.instructions?.map { instruction ->
             val description = instruction.descriptionTemplate?.let { template ->
-                renderTemplate(parseTemplate(template), factor, measuringSystem)
+                renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem)
             }
             instruction.copy(description = description ?: instruction.description)
         }
 
-        return recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
+        val scaledRecipe = recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
+
+        return if(convertTerminologies == false || (measuringSystem == sourceMeasuringSystem)) {
+            scaledRecipe
+        } else {
+            renderRecipeForTerminology(scaledRecipe)
+        }
+
+    }
+
+    fun renderRecipeForTerminology(recipe: RecipeV3, section: TerminologySection = TerminologySection.ALL): RecipeV3 {
+        return recipe.copy(
+            title = if (shouldConvert(section, TerminologySection.TITLE)) {
+                replaceInText(recipe.title)
+            } else {
+                recipe.title
+            },
+            description = if (shouldConvert(section, TerminologySection.DESCRIPTION)) {
+                replaceInText(recipe.description)
+            } else {
+                recipe.description
+            },
+            ingredients = if (shouldConvert(section, TerminologySection.INGREDIENTS)) {
+                recipe.ingredients?.map { ingredientSection ->
+                    ingredientSection.copy(
+                        ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
+                            ingredient.copy(
+                                text = replaceInText(ingredient.text),
+                                template = replaceInText(ingredient.template)
+                            )
+                        },
+                        recipeSection = replaceInText(ingredientSection.recipeSection)
+                    )
+                }
+            } else {
+                recipe.ingredients
+            },
+            instructions = if (shouldConvert(section, TerminologySection.INSTRUCTIONS)) {
+                recipe.instructions?.map { instruction ->
+                    instruction.copy(
+                        description = replaceInText(instruction.description) ?: instruction.description,
+                        descriptionTemplate = replaceInText(instruction.descriptionTemplate)
+                    )
+                }
+            } else {
+                recipe.instructions
+            }
+        )
+    }
+
+    private fun shouldConvert(section: TerminologySection, currentSection: TerminologySection): Boolean {
+        return section == TerminologySection.ALL || section == currentSection
+    }
+
+    internal fun replaceInText(text: String?): String? {
+        return terminologyTable?.convertTerm(text) ?: text
     }
 }
 
-fun newTemplateSession(rawDensityData: String? = null):Result<TemplateSession> {
-    val densityTable = if(rawDensityData!=null) loadDensityTable(rawDensityData) else loadInternalDensityTable()
-    return densityTable.map { TemplateSession(it) }
+fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String? = null, convertTerminologies: Boolean? = null): Result<RenderSession> {
+    val terminologyTable = setUpTerminologyTable(rawTerminologyData).getOrElse {
+        return Result.failure(it)
+    }
+    val densityTable = if (rawDensityData != null) loadDensityTable(rawDensityData) else loadInternalDensityTable()
+    return densityTable.map { RenderSession(it, terminologyTable, convertTerminologies) }
 }
 
 /**
- * Creates a TemplateSession without any density conversion data.  This is intended as a fallback
- * if newTemplateSession fails on internal data
+ * Creates a RenderSession without any density conversion data.  This is intended as a fallback
+ * if newRenderSession fails on internal data
  */
-fun noCustomaryTemplateSession(): TemplateSession {
+fun noCustomaryRenderSession(): RenderSession {
     val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
-    return TemplateSession(densityTable)
+    val terminologyTable = TerminologyTable(HashMap())
+    return RenderSession(densityTable, terminologyTable)
 }
 
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
     val (before, _) = splitBeforeSuffix(renderedTemplate)
     return before.trim()
+}
+
+fun setUpTerminologyTable(rawTerminologyData: String? = null):Result<TerminologyTable> {
+    val terminologyTable =
+        (if (rawTerminologyData != null) loadTerminologyTable(rawTerminologyData) else loadInternalTerminologyTable()).map { it }
+    return terminologyTable
 }
