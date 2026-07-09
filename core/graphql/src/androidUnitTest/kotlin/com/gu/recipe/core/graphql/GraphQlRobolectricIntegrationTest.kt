@@ -33,7 +33,7 @@ import kotlin.test.fail
 class GraphQlRobolectricIntegrationTest {
 
     @Test
-    fun `live query is persisted in sql normalized cache and can be read cache only`() = runTest {
+    fun `given a live query when fetched with network only then it is persisted and can be read with cache only`() = runTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val cacheName = "feast_graphql_test_${System.nanoTime()}.db"
         context.deleteDatabase(cacheName)
@@ -70,7 +70,7 @@ class GraphQlRobolectricIntegrationTest {
     }
 
     @Test
-    fun `live data source query returns fronts through real graphql client`() = runTest {
+    fun `given live data source when querying fronts by region then it returns fronts through real graphql client`() = runTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val cacheName = "feast_graphql_datasource_${System.nanoTime()}.db"
         context.deleteDatabase(cacheName)
