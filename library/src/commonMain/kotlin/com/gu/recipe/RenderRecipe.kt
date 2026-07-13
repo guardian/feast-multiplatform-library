@@ -277,6 +277,14 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         )
     }
 
+    fun applyTerminologyToRecipeTitle(title: String): String {
+        return if (convertTerminologies == false) {
+            title
+        } else {
+            replaceInText(title) ?: title
+        }
+    }
+
     private fun shouldConvert(section: TerminologySection, currentSection: TerminologySection): Boolean {
         return section == TerminologySection.ALL || section == currentSection
     }
