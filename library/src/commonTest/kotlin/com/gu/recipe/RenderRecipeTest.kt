@@ -626,6 +626,30 @@ class RenderRecipeTest {
     }
 
     @Test
+    fun `applyTerminologyToRecipeTitle converts just the right part of title`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+
+        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
+    }
+
+    @Test
+    fun `applyTerminologyToRecipeTitle returns original title when conversion does not convert`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            )
+        )
+
+        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("eggplant tart"))
+    }
+
+    @Test
     fun `replaceInText is case now sensitive and replaces whole terms with captilization of 1st letter if found so`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
