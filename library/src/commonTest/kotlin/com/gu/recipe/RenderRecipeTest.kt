@@ -631,10 +631,24 @@ class RenderRecipeTest {
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
                 terminologyMap = mapOf("aubergine" to "eggplant")
-            )
+            ),
+            convertTerminologies = true
         )
 
         assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
+    }
+
+    @Test
+    fun `applyTerminologyToRecipeTitle returns original title when terminology conversion is disabled`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            ),
+            convertTerminologies = false
+        )
+
+        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
     }
 
     @Test
