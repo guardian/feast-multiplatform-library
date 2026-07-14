@@ -626,7 +626,7 @@ class RenderRecipeTest {
     }
 
     @Test
-    fun `applyTerminologyToRecipeTitle converts just the right part of title`() {
+    fun `applyTerminologyToRecipeTitle converts title when target measuring system is US and terminology conversion is enabled`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
@@ -635,11 +635,24 @@ class RenderRecipeTest {
             convertTerminologies = true
         )
 
-        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
+        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.USCombined))
     }
 
     @Test
-    fun `applyTerminologyToRecipeTitle returns original title when terminology conversion is disabled`() {
+    fun `applyTerminologyToRecipeTitle returns original title when target measuring system is not US`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to "eggplant")
+            ),
+            convertTerminologies = true
+        )
+
+        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.Metric))
+    }
+
+    @Test
+    fun `applyTerminologyToRecipeTitle returns original title when terminology conversion is disabled for US measuring system`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
@@ -648,7 +661,7 @@ class RenderRecipeTest {
             convertTerminologies = false
         )
 
-        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
+        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.USCustomary))
     }
 
     @Test
@@ -657,14 +670,15 @@ class RenderRecipeTest {
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
                 terminologyMap = mapOf("aubergine" to "eggplant")
-            )
+            ),
+            convertTerminologies = true
         )
 
-        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("eggplant tart"))
+        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("eggplant tart", MeasuringSystem.USCustomary))
     }
 
     @Test
-    fun `replaceInText is case now sensitive and replaces whole terms with captilization of 1st letter if found so`() {
+    fun `applyTerminology is case now sensitive and replaces whole terms with captilization of 1st letter if found so`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
@@ -672,12 +686,12 @@ class RenderRecipeTest {
             )
         )
 
-        assertEquals("Roast the Eggplant", session.replaceInText("Roast the AUBERGINE"))
-        assertEquals("aubergines are great", session.replaceInText("aubergines are great"))
+        assertEquals("Roast the Eggplant", session.applyTerminology("Roast the AUBERGINE"))
+        assertEquals("aubergines are great", session.applyTerminology("aubergines are great"))
     }
 
     @Test
-    fun `replaceInText prefers longer terminology matches before shorter ones`() {
+    fun `applyTerminology prefers longer terminology matches before shorter ones`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
@@ -688,7 +702,7 @@ class RenderRecipeTest {
             )
         )
 
-        assertEquals("powdered sugar", session.replaceInText("icing sugar"))
+        assertEquals("powdered sugar", session.applyTerminology("icing sugar"))
     }
 
     @Test
