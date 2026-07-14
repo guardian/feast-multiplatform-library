@@ -93,6 +93,7 @@ package com.gu.recipe {
 
   public final class RenderSession {
     ctor public RenderSession(com.gu.recipe.density.DensityTable densityTable, optional com.gu.recipe.terminology.TerminologyTable? terminologyTable, optional Boolean? convertTerminologies);
+    method public String applyTerminologyToRecipeTitle(String title);
     method public com.gu.recipe.generated.RecipeV3 renderRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
     method public com.gu.recipe.generated.RecipeV3 renderRecipeForTerminology(com.gu.recipe.generated.RecipeV3 recipe, optional com.gu.recipe.TerminologySection section);
   }
