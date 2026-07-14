@@ -240,12 +240,12 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     fun renderRecipeForTerminology(recipe: RecipeV3, section: TerminologySection = TerminologySection.ALL): RecipeV3 {
         return recipe.copy(
             title = if (shouldConvert(section, TerminologySection.TITLE)) {
-                replaceInText(recipe.title)
+                applyTerminology(recipe.title)
             } else {
                 recipe.title
             },
             description = if (shouldConvert(section, TerminologySection.DESCRIPTION)) {
-                replaceInText(recipe.description)
+                applyTerminology(recipe.description)
             } else {
                 recipe.description
             },
@@ -254,11 +254,11 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                     ingredientSection.copy(
                         ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
                             ingredient.copy(
-                                text = replaceInText(ingredient.text),
-                                template = replaceInText(ingredient.template)
+                                text = applyTerminology(ingredient.text),
+                                template = applyTerminology(ingredient.template)
                             )
                         },
-                        recipeSection = replaceInText(ingredientSection.recipeSection)
+                        recipeSection = applyTerminology(ingredientSection.recipeSection)
                     )
                 }
             } else {
@@ -267,8 +267,8 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
             instructions = if (shouldConvert(section, TerminologySection.INSTRUCTIONS)) {
                 recipe.instructions?.map { instruction ->
                     instruction.copy(
-                        description = replaceInText(instruction.description) ?: instruction.description,
-                        descriptionTemplate = replaceInText(instruction.descriptionTemplate)
+                        description = applyTerminology(instruction.description) ?: instruction.description,
+                        descriptionTemplate = applyTerminology(instruction.descriptionTemplate)
                     )
                 }
             } else {
@@ -277,11 +277,11 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         )
     }
 
-    fun applyTerminologyToRecipeTitle(title: String): String {
-        return if (convertTerminologies == false) {
-            title
+    fun applyTerminologyToRecipeTitle(title: String, measuringSystem: MeasuringSystem): String {
+        return if (convertTerminologies == true && measuringSystem == MeasuringSystem.USCombined) {
+            applyTerminology(title) ?: title
         } else {
-            replaceInText(title) ?: title
+            title
         }
     }
 
@@ -289,7 +289,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         return section == TerminologySection.ALL || section == currentSection
     }
 
-    internal fun replaceInText(text: String?): String? {
+    internal fun applyTerminology(text: String?): String? {
         return terminologyTable?.convertTerm(text) ?: text
     }
 }
