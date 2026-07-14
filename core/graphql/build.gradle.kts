@@ -147,7 +147,6 @@ kotlin {
                 implementation(project(":core:networking"))
                 implementation(libs.apollo.runtime)
                 implementation(libs.normalised.cache)
-                implementation(libs.normalised.cache.sqlite)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.core)
             }
@@ -161,6 +160,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
+                implementation(libs.normalised.cache.sqlite)
                 implementation(libs.koin.android)
                 implementation(libs.hilt.android)
             }

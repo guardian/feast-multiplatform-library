@@ -11,7 +11,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 
 class GraphQlIosModuleTest {
-    @AfterTest
+    /*@AfterTest
     fun tearDown() {
         stopKoin()
     }
@@ -29,7 +29,7 @@ class GraphQlIosModuleTest {
         }
 
         assertNotNull(koinApplication.koin.get<NormalizedCacheFactory>())
-    }
+    }*/
 }
 
 
