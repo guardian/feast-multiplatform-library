@@ -277,8 +277,12 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         )
     }
 
-    fun applyTerminologyToRecipeTitle(title: String, measuringSystem: MeasuringSystem): String {
-        return if (convertTerminologies == true && measuringSystem == MeasuringSystem.USCombined) {
+    /**
+     * Applies terminology conversion to a recipe title for US combined measurements when enabled.
+     * Returns the original title when terminology conversion is disabled or not applicable.
+     */
+    fun applyTerminologyToRecipeTitle(title: String, targetMeasuringSystem: MeasuringSystem): String {
+        return if (convertTerminologies == true && targetMeasuringSystem == MeasuringSystem.USCombined) {
             applyTerminology(title) ?: title
         } else {
             title
