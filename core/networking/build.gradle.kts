@@ -67,8 +67,6 @@ kotlin {
 		}
 		val androidMain by getting {
 			dependencies {
-				implementation(libs.retrofit.core)
-				implementation(libs.retrofit.kotlinx.serialization.converter)
 				implementation(libs.okhttp.core)
 				implementation(libs.okhttp.logging.interceptor)
 			}
