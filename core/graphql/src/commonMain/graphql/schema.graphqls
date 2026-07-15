@@ -1,5 +1,8 @@
-schema {
-  query: Query
+enum AppColour {
+  Primary
+  Quaternary
+  Secondary
+  Tertiary
 }
 
 type Chef {
@@ -45,18 +48,58 @@ enum ContentTypes {
   RECIPE
 }
 
+type CustomMessage {
+  backgroundColor: AppColour!
+  ctaLabel: String
+  foregroundColor: AppColour!
+  image: String!
+  isDismissable: Boolean!
+  isIcon: Boolean!
+  showChevron: Boolean!
+  size: PromptSize!
+  supporting: String
+  title: String!
+}
+
+type CustomMessageInsert {
+  messages: [CustomMessage!]!
+}
+
 type FeastAppContainer {
   body: String
   excludedRegions: [String!]
-  id: uuid
+  id: uuid!
   identityId: String
   items: [item!]!
   targetedRegions: [String!]
   title: String!
 }
 
+type Insert {
+  "What type of insert this is, indicating the content to be shown"
+  insertType: String!
+}
+
+type KeywordStats {
+  buckets: [StatBucket!]!
+  docCountErrorUpperBound: Int!
+  sumOtherDocCount: Int!
+}
+
+type KeywordSuggestionsInsert {
+  keywordSuggestions: [SuggestedFilterResult!]!
+}
+
 "A timestamp in local format"
 scalar LocalDateTime
+
+"The original measuring system used in this recipe"
+enum OriginalMeasuringSystem {
+  AUS
+  IMPERIAL
+  METRIC
+  US
+}
 
 type Palette {
   backgroundHex: String
@@ -73,9 +116,15 @@ type PrivateNote {
   recipeId: String!
 }
 
+enum PromptSize {
+  large
+  small
+}
+
 type Query {
   "Items saved in the current user's personal collections"
   SavedCollections: [SavedCollection!]!
+  availableFilters: availableFilters!
 
   "information about a specific chef"
   chef(id: String!): ChefBio
@@ -86,20 +135,21 @@ type Query {
   "returns curation ('fronts') information"
   curation(region: regions!, edition: editions!, date: date): [FeastAppContainer!]!
 
-  "returns a recipe with specific checksum"
-  recipe(checksum: String!): Recipe
-
-  "returns a recipe with the specific id and version"
-  recipeById(id: String!): Recipe
+  "returns a recipe with the specific unique id"
+  recipe(id: String!): Recipe
 
   "returns all recipes"
   recipes(limit: Int!, offset: Int, sortBy: recipeSortFields, sortDirection: recipeSortDirections, celebrations: [String!], cuisines: [String!], diets: [String!], mealTypes: [String!], techniques: [String!], utensilsAppliances: [String!], contributors: [String!], bylines: [String!]): [Recipe!]!
+
+  "performs a recipe search and returns the results"
+  search(pageSize: Int, page: Int, uprateByDate: SortableDates, cuisineFilter: [String!], contributorFilter: [String!], dietFilter: [String!], mealTypeFilter: [String!], celebrationFilter: [String!], sponsorFilter: [String!], enableCutOff: Boolean, q: String!, limit: Int): SearchResponse
 }
 
 "A field containing a raw JSON object"
 scalar RawJson
 
 type Recipe {
+  appExclusiveBranding: Boolean!
   bookCredit: String
   canonicalArticle: String
 
@@ -132,8 +182,10 @@ type Recipe {
 
   "Meal type IDs associated with this recipe"
   mealTypes: [String!]!
+  originalMeasuringSystem: OriginalMeasuringSystem!
   previewImage: image
   publishedDate: LocalDateTime
+  renderedTimings: String
 
   "The number of people who've saved this recipe"
   savedByCount: Int!
@@ -143,7 +195,7 @@ type Recipe {
   serves: [serving!]!
 
   "Sponsorship entries associated with this recipe"
-  sponsorships: [RawJson!]!
+  sponsorships: [SponsorData!]!
 
   "Technique IDs associated with this recipe"
   techniques: [String!]!
@@ -191,6 +243,61 @@ type SavedRecipe {
   recipe: Recipe
 }
 
+type SearchHit {
+  "a referenced recipe"
+  recipe: Recipe!
+
+  "Score of the result. The higher the number, the more relevant the result. Generally between 0 and 1"
+  score: Float
+}
+
+type SearchResponse {
+  maxScore: Float!
+
+  "The results of the search"
+  results: [SearchResult!]!
+  stats: StatsSection
+}
+
+union SearchResult = SearchHit | Insert | KeywordSuggestionsInsert | CustomMessageInsert
+
+"Specific date fields that can be used for reordering results"
+enum SortableDates {
+  "The first time that this recipe (article) was published"
+  firstPublishedDate
+
+  "The last time a change was made to the block containing this recipe in its original article"
+  lastModifiedDate
+
+  "The last time a revision of the recipe (article) was published"
+  publishedDate
+}
+
+type SponsorData {
+  highContrastSponsorLogo: String
+  highContrastSponsorLogoHeight: Int
+  highContrastSponsorLogoWidth: Int
+  sponsorLink: String!
+  sponsorLogo: String!
+  sponsorLogoHeight: Int
+  sponsorLogoWidth: Int
+  sponsorName: String!
+  sponsorshipType: String!
+}
+
+type StatBucket {
+  docCount: Int!
+  key: String!
+}
+
+type StatsSection {
+  bylines: KeywordStats
+  contributors: KeywordStats
+  cuisineIds: KeywordStats
+  mealTypeIds: KeywordStats
+  suitableForDietIds: KeywordStats
+}
+
 type SubCollection {
   collection: SubCollectionData!
 }
@@ -207,8 +314,50 @@ type SubCollectionData {
   title: String!
 }
 
+type SuggestedContributor {
+  "Information about this chef"
+  chef: ChefBio
+  id: String!
+  type: SuggestedFilterType!
+}
+
+type SuggestedFilter {
+  id: String!
+  type: SuggestedFilterType!
+}
+
+"Represents a filter that the user might want to apply. If a contributor it allows the whole of the contributor's information"
+union SuggestedFilterResult = SuggestedContributor | SuggestedFilter
+
+enum SuggestedFilterType {
+  Byline
+  Celebration
+  Contributor
+  Cuisine
+  MealType
+  SuitableForDiet
+}
+
 "A timestamp with timezone attached"
 scalar ZonedDateTime
+
+"shows which values are available for search filtering in each category"
+type availableFilters {
+  "collects recipes best suited to certain occasions, for example Christmas"
+  celebrationIds(startAt: Int = 0, limit: Int = 20): [String!]!
+
+  "collects recipes by our main chefs. For more options see the `chef` root query type"
+  contributorIds(startAt: Int = 0, limit: Int = 20, contains: String): [String!]!
+
+  "collects recipes by their geographical origin"
+  cuisineIds(startAt: Int = 0, limit: Int = 20): [String!]!
+
+  "which diets a recipe is suitable for, for example vegetarian"
+  dietIds(startAt: Int = 0, limit: Int = 20): [String!]!
+
+  "collects recipes by the part of a meal they are best suited for, for example starter or main course"
+  mealTypeIds(startAt: Int = 0, limit: Int = 20): [String!]!
+}
 
 type byline {
   "returns all recipes"

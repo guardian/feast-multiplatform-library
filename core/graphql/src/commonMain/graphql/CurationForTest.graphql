@@ -1,0 +1,31 @@
+query Curation($region: regions!, $edition: editions!) {
+    curation(region: $region, edition: $edition) {
+        title
+        items {
+            ... on RecipeReference {
+                recipe {
+                    appExclusiveBranding
+                    title
+                    contributors {
+                        webTitle
+                    }
+                    featuredImage {
+                        templateUrl
+                        url
+                    }
+                    diets
+                    renderedTimings
+                }
+            }
+            ... on Chef {
+                chef {
+                    foregroundHex
+                    backgroundHex
+                    image
+                    id
+                    bio
+                }
+            }
+        }
+    }
+}
