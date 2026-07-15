@@ -3,7 +3,7 @@ package com.gu.recipe.api.repository
 import com.gu.recipe.api.models.FrontResponse
 import com.gu.recipe.core.graphql.GraphQlError
 import com.gu.recipe.core.graphql.GraphQlResult
-import com.gu.recipe.core.graphql.generated.CurationQuery
+import com.gu.recipe.core.graphql.generated.CurationForTestQuery
 import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
@@ -36,7 +36,7 @@ class GraphQlRecipeRepository(
     override suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
-    ): Result<CurationQuery.Data> {
+    ): Result<CurationForTestQuery.Data> {
         return when (val result = dataSource.getCurationForTest(
             region = region,
             edition = edition

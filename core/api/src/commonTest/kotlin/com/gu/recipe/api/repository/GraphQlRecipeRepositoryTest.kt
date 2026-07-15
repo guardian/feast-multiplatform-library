@@ -1,7 +1,7 @@
 package com.gu.recipe.api.repository
 
 import com.gu.recipe.core.graphql.GraphQlResult
-import com.gu.recipe.core.graphql.generated.CurationQuery
+import com.gu.recipe.core.graphql.generated.CurationForTestQuery
 import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
@@ -9,7 +9,7 @@ import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
 
 private class FakeRecipeGraphQlDataSource(
     private val result: GraphQlResult<List<GetFrontsByRegionQuery.Front>>? = null,
-    private val curationResult: GraphQlResult<CurationQuery.Data>? = null
+    private val curationResult: GraphQlResult<CurationForTestQuery.Data>? = null
 ) : RecipeGraphQlDataSource {
 
     override suspend fun getFrontByRegion(
@@ -21,7 +21,7 @@ private class FakeRecipeGraphQlDataSource(
     override suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
-    ): GraphQlResult<CurationQuery.Data> = curationResult!!
+    ): GraphQlResult<CurationForTestQuery.Data> = curationResult!!
 }
 
 private fun suspendTest(block: suspend () -> Unit) {

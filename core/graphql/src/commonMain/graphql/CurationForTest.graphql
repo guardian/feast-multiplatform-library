@@ -1,4 +1,4 @@
-query Curation($region: regions!, $edition: editions!) {
+query CurationForTest($region: regions!, $edition: editions!) {
     curation(region: $region, edition: $edition) {
         title
         items {
