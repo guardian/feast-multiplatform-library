@@ -3,7 +3,7 @@ package com.gu.recipe.core.graphql.repository
 import com.gu.recipe.core.graphql.GraphQlResult
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
-import com.gu.recipe.core.graphql.generated.CurationForTestQuery
+import com.gu.recipe.core.graphql.generated.CurationQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 
@@ -29,9 +29,9 @@ class ApolloRecipeGraphQlDataSource(
     override suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
-    ): GraphQlResult<List<CurationForTest.Front>> {
+    ): GraphQlResult<CurationQuery.Data> {
         return when (val result = feastGraphQlClient.query(
-            CurationForTestQuery(
+            CurationQuery(
                 region = region,
                 edition = edition
             )
