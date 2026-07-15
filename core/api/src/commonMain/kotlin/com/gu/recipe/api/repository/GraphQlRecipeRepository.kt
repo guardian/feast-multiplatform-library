@@ -1,12 +1,10 @@
 package com.gu.recipe.api.repository
 
-import com.gu.recipe.api.models.FrontResponse
 import com.gu.recipe.core.graphql.GraphQlError
 import com.gu.recipe.core.graphql.GraphQlResult
 import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
-import com.gu.recipe.core.graphql.model.GraphQlRecipe
 import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
 
 class GraphQlRecipeRepository(
@@ -38,11 +36,6 @@ class GraphQlRecipeRepository(
         is GraphQlError.Unexpected -> RecipeRepositoryError.Unexpected(cause)
         GraphQlError.MissingData -> RecipeRepositoryError.MissingData
     }
-
-    private fun GraphQlRecipe.toAPIResult(): FrontResponse =
-        FrontResponse(
-            id = id,
-        )
 }
 
 sealed class RecipeRepositoryError : Exception() {
