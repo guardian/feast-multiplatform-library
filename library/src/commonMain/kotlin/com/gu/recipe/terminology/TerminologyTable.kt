@@ -40,36 +40,28 @@ class TerminologyTable(
         val regex = replacementRegex
 
         return text?.replace(regex) { match ->
-            println("Processing match: ${match.value}")
             val replacementEntry = replacementMap[match.value.lowercase()]
-            println("Match found: ${match.value}, replacementEntry: $replacementEntry")
             if (replacementEntry != null) {
                 // Extract the local context around the match
                 val localContext = extractLocalContext(text, match.range)
-                println("Local context: $localContext")
 
                 // Check if the match is part of any blocked phrase in the local context
                 val isBlocked = replacementEntry.block.any { blockWord ->
                     Regex("\\b${Regex.escape(blockWord)}\\b", RegexOption.IGNORE_CASE).containsMatchIn(localContext)
                 }
-                println("Is blocked: $isBlocked for match: ${match.value}")
 
                 if (!isBlocked) {
-                    println("Replacing ${match.value} with ${replacementEntry.usTerm}")
                     val replacement = replacementEntry.usTerm
                     val finalReplacement = if (match.value.firstOrNull()?.isUpperCase() == true) {
                         replacement.replaceFirstChar { it.uppercase() }
                     } else {
                         replacement
                     }
-                    println("Final replacement: $finalReplacement")
                     finalReplacement
                 } else {
-                    println("Match ${match.value} is blocked, returning original")
                     match.value
                 }
             } else {
-                println("No replacement entry found for match: ${match.value}, returning original")
                 match.value
             }
         }?.also { result ->
