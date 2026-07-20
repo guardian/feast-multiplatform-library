@@ -12,6 +12,7 @@ interface RecipeRepository {
         recipesLimit: Int
     ): Result<List<GetFrontsByRegionQuery.Front>>
 
+    @Throws(Exception::class)
     suspend fun getCurationForTest(
         region: Regions,
         edition: Editions

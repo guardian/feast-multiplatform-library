@@ -48,6 +48,7 @@ kotlin {
 
             // Specify CFBundleIdentifier to uniquely identify the framework
             binaryOption("bundleId", APIConfig.BUNDLE_ID)
+            export(project(":core:graphql"))
             xcf.add(this)
             isStatic = true
         }

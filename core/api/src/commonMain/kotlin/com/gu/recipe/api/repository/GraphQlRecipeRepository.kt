@@ -33,6 +33,7 @@ class GraphQlRecipeRepository(
         }
     }
 
+    @Throws(Exception::class)
     override suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
