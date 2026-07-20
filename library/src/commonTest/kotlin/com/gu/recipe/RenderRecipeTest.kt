@@ -4,6 +4,7 @@ import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.template.QuantityPlaceholder
+import com.gu.recipe.terminology.TerminologyEntry
 import com.gu.recipe.wrapWithStrongTag
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -522,8 +523,8 @@ class RenderRecipeTest {
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
                 terminologyMap = mapOf(
-                    "aubergine" to "eggplant",
-                    "icing sugar" to "powdered sugar"
+                    "aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()),
+                    "icing sugar" to TerminologyEntry(id = 2, ukTerm = "icing sugar",usTerm = "powdered sugar", block = emptyList())
                 )
             )
         )
@@ -566,7 +567,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val recipe = RecipeV3(
@@ -598,7 +599,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val recipe = RecipeV3(
@@ -630,7 +631,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             ),
             convertTerminologies = true
         )
@@ -643,7 +644,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             ),
             convertTerminologies = true
         )
@@ -656,7 +657,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             ),
             convertTerminologies = false
         )
@@ -669,7 +670,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             ),
             convertTerminologies = true
         )
@@ -682,7 +683,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
 
@@ -696,8 +697,8 @@ class RenderRecipeTest {
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
                 terminologyMap = mapOf(
-                    "sugar" to "sweetener",
-                    "icing sugar" to "powdered sugar"
+                    "sugar" to TerminologyEntry(id = 1, ukTerm = "sugar", usTerm = "sweetener", block = emptyList()),
+                    "icing sugar" to TerminologyEntry(id = 2, ukTerm = "icing sugar", usTerm = "powdered sugar", block = emptyList())
                 )
             )
         )
@@ -710,7 +711,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val scaledRecipe = RecipeV3(
@@ -736,7 +737,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val scaledRecipe = RecipeV3(
@@ -765,5 +766,45 @@ class RenderRecipeTest {
             MeasuringSystem.USCustomary
         )
         assertEquals(expectedRecipe, result)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology ALL converts every section with block list into consideration`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf(
+                    "sponge" to TerminologyEntry(
+                        id = 1,
+                        ukTerm = "sponge",
+                        usTerm = "cake",
+                        block = listOf(
+                            "victoria sponge",
+                            "sponge cake",
+                            "bake sponge",
+                            "baked sponge",
+                            "sponge fingers"
+                        )
+                    )
+                )
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "Passionfruit sponge cake",
+            description = "There are so many uses for a great sponge cake. Browning the butter before you mix gives this sponge a lovely nutty, buttery quality. ",
+            ingredients = listOf(),
+            instructions = listOf(
+                Instruction(description = "Put sponge in a plate"),
+                Instruction(description = "Get slice of Victoria sponge in a serving plate")
+            )
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.ALL)
+
+        assertEquals("Passionfruit sponge cake", rendered.title)
+        assertEquals("There are so many uses for a great sponge cake. Browning the butter before you mix gives this cake a lovely nutty, buttery quality. ", rendered.description)
+        assertEquals("Put cake in a plate", rendered.instructions?.get(0)?.description)
+        assertEquals("Get slice of Victoria sponge in a serving plate", rendered.instructions?.get(1)?.description)
     }
 }
