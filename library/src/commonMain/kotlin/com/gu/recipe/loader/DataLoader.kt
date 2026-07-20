@@ -31,6 +31,7 @@ class DataLoader(
                         convertTerminologies = convertTerminologies,
                     ).getOrElse {
                         onError?.invoke("Remote data failed validation: ${it.message}")
+                        onError?.invoke("Remote data failed validation: ${it.message}")
                         fallbackSession()
                     }
                 }
