@@ -36,13 +36,13 @@ class GraphQlRecipeRepository(
     override suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
-    ): Result<CurationForTestQuery.Data> {
+    ): CurationForTestQuery.Data {
         return when (val result = dataSource.getCurationForTest(
             region = region,
             edition = edition
         )) {
-            is GraphQlResult.Success -> Result.success(result.value)
-            is GraphQlResult.Failure -> Result.failure(result.error.toRepositoryError())
+            is GraphQlResult.Success -> result.value
+            is GraphQlResult.Failure -> throw result.error.toRepositoryError()
         }
     }
 

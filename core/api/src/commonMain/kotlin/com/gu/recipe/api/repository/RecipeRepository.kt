@@ -15,5 +15,5 @@ interface RecipeRepository {
     suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
-    ): Result<CurationForTestQuery.Data>
+    ): CurationForTestQuery.Data
 }
