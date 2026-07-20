@@ -60,7 +60,7 @@ kotlin {
             dependencies {
                 api(project(":core:networking"))
                 api(libs.koin.core)
-                implementation(project(":core:graphql"))
+                api(project(":core:graphql"))
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
             }
