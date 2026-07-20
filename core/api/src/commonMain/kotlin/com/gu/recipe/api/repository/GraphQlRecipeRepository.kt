@@ -9,6 +9,7 @@ import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 import com.gu.recipe.core.graphql.model.GraphQlRecipe
 import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
+import kotlin.coroutines.cancellation.CancellationException
 
 class GraphQlRecipeRepository(
     private val dataSource: RecipeGraphQlDataSource,
@@ -33,7 +34,7 @@ class GraphQlRecipeRepository(
         }
     }
 
-    @Throws(Exception::class)
+    @Throws(RecipeRepositoryError::class, CancellationException::class)
     override suspend fun getCurationForTest(
         region: Regions,
         edition: Editions
