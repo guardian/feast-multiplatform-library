@@ -14,7 +14,7 @@ data class TerminologySchema constructor(
 
 
 @Serializable
-data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String, val block: List<String>) //keeping id and ukterm optional when conversion needed
+data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String, val block: List<String>)
 class TerminologyTable(
     val terminologyMap: Map<String, TerminologyEntry>
 ) {
@@ -79,30 +79,12 @@ fun loadInternalTerminologyTable(): Result<TerminologyTable> {
 fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
     return try {
         val data = Json.decodeFromString<TerminologySchema>(raw)
-        println("Raw data values: ${data.values}")
-
-        data.values.forEachIndexed { index, row ->
-            if (row.size < 4) {
-                println("Row $index is too short: $row")
-            } else {
-                println("Row $index is valid: $row")
-            }
-        }
 
         val terminologyMap = data.values.associate { row ->
-
-            val id = row[0].jsonPrimitive.intOrNull ?: throw IllegalArgumentException("Invalid ID in row: $row")
-            val ukTerm = row[1].jsonPrimitive.contentOrNull ?: throw IllegalArgumentException("Invalid UK term in row: $row")
-            val usTerm = row[2].jsonPrimitive.contentOrNull ?: throw IllegalArgumentException("Invalid US term in row: $row")
-            val block = row[3].takeIf { it is JsonArray }?.jsonArray?.mapNotNull { it.jsonPrimitive.contentOrNull }
-                ?: throw IllegalArgumentException("Invalid block in row: $row")
-
-//            val id = row[0].jsonPrimitive.int
-//            val ukTerm = row[1].jsonPrimitive.content
-//            val usTerm = row[2].jsonPrimitive.content
-//            val block = row[3].jsonArray.map { it.jsonPrimitive.content }
-            // Debugging block field
-            println("Parsed block for ukTerm '$ukTerm': $block")
+            val id = row[0].jsonPrimitive.int
+            val ukTerm = row[1].jsonPrimitive.content
+            val usTerm = row[2].jsonPrimitive.content
+            val block = row[3].jsonArray.map { it.jsonPrimitive.content }
             ukTerm to TerminologyEntry(id = id, ukTerm = ukTerm, usTerm = usTerm, block = block)
         }
 
