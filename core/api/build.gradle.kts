@@ -48,6 +48,7 @@ kotlin {
 
             // Specify CFBundleIdentifier to uniquely identify the framework
             binaryOption("bundleId", APIConfig.BUNDLE_ID)
+            export(project(":core:graphql"))
             xcf.add(this)
             isStatic = true
         }
@@ -60,7 +61,7 @@ kotlin {
             dependencies {
                 api(project(":core:networking"))
                 api(libs.koin.core)
-                implementation(project(":core:graphql"))
+                api(project(":core:graphql"))
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
             }
