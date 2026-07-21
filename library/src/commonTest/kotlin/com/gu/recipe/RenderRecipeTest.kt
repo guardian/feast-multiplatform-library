@@ -4,7 +4,6 @@ import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.template.QuantityPlaceholder
-import com.gu.recipe.wrapWithStrongTag
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -50,19 +49,23 @@ class RenderRecipeTest {
                     ingredientsList = listOf(
                         IngredientItem(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour""",
-                            text = "<strong>200-240 g of flour</strong>"
+                            text = "<strong>200-240 g of flour</strong>",
+                            ingredientWithoutSuffix = "<strong>200-240 g of flour</strong>"
                         ),
                         IngredientItem(
                             template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes""",
-                            text = "<strong>2.4 kg of potatoes</strong>"
+                            text = "<strong>2.4 kg of potatoes</strong>",
+                            ingredientWithoutSuffix = "<strong>2.4 kg of potatoes</strong>"
                         ),
                         IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt""",
-                            text = "<strong>1½ tsp of salt</strong>"
+                            text = "<strong>1½ tsp of salt</strong>",
+                            ingredientWithoutSuffix = "<strong>1½ tsp of salt</strong>"
                         ),
                         IngredientItem(
                             template = """{"min":1, "scale":true} x {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",
-                            text = "<strong>2 x 400 g tin chopped tomatoes</strong>"
+                            text = "<strong>2 x 400 g tin chopped tomatoes</strong>",
+                            ingredientWithoutSuffix = "<strong>2 x 400 g tin chopped tomatoes</strong>"
                         ),
                     )
                 )
@@ -99,7 +102,12 @@ class RenderRecipeTest {
     fun stripExtraHTML(recipe: RecipeV3): RecipeV3 {
         return recipe.copy(
             ingredients = recipe.ingredients?.map { it.copy(
-                ingredientsList = it.ingredientsList?.map { it.copy(text = stripHTMLFromString(it.text)) }
+                ingredientsList = it.ingredientsList?.map {
+                    it.copy(
+                        text = stripHTMLFromString(it.text),
+                        ingredientWithoutSuffix = null
+                    )
+                }
             ) }
         )
     }
@@ -297,6 +305,52 @@ class RenderRecipeTest {
         assertEquals("<strong>150 g mayonnaise </strong>(homemade or shop-bought)", wrapWithStrongTag("150 g mayonnaise (homemade or shop-bought)"))
     }
 
+    @Test
+    fun `renderRecipe populates styled ingredientWithoutSuffix without suffix text`() {
+        val recipeTemplate = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            template = """{"min": 2, "unit": "tsp", "scale": true} (heaped) red miso paste (white will work, too)""",
+                            suffix = "(white will work, too)"
+                        ),
+                        IngredientItem(
+                            template = """{"min": 150, "unit": "ml", "scale": true} single cream""",
+                            suffix = ""
+                        ),
+                        IngredientItem(
+                            template = """{"min": 2, "scale": true} onions, peeled and roughly sliced""",
+                            suffix = "peeled and roughly sliced"
+                        ),
+                        IngredientItem(
+                            template = """{"min": 150, "unit": "g", "scale": true} egg; small""",
+                            suffix = "small"
+                        ),
+                        IngredientItem(
+                            template = """{"min": 150, "unit": "g", "scale": true} mayonnaise (homemade or shop-bought)""",
+                            suffix = "homemade or shop-bought)"
+                        )
+                    )
+                )
+            )
+        )
+        val session = RenderSession(DensityTable("test", HashMap(), HashMap()))
+
+        val ingredients = session.renderRecipe(recipeTemplate, 1.0f, MeasuringSystem.Metric)
+            .ingredients
+            ?.first()
+            ?.ingredientsList
+
+        assertEquals("<strong>2 tsp </strong>(heaped)<strong> red miso paste</strong>", ingredients?.get(0)?.ingredientWithoutSuffix)
+        assertEquals("<strong>150 ml single cream</strong>", ingredients?.get(1)?.ingredientWithoutSuffix)
+        assertEquals("<strong>2 onions</strong>", ingredients?.get(2)?.ingredientWithoutSuffix)
+        assertEquals("<strong>150 g egg</strong>", ingredients?.get(3)?.ingredientWithoutSuffix)
+        assertEquals("<strong>150 g mayonnaise</strong>", ingredients?.get(4)?.ingredientWithoutSuffix)
+    }
+
+    @Suppress("DEPRECATION")
     @Test
     fun `textWithoutSuffix returns first part of the ingredient`() {
         val ingredient = "1 potato, (100g) thinly chopped"
