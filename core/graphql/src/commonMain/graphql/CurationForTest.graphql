@@ -5,6 +5,7 @@ query CurationForTest($region: regions!, $edition: editions!) {
             ... on RecipeReference {
                 recipe {
                     appExclusiveBranding
+                    id
                     title
                     contributors {
                         webTitle
