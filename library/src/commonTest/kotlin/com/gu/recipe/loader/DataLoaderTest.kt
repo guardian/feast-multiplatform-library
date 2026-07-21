@@ -64,8 +64,8 @@ class DataLoaderTest {
 
         assertNotNull(session)
         assertEquals(2, errors.size, "Expects two errors for invalid remote data for both density and terminology")
-        assertTrue(errors[0].contains("Remote data failed validation"))
-        assertTrue(errors[1].contains("Remote data failed validation"))
+        assertTrue(errors[0].contains("Density data failed validation"))
+        assertTrue(errors[1].contains("Terminology data failed validation"))
     }
 
     @Test
@@ -98,8 +98,8 @@ class DataLoaderTest {
 
         assertNotNull(session)
         assertEquals(2, errors.size, "Expects two errors for invalid empty data for both density and terminology")
-        assertTrue(errors[0].contains("Remote data failed validation"))
-        assertTrue(errors[1].contains("Remote data failed validation"))
+        assertTrue(errors[0].contains("Density data failed validation"))
+        assertTrue(errors[1].contains("Terminology data failed validation"))
     }
 
     @Test
@@ -111,8 +111,8 @@ class DataLoaderTest {
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertEquals(2, errors.size, "Expects two errors for invalid remote data for both density and terminology")
-        assertTrue(errors[0].contains("Remote data failed validation"))
-        assertTrue(errors[1].contains("Remote data failed validation"))
+        assertTrue(errors[0].contains("Density data failed validation"))
+        assertTrue(errors[1].contains("Terminology data failed validation"))
     }
 
     @Test

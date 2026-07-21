@@ -792,7 +792,7 @@ class RenderRecipeTest {
         val recipe = RecipeV3(
             id = "test-recipe",
             title = "Passionfruit sponge cake",
-            description = "There are so many uses for a great sponge cake. Browning the butter before you mix gives this sponge a lovely nutty, buttery quality. ",
+            description = "There are so many uses for a great sponge cake. Browning the butter before you mix gives this sponge a lovely nutty, buttery quality. Serve with sponge cake and extra sponge on the side.",
             ingredients = listOf(),
             instructions = listOf(
                 Instruction(description = "Put sponge in a plate"),
@@ -803,7 +803,7 @@ class RenderRecipeTest {
         val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.ALL)
 
         assertEquals("Passionfruit sponge cake", rendered.title)
-        assertEquals("There are so many uses for a great sponge cake. Browning the butter before you mix gives this cake a lovely nutty, buttery quality. ", rendered.description)
+        assertEquals("There are so many uses for a great sponge cake. Browning the butter before you mix gives this cake a lovely nutty, buttery quality. Serve with sponge cake and extra cake on the side.", rendered.description)
         assertEquals("Put cake in a plate", rendered.instructions?.get(0)?.description)
         assertEquals("Get slice of Victoria sponge in a serving plate", rendered.instructions?.get(1)?.description)
     }
