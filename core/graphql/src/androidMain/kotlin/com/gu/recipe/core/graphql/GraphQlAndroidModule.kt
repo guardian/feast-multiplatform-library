@@ -21,13 +21,16 @@ fun androidGraphQlModule(
     ioDispatcher = ioDispatcher,
 )
 
+/*
+    // TODO: we commented out platformNetworkModule, we will pick this later
+ */
 fun androidGraphQlModule(
     context: Context,
     config: GraphQlConfig,
 ): Module = org.koin.dsl.module {
     single { context.applicationContext }
     includes(
-        platformNetworkModule,
+        //platformNetworkModule,
         graphQlModule(
             config = config,
             ioDispatcher = EntryPointAccessors.fromApplication(

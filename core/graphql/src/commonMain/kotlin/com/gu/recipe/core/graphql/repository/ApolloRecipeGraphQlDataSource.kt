@@ -6,6 +6,7 @@ import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 
+// TODO: remove this class, not required
 class ApolloRecipeGraphQlDataSource(
     private val feastGraphQlClient: FeastGraphQlClient,
 ) : RecipeGraphQlDataSource {

@@ -13,7 +13,7 @@ enum class FeastEndpointType {
  */
 enum class FeastNetworkApiEndpoint(val value: String) {
     CODE("https://recipes.code.dev-guardianapis.com"),
-    PROD("https://recipes.code.dev-guardianapis.com"),
+    PROD("https://recipes.guardianapis.com"),
 }
 
 fun FeastEndpointType.toNetworkType(): FeastNetworkApiEndpoint = when (this) {

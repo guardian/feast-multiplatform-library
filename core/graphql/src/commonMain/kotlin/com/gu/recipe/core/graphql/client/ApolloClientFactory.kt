@@ -13,20 +13,23 @@ import kotlinx.coroutines.CoroutineDispatcher
 class ApolloClientFactory(
     private val dispatcher: CoroutineDispatcher,
 ) {
+    /*
+        // TODO: commented out normalizedCache part, we will pick this up in followup PRs
+     */
     @OptIn(ApolloExperimental::class)
     fun create(
         config: GraphQlConfig,
-        normalizedCacheFactory: NormalizedCacheFactory = MemoryCacheFactory(),
+        //normalizedCacheFactory: NormalizedCacheFactory = MemoryCacheFactory(),
     ): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(config.serverUrl)
             .dispatcher(dispatcher)
             .failFastIfOffline(true)
-            .normalizedCache(
+            /*.normalizedCache(
                 normalizedCacheFactory,
                 DefaultCacheKeyGenerator,
                 DefaultCacheResolver
-            )
+            )*/
             .build()
     }
 }

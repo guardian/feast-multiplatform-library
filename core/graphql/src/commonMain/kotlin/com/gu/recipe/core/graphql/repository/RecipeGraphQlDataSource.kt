@@ -5,6 +5,7 @@ import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 
+// TODO: remove this interface, not required
 interface RecipeGraphQlDataSource {
     suspend fun getFrontByRegion(
         region: Regions,
