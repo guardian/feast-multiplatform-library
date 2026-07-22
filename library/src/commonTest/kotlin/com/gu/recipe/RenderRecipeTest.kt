@@ -5,7 +5,6 @@ import com.gu.recipe.generated.*
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.terminology.TerminologyEntry
-import com.gu.recipe.wrapWithStrongTag
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals

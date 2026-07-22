@@ -6,7 +6,7 @@ import kotlinx.serialization.json.*
 import com.gu.recipe.generated.internalTerminologyData
 
 @Serializable
-data class TerminologySchema constructor(
+data class TerminologySchema(
     @SerialName("prepared_at") val preparedAt: String,
     val key: List<String>,
     val values: List<List<JsonElement>>
@@ -15,10 +15,17 @@ data class TerminologySchema constructor(
 
 @Serializable
 data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String, val block: List<String>)
+
+/**
+ * Converts UK terminology to US terminology.
+ *
+ * Each [TerminologyEntry.block] value is treated as a protected phrase span: a matched UK term is
+ * not replaced only when that exact match sits inside one of its blocked phrases. For example,
+ * `pepper` may be replaced generally, while the `pepper` in `red pepper` remains unchanged.
+ */
 class TerminologyTable(
     val terminologyMap: Map<String, TerminologyEntry>
 ) {
-    // Expose the keys so the Trie knows what words to build structures for
     private val replacementMap = terminologyMap.mapKeys { (key, _) -> key.lowercase() }
     private val replacementRegex = terminologyMap.keys
         .sortedByDescending { it.length }
@@ -26,50 +33,96 @@ class TerminologyTable(
         ?.joinToString(separator = "|", prefix = "\\b(?:", postfix = ")\\b") { Regex.escape(it) }
         ?.let { Regex(it, RegexOption.IGNORE_CASE) }
 
-    private fun extractLocalContext(text: String, range: IntRange): String {
-        val contextRange = 20 //We can adjust the context range if needed. it is working good so far with 20 characters before and after the match
-        val matchStart = range.first
-        val matchEnd = range.last
-        val contextStart = maxOf(0, matchStart - contextRange)
-        val contextEnd = minOf(text.length, matchEnd + contextRange)
-        return text.substring(contextStart, contextEnd)
+    /**
+     * Returns true when [index] is at the start/end of [text], or where a word character and a
+     * non-word character meet, using letters and digits as word characters.
+     */
+    private fun hasWordBoundary(text: String, index: Int): Boolean {
+        return index == 0 || index == text.length || text[index - 1].isLetterOrDigit() != text[index].isLetterOrDigit()
     }
 
+    /**
+     * Finds every whole-phrase occurrence of [blockPhrase] in [text].
+     *
+     * Matching is case-insensitive and boundary-aware, so a block phrase such as `red pepper` does
+     * not match the substring `red pepper` inside `tired pepper`.
+     */
+    private fun findBlockedPhraseRanges(text: String, blockPhrase: String): List<IntRange> {
+        if (blockPhrase.isEmpty()) return emptyList()
+
+        val ranges = mutableListOf<IntRange>()
+        var blockStart = text.indexOf(blockPhrase, ignoreCase = true)
+        while (blockStart >= 0) {
+            val blockEndExclusive = blockStart + blockPhrase.length
+            if (hasWordBoundary(text, blockStart) && hasWordBoundary(text, blockEndExclusive)) {
+                ranges += blockStart..<blockEndExclusive
+            }
+            blockStart = text.indexOf(blockPhrase, startIndex = blockStart + 1, ignoreCase = true)
+        }
+        return ranges
+    }
+
+    /**
+     * Finds all protected phrase ranges for a terminology [entry] within one input [text].
+     *
+     * The result is computed lazily per matched term during [convertTerm] and cached only for that
+     * conversion call, avoiding long-lived block regex/range state in singleton instances.
+     */
+    private fun findBlockedRanges(text: String, entry: TerminologyEntry): List<IntRange> {
+        return entry.block.flatMap { blockPhrase ->
+            findBlockedPhraseRanges(text, blockPhrase)
+        }
+    }
+
+    /**
+     * Returns true when [termRange] is fully contained inside any protected blocked phrase range.
+     */
+    private fun isBlocked(blockedRanges: List<IntRange>?, termRange: IntRange): Boolean {
+        return blockedRanges.orEmpty().any { blockRange ->
+            termRange.first >= blockRange.first && termRange.last <= blockRange.last
+        }
+    }
+
+    /**
+     * Returns the US replacement, preserving uppercase first-letter style from [matchValue].
+     */
+    private fun replacementFor(matchValue: String, entry: TerminologyEntry): String {
+        val replacement = entry.usTerm
+        return if (matchValue.firstOrNull()?.isUpperCase() == true) {
+            replacement.replaceFirstChar { it.uppercase() }
+        } else {
+            replacement
+        }
+    }
+
+    /**
+     * Converts terminology in [text], returning null when [text] is null.
+     *
+     * Blocked phrase ranges are cached per matched term for this invocation only. This avoids
+     * repeated scans for the same term in long strings while keeping singleton memory usage low.
+     */
     internal fun convertTerm(text: String?): String? {
-        if (replacementRegex == null) return text
-        val regex = replacementRegex
+        val source = text ?: return null
+        val regex = replacementRegex ?: return source
+        val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
 
-        return text?.replace(regex) { match ->
-            val replacementEntry = replacementMap[match.value.lowercase()]
+        return regex.replace(source) { match ->
+            val matchedTerm = match.value.lowercase()
+            val replacementEntry = replacementMap[matchedTerm]
             if (replacementEntry != null) {
-                // Extract the local context around the match
-                val localContext = extractLocalContext(text, match.range)
-
-                // Check if the match is part of any blocked phrase in the local context
-                val isBlocked = replacementEntry.block.any { blockWord ->
-                    Regex("\\b${Regex.escape(blockWord)}\\b", RegexOption.IGNORE_CASE).containsMatchIn(localContext)
+                val blockedRanges = blockedRangesByTerm.getOrPut(matchedTerm) {
+                    findBlockedRanges(source, replacementEntry)
                 }
-
-                if (!isBlocked) {
-                    val replacement = replacementEntry.usTerm
-                    val finalReplacement = if (match.value.firstOrNull()?.isUpperCase() == true) {
-                        replacement.replaceFirstChar { it.uppercase() }
-                    } else {
-                        replacement
-                    }
-                    finalReplacement
+                if (!isBlocked(blockedRanges, match.range)) {
+                    replacementFor(match.value, replacementEntry)
                 } else {
                     match.value
                 }
             } else {
                 match.value
             }
-        }?.also { result ->
-            println("Final result after replacement: $result")
         }
     }
-
-
 }
 
 fun loadInternalTerminologyTable(): Result<TerminologyTable> {
