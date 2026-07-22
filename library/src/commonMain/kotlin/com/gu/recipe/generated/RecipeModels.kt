@@ -6,9 +6,6 @@
 package com.gu.recipe.generated
 
 import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.encoding.*
 
 /**
  * Complete recipe with metadata, ingredients, instructions, and categorization
@@ -263,6 +260,11 @@ data class IngredientItem (
      * Full text representation of the ingredient
      */
     val text: String? = null,
+
+    /**
+     * What is `text` minus the `suffix`
+     */
+    val ingredientWithoutSuffix: String? = null,
 
     /**
      * Unit of measurement for the ingredient
