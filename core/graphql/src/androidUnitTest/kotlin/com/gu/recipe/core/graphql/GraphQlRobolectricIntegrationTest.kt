@@ -104,10 +104,10 @@ class GraphQlRobolectricIntegrationTest {
 
         return ApolloClientFactory(Dispatchers.IO).create(
             config = config,
-            normalizedCacheFactory = SqlNormalizedCacheFactory(
+            /*normalizedCacheFactory = SqlNormalizedCacheFactory(
                 context = context.applicationContext,
                 name = cacheName,
-            ),
+            ),*/
         )
     }
 

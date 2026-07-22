@@ -30,7 +30,7 @@ fun graphQlModule(
     single<ApolloClient> {
         get<ApolloClientFactory>().create(
             config = get(),
-            normalizedCacheFactory = getOrNull<NormalizedCacheFactory>() ?: MemoryCacheFactory(),
+            //normalizedCacheFactory = getOrNull<NormalizedCacheFactory>() ?: MemoryCacheFactory(),
         )
     }
     single { FeastGraphQlClient(get()) }
