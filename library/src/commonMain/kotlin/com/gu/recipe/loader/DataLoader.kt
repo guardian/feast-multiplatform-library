@@ -30,8 +30,7 @@ class DataLoader(
                         terminologyResult.content,
                         convertTerminologies = convertTerminologies,
                     ).getOrElse {
-                        onError?.invoke("Density data failed validation: ${it.message}")
-                        onError?.invoke("Terminology data failed validation: ${it.message}")
+                        onError?.invoke("RenderSession initialisation failed: ${it.message}")
                         fallbackSession()
                     }
                 }
