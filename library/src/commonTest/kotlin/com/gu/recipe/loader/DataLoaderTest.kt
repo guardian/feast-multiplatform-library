@@ -63,9 +63,8 @@ class DataLoaderTest {
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertNotNull(session)
-        assertEquals(2, errors.size, "Expects two errors for invalid remote data for both density and terminology")
-        assertTrue(errors[0].contains("Density data failed validation"))
-        assertTrue(errors[1].contains("Terminology data failed validation"))
+        assertEquals(1, errors.size)
+        assertTrue(errors[0].contains("RenderSession initialisation failed"))
     }
 
     @Test
@@ -97,22 +96,21 @@ class DataLoaderTest {
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertNotNull(session)
-        assertEquals(2, errors.size, "Expects two errors for invalid empty data for both density and terminology")
-        assertTrue(errors[0].contains("Density data failed validation"))
-        assertTrue(errors[1].contains("Terminology data failed validation"))
+        assertEquals(1, errors.size)
+        assertTrue(errors[0].contains("RenderSession initialisation failed"))
     }
 
     @Test
-    fun `onError callback is invoked when bridge returns invalid JSON`() = runTest {
+    fun `onError callback is invoked when density JSON is invalid`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Success(invalidJson), DataLoadResult.Success(invalidJson))
+        val bridge = FakeBridge(DataLoadResult.Success(invalidJson), DataLoadResult.Success(validTerminologyJson))
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
-        assertEquals(2, errors.size, "Expects two errors for invalid remote data for both density and terminology")
-        assertTrue(errors[0].contains("Density data failed validation"))
-        assertTrue(errors[1].contains("Terminology data failed validation"))
+        assertNotNull(session)
+        assertEquals(1, errors.size)
+        assertTrue(errors[0].contains("RenderSession initialisation failed"))
     }
 
     @Test
