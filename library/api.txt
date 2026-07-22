@@ -540,6 +540,23 @@ package com.gu.recipe.template {
 
 package com.gu.recipe.terminology {
 
+  @kotlinx.serialization.Serializable public final class TerminologyEntry {
+    ctor public TerminologyEntry(int id, String ukTerm, String usTerm, java.util.List<java.lang.String> block);
+    method public int component1();
+    method public String component2();
+    method public String component3();
+    method public java.util.List<java.lang.String> component4();
+    method public com.gu.recipe.terminology.TerminologyEntry copy(optional int id, optional String ukTerm, optional String usTerm, optional java.util.List<java.lang.String> block);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getBlock();
+    method @InaccessibleFromKotlin public int getId();
+    method @InaccessibleFromKotlin public String getUkTerm();
+    method @InaccessibleFromKotlin public String getUsTerm();
+    property public java.util.List<java.lang.String> block;
+    property public int id;
+    property public String ukTerm;
+    property public String usTerm;
+  }
+
   @kotlinx.serialization.Serializable public final class TerminologySchema {
     ctor public TerminologySchema(String preparedAt, java.util.List<java.lang.String> key, java.util.List<? extends java.util.List<? extends kotlinx.serialization.json.JsonElement>> values);
     method public String component1();
@@ -555,7 +572,9 @@ package com.gu.recipe.terminology {
   }
 
   public final class TerminologyTable {
-    ctor public TerminologyTable(java.util.Map<java.lang.String,java.lang.String> terminologyMap);
+    ctor public TerminologyTable(java.util.Map<java.lang.String,com.gu.recipe.terminology.TerminologyEntry> terminologyMap);
+    method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.terminology.TerminologyEntry> getTerminologyMap();
+    property public java.util.Map<java.lang.String,com.gu.recipe.terminology.TerminologyEntry> terminologyMap;
   }
 
   public final class TerminologyTableKt {
