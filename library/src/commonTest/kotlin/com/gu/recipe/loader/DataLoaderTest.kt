@@ -9,48 +9,67 @@ import kotlin.test.assertEquals
 class DataLoaderTest {
 
     // Uses a distinct prepared_at and a limited ingredient set (only 2 items)
-    // so we can distinguish remote-data sessions from bundled fallback sessions.
+    // so we can distinguish remote-data sessions from bundled fallback sessions
     private val validDensityJson = """
-        {"prepared_at":"2026-01-01T00:00:00","key":["id","name","normalised_name","density"],"values":[[1,"Olive oil","olive oil",0.47],[2,"Salt (fine sea salt)","salt",0.36]]}
-    """.trimIndent()
+    {"prepared_at":"2026-01-01T00:00:00","key":["id","name","normalised_name","density"],"values":[[1,"Olive oil","olive oil",0.47],[2,"Salt (fine sea salt)","salt",0.36]]}
+""".trimIndent()
+
+    private val validTerminologyJson = """
+    {"prepared_at":"2026-01-01T00:00:00","key":["id","ukTerm","usTerm","block"],"values":[[1,"aubergine","eggplant",[]],[2,"courgette","zucchini",[]]]}
+""".trimIndent()
 
     private val invalidJson = "not valid json at all"
 
-    private class FakeBridge(private val result: DataLoadResult) : DataLoaderBridge {
+    private class FakeBridge(
+        private val densityResult: DataLoadResult,
+        private val terminologyResult: DataLoadResult
+    ) : DataLoaderBridge {
         override suspend fun loadData(url: String, authToken: String?): DataLoadResult {
-            return result
+            return when (url) {
+                "https://example.com/density" -> densityResult
+                "https://example.com/terminology" -> terminologyResult
+                else -> DataLoadResult.Failure("Unknown URL")
+            }
         }
     }
 
     @Test
-    fun `bridge returns Success with valid data JSON - session uses remote data`() = runTest {
+    fun `bridge returns Success with valid data and terminology JSON - session uses remote data`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Success(validDensityJson))
+
+        val bridge = FakeBridge(
+            DataLoadResult.Success(validDensityJson),
+            DataLoadResult.Success(validTerminologyJson)
+        )
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
-        val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
+        val session = loader.initialiseConversionSession(
+            "https://example.com/density",
+            "https://example.com/terminology",
+            "token123"
+        )
 
         assertNotNull(session)
         // onError must NOT be called — proves remote data was used, not fallback
-        assertTrue(errors.isEmpty(), "Expected no errors when remote data is valid")
+        assertTrue(errors.isEmpty(), "Expected no errors when remote data and terminology data are valid")
     }
 
     @Test
     fun `bridge returns Success with invalid JSON - falls back to bundled internal data`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Success(invalidJson))
+        val bridge = FakeBridge(DataLoadResult.Success(invalidJson), DataLoadResult.Success(invalidJson))
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertNotNull(session)
-        assertEquals(1, errors.size, "Expected exactly one error for invalid remote data")
-        assertTrue(errors[0].contains("Remote data failed validation"))
+        assertEquals(1, errors.size)
+        assertTrue(errors[0].contains("RenderSession initialisation failed"))
     }
 
     @Test
     fun `bridge returns Failure - falls back to bundled internal data`() = runTest {
-        val bridge = FakeBridge(DataLoadResult.Failure())
+        val bridge = FakeBridge(DataLoadResult.Failure(), DataLoadResult.Failure())
         val loader = DataLoader(bridge)
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
@@ -60,7 +79,7 @@ class DataLoaderTest {
 
     @Test
     fun `bridge returns Failure with reason - falls back to bundled internal data`() = runTest {
-        val bridge = FakeBridge(DataLoadResult.Failure("Network timeout"))
+        val bridge = FakeBridge(DataLoadResult.Failure("Network timeout"), DataLoadResult.Failure("Network timeout"))
         val loader = DataLoader(bridge)
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
@@ -71,32 +90,33 @@ class DataLoaderTest {
     @Test
     fun `bridge returns Success with empty string - falls back to bundled internal data`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Success(""))
+        val bridge = FakeBridge(DataLoadResult.Success(""), DataLoadResult.Success(""))
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertNotNull(session)
-        assertEquals(1, errors.size, "Expected onError for invalid empty data")
-        assertTrue(errors[0].contains("Remote data failed validation"))
+        assertEquals(1, errors.size)
+        assertTrue(errors[0].contains("RenderSession initialisation failed"))
     }
 
     @Test
-    fun `onError callback is invoked when bridge returns invalid JSON`() = runTest {
+    fun `onError callback is invoked when density JSON is invalid`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Success(invalidJson))
+        val bridge = FakeBridge(DataLoadResult.Success(invalidJson), DataLoadResult.Success(validTerminologyJson))
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
+        assertNotNull(session)
         assertEquals(1, errors.size)
-        assertTrue(errors[0].contains("Remote data failed validation"))
+        assertTrue(errors[0].contains("RenderSession initialisation failed"))
     }
 
     @Test
     fun `onError callback is invoked when bridge returns Failure with reason`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Failure("Connection refused"))
+        val bridge = FakeBridge(DataLoadResult.Failure("Connection refused"), DataLoadResult.Failure("Connection refused"))
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
@@ -108,7 +128,7 @@ class DataLoaderTest {
     @Test
     fun `onError callback is not invoked when bridge returns Failure without reason`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Failure())
+        val bridge = FakeBridge(DataLoadResult.Failure(), DataLoadResult.Failure())
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
@@ -121,11 +141,12 @@ class DataLoaderTest {
     @Test
     fun `onError callback is not invoked on success`() = runTest {
         val errors = mutableListOf<String>()
-        val bridge = FakeBridge(DataLoadResult.Success(validDensityJson))
+        val bridge = FakeBridge(DataLoadResult.Success(validDensityJson), DataLoadResult.Success(validTerminologyJson))
         val loader = DataLoader(bridge, onError = { errors.add(it) })
 
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertTrue(errors.isEmpty())
     }
+
 }
