@@ -7,16 +7,10 @@ import com.gu.recipe.core.networking.NetworkConfig
 
 data class FeastApiConfig(
     val networkConfig: NetworkConfig,
-    val serverUrl: String? = null,
 )
 
 internal fun FeastApiConfig.toGraphQlConfig(): GraphQlConfig =
     GraphQlConfig(
         networkConfig = networkConfig,
-        serverUrlProvider = serverUrl
-            ?.trim()
-            ?.takeIf(String::isNotEmpty)
-            ?.let(::FixedGraphQlServerUrlProvider)
-            ?: DefaultFeastGraphQlServerUrlProvider,
     )
 

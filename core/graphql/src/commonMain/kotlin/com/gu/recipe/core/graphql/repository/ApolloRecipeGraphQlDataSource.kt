@@ -6,7 +6,6 @@ import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 
-// TODO: remove this class, not required
 class ApolloRecipeGraphQlDataSource(
     private val feastGraphQlClient: FeastGraphQlClient,
 ) : RecipeGraphQlDataSource {
@@ -14,17 +13,17 @@ class ApolloRecipeGraphQlDataSource(
     override suspend fun getFrontByRegion(
         region: Regions, edition: Editions, recipesLimit: Int
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>> {
-        return when (val result = feastGraphQlClient.query(
+        val result = feastGraphQlClient.query(
             GetFrontsByRegionQuery(
                 region = region,
                 edition = edition,
                 recipesLimit2 = recipesLimit,
-            )
-        )) {
-            is GraphQlResult.Success -> GraphQlResult.Success(result.value.Front)
-            is GraphQlResult.Failure -> result
+            ),
+        )
+        return if (result is GraphQlResult.Success) {
+            GraphQlResult.Success(result.value.Front)
+        } else {
+            result as GraphQlResult.Failure
         }
     }
 }
-
-
