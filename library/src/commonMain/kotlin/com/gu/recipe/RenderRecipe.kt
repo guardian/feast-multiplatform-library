@@ -44,6 +44,15 @@ private fun splitBeforeSuffix(value: String): Pair<String, String?> {
     }
 }
 
+private fun removeSuffixFromRenderedIngredientName(renderedIngredientName: String, suffix: String?): String {
+    val renderedName = renderedIngredientName.trim()
+    val suffixToRemove = suffix?.trim()?.takeIf { it.isNotEmpty() } ?: return renderedName
+    val suffixStart = renderedName.lastIndexOf(suffixToRemove)
+    if (suffixStart == -1) return renderedName
+
+    return renderedName.take(suffixStart).trim().trimEnd(',', ';', '(').trim()
+}
+
 internal fun wrapWithStrongTag(value: String): String {
     // Rule: bold text runs until the first comma/semicolon; anything after that stays plain text,
     // and any parenthesized groups within the boldable portion also remain plain while surrounding
@@ -211,11 +220,17 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         val scaledIngredients = recipe.ingredients?.map { ingredientSection ->
             IngredientsList(
                 ingredientsList = ingredientSection.ingredientsList?.map { templateIngredient ->
-                    val scaledText = templateIngredient.template?.let { template ->
-                        wrapWithStrongTag(renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem))
-                    } ?: templateIngredient.text
+                    val renderedIngredient = templateIngredient.template?.let { template ->
+                        renderTemplate(parseTemplate(template), factor, measuringSystem, sourceMeasuringSystem)
+                    }
+                    val styledIngredientText = renderedIngredient?.let(::wrapWithStrongTag) ?: templateIngredient.text
 
-                    templateIngredient.copy(text = scaledText)
+                    templateIngredient.copy(
+                        text = styledIngredientText,
+                        ingredientWithoutSuffix = renderedIngredient?.let {
+                            wrapWithStrongTag(removeSuffixFromRenderedIngredientName(it, templateIngredient.suffix))
+                        } ?: templateIngredient.ingredientWithoutSuffix
+                    )
                 },
                 recipeSection = ingredientSection.recipeSection
             )
@@ -240,12 +255,12 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     fun renderRecipeForTerminology(recipe: RecipeV3, section: TerminologySection = TerminologySection.ALL): RecipeV3 {
         return recipe.copy(
             title = if (shouldConvert(section, TerminologySection.TITLE)) {
-                replaceInText(recipe.title)
+                applyTerminology(recipe.title)
             } else {
                 recipe.title
             },
             description = if (shouldConvert(section, TerminologySection.DESCRIPTION)) {
-                replaceInText(recipe.description)
+                applyTerminology(recipe.description)
             } else {
                 recipe.description
             },
@@ -254,11 +269,12 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                     ingredientSection.copy(
                         ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
                             ingredient.copy(
-                                text = replaceInText(ingredient.text),
-                                template = replaceInText(ingredient.template)
+                                text = applyTerminology(ingredient.text),
+                                ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
+                                template = applyTerminology(ingredient.template)
                             )
                         },
-                        recipeSection = replaceInText(ingredientSection.recipeSection)
+                        recipeSection = applyTerminology(ingredientSection.recipeSection)
                     )
                 }
             } else {
@@ -267,8 +283,8 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
             instructions = if (shouldConvert(section, TerminologySection.INSTRUCTIONS)) {
                 recipe.instructions?.map { instruction ->
                     instruction.copy(
-                        description = replaceInText(instruction.description) ?: instruction.description,
-                        descriptionTemplate = replaceInText(instruction.descriptionTemplate)
+                        description = applyTerminology(instruction.description) ?: instruction.description,
+                        descriptionTemplate = applyTerminology(instruction.descriptionTemplate)
                     )
                 }
             } else {
@@ -277,11 +293,15 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         )
     }
 
-    fun applyTerminologyToRecipeTitle(title: String): String {
-        return if (convertTerminologies == false) {
-            title
+    /**
+     * Applies terminology conversion to a recipe title for US combined measurements when enabled.
+     * Returns the original title when terminology conversion is disabled or not applicable.
+     */
+    fun applyTerminologyToRecipeTitle(title: String, targetMeasuringSystem: MeasuringSystem): String {
+        return if (convertTerminologies == true && targetMeasuringSystem == MeasuringSystem.USCombined) {
+            applyTerminology(title) ?: title
         } else {
-            replaceInText(title) ?: title
+            title
         }
     }
 
@@ -289,7 +309,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         return section == TerminologySection.ALL || section == currentSection
     }
 
-    internal fun replaceInText(text: String?): String? {
+    internal fun applyTerminology(text: String?): String? {
         return terminologyTable?.convertTerm(text) ?: text
     }
 }
@@ -312,6 +332,10 @@ fun noCustomaryRenderSession(): RenderSession {
     return RenderSession(densityTable, terminologyTable)
 }
 
+
+@Deprecated(
+    message = "Use IngredientItem.ingredientWithoutSuffix from renderRecipe output where possible."
+)
 fun ingredientWithoutSuffix(renderedTemplate: String): String {
     val (before, _) = splitBeforeSuffix(renderedTemplate)
     return before.trim()

@@ -4,7 +4,7 @@ import com.gu.recipe.unit.MeasuringSystem
 import com.gu.recipe.generated.*
 import com.gu.recipe.density.DensityTable
 import com.gu.recipe.template.QuantityPlaceholder
-import com.gu.recipe.wrapWithStrongTag
+import com.gu.recipe.terminology.TerminologyEntry
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -50,19 +50,23 @@ class RenderRecipeTest {
                     ingredientsList = listOf(
                         IngredientItem(
                             template = """{"min": 100, "max": 120, "unit": "g", "scale": true} of flour""",
-                            text = "<strong>200-240 g of flour</strong>"
+                            text = "<strong>200-240 g of flour</strong>",
+                            ingredientWithoutSuffix = "<strong>200-240 g of flour</strong>"
                         ),
                         IngredientItem(
                             template = """{"min": 1.2, "unit": "kg", "scale": true} of potatoes""",
-                            text = "<strong>2.4 kg of potatoes</strong>"
+                            text = "<strong>2.4 kg of potatoes</strong>",
+                            ingredientWithoutSuffix = "<strong>2.4 kg of potatoes</strong>"
                         ),
                         IngredientItem(
                             template = """{"min": 0.25, "unit": "tbsp", "scale": true} of salt""",
-                            text = "<strong>1½ tsp of salt</strong>"
+                            text = "<strong>1½ tsp of salt</strong>",
+                            ingredientWithoutSuffix = "<strong>1½ tsp of salt</strong>"
                         ),
                         IngredientItem(
                             template = """{"min":1, "scale":true} x {"min":400, "unit":"g", "scale":false} tin chopped tomatoes""",
-                            text = "<strong>2 x 400 g tin chopped tomatoes</strong>"
+                            text = "<strong>2 x 400 g tin chopped tomatoes</strong>",
+                            ingredientWithoutSuffix = "<strong>2 x 400 g tin chopped tomatoes</strong>"
                         ),
                     )
                 )
@@ -99,7 +103,12 @@ class RenderRecipeTest {
     fun stripExtraHTML(recipe: RecipeV3): RecipeV3 {
         return recipe.copy(
             ingredients = recipe.ingredients?.map { it.copy(
-                ingredientsList = it.ingredientsList?.map { it.copy(text = stripHTMLFromString(it.text)) }
+                ingredientsList = it.ingredientsList?.map {
+                    it.copy(
+                        text = stripHTMLFromString(it.text),
+                        ingredientWithoutSuffix = null
+                    )
+                }
             ) }
         )
     }
@@ -297,6 +306,52 @@ class RenderRecipeTest {
         assertEquals("<strong>150 g mayonnaise </strong>(homemade or shop-bought)", wrapWithStrongTag("150 g mayonnaise (homemade or shop-bought)"))
     }
 
+    @Test
+    fun `renderRecipe populates styled ingredientWithoutSuffix without suffix text`() {
+        val recipeTemplate = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            template = """{"min": 2, "unit": "tsp", "scale": true} (heaped) red miso paste (white will work, too)""",
+                            suffix = "(white will work, too)"
+                        ),
+                        IngredientItem(
+                            template = """{"min": 150, "unit": "ml", "scale": true} single cream""",
+                            suffix = ""
+                        ),
+                        IngredientItem(
+                            template = """{"min": 2, "scale": true} onions, peeled and roughly sliced""",
+                            suffix = "peeled and roughly sliced"
+                        ),
+                        IngredientItem(
+                            template = """{"min": 150, "unit": "g", "scale": true} egg; small""",
+                            suffix = "small"
+                        ),
+                        IngredientItem(
+                            template = """{"min": 150, "unit": "g", "scale": true} mayonnaise (homemade or shop-bought)""",
+                            suffix = "homemade or shop-bought)"
+                        )
+                    )
+                )
+            )
+        )
+        val session = RenderSession(DensityTable("test", HashMap(), HashMap()))
+
+        val ingredients = session.renderRecipe(recipeTemplate, 1.0f, MeasuringSystem.Metric)
+            .ingredients
+            ?.first()
+            ?.ingredientsList
+
+        assertEquals("<strong>2 tsp </strong>(heaped)<strong> red miso paste</strong>", ingredients?.get(0)?.ingredientWithoutSuffix)
+        assertEquals("<strong>150 ml single cream</strong>", ingredients?.get(1)?.ingredientWithoutSuffix)
+        assertEquals("<strong>2 onions</strong>", ingredients?.get(2)?.ingredientWithoutSuffix)
+        assertEquals("<strong>150 g egg</strong>", ingredients?.get(3)?.ingredientWithoutSuffix)
+        assertEquals("<strong>150 g mayonnaise</strong>", ingredients?.get(4)?.ingredientWithoutSuffix)
+    }
+
+    @Suppress("DEPRECATION")
     @Test
     fun `textWithoutSuffix returns first part of the ingredient`() {
         val ingredient = "1 potato, (100g) thinly chopped"
@@ -522,8 +577,8 @@ class RenderRecipeTest {
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
                 terminologyMap = mapOf(
-                    "aubergine" to "eggplant",
-                    "icing sugar" to "powdered sugar"
+                    "aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()),
+                    "icing sugar" to TerminologyEntry(id = 2, ukTerm = "icing sugar",usTerm = "powdered sugar", block = emptyList())
                 )
             )
         )
@@ -566,7 +621,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val recipe = RecipeV3(
@@ -598,7 +653,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val recipe = RecipeV3(
@@ -626,29 +681,42 @@ class RenderRecipeTest {
     }
 
     @Test
-    fun `applyTerminologyToRecipeTitle converts just the right part of title`() {
+    fun `applyTerminologyToRecipeTitle converts title when target measuring system is US and terminology conversion is enabled`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             ),
             convertTerminologies = true
         )
 
-        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
+        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.USCombined))
     }
 
     @Test
-    fun `applyTerminologyToRecipeTitle returns original title when terminology conversion is disabled`() {
+    fun `applyTerminologyToRecipeTitle returns original title when target measuring system is not US`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
+            ),
+            convertTerminologies = true
+        )
+
+        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.Metric))
+    }
+
+    @Test
+    fun `applyTerminologyToRecipeTitle returns original title when terminology conversion is disabled for US measuring system`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             ),
             convertTerminologies = false
         )
 
-        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart"))
+        assertEquals("aubergine tart", session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.USCustomary))
     }
 
     @Test
@@ -656,39 +724,40 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
-            )
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
+            ),
+            convertTerminologies = true
         )
 
-        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("eggplant tart"))
+        assertEquals("eggplant tart", session.applyTerminologyToRecipeTitle("eggplant tart", MeasuringSystem.USCustomary))
     }
 
     @Test
-    fun `replaceInText is case now sensitive and replaces whole terms with captilization of 1st letter if found so`() {
+    fun `applyTerminology is case now sensitive and replaces whole terms with captilization of 1st letter if found so`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
 
-        assertEquals("Roast the Eggplant", session.replaceInText("Roast the AUBERGINE"))
-        assertEquals("aubergines are great", session.replaceInText("aubergines are great"))
+        assertEquals("Roast the Eggplant", session.applyTerminology("Roast the AUBERGINE"))
+        assertEquals("aubergines are great", session.applyTerminology("aubergines are great"))
     }
 
     @Test
-    fun `replaceInText prefers longer terminology matches before shorter ones`() {
+    fun `applyTerminology prefers longer terminology matches before shorter ones`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
                 terminologyMap = mapOf(
-                    "sugar" to "sweetener",
-                    "icing sugar" to "powdered sugar"
+                    "sugar" to TerminologyEntry(id = 1, ukTerm = "sugar", usTerm = "sweetener", block = emptyList()),
+                    "icing sugar" to TerminologyEntry(id = 2, ukTerm = "icing sugar", usTerm = "powdered sugar", block = emptyList())
                 )
             )
         )
 
-        assertEquals("powdered sugar", session.replaceInText("icing sugar"))
+        assertEquals("powdered sugar", session.applyTerminology("icing sugar"))
     }
 
     @Test
@@ -696,7 +765,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val scaledRecipe = RecipeV3(
@@ -722,7 +791,7 @@ class RenderRecipeTest {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
             terminologyTable = com.gu.recipe.terminology.TerminologyTable(
-                terminologyMap = mapOf("aubergine" to "eggplant")
+                terminologyMap = mapOf("aubergine" to TerminologyEntry(id = 1, ukTerm = "aubergine", usTerm = "eggplant", block = emptyList()))
             )
         )
         val scaledRecipe = RecipeV3(
@@ -751,5 +820,45 @@ class RenderRecipeTest {
             MeasuringSystem.USCustomary
         )
         assertEquals(expectedRecipe, result)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology ALL converts every section with block list into consideration`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf(
+                    "sponge" to TerminologyEntry(
+                        id = 1,
+                        ukTerm = "sponge",
+                        usTerm = "cake",
+                        block = listOf(
+                            "victoria sponge",
+                            "sponge cake",
+                            "bake sponge",
+                            "baked sponge",
+                            "sponge fingers"
+                        )
+                    )
+                )
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "Passionfruit sponge cake",
+            description = "There are so many uses for a great sponge cake. Browning the butter before you mix gives this sponge a lovely nutty, buttery quality. Serve with sponge cake and extra sponge on the side.",
+            ingredients = listOf(),
+            instructions = listOf(
+                Instruction(description = "Put sponge in a plate"),
+                Instruction(description = "Get slice of Victoria sponge in a serving plate")
+            )
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.ALL)
+
+        assertEquals("Passionfruit sponge cake", rendered.title)
+        assertEquals("There are so many uses for a great sponge cake. Browning the butter before you mix gives this cake a lovely nutty, buttery quality. Serve with sponge cake and extra cake on the side.", rendered.description)
+        assertEquals("Put cake in a plate", rendered.instructions?.get(0)?.description)
+        assertEquals("Get slice of Victoria sponge in a serving plate", rendered.instructions?.get(1)?.description)
     }
 }
