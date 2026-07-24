@@ -22,6 +22,14 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.metalava)
     alias(libs.plugins.kotlinSerialization)
+    id("co.touchlab.skie") version "0.10.13"
+}
+
+skie {
+    build {
+        produceDistributableFramework()
+        enableSwiftLibraryEvolution.set(true)
+    }
 }
 
 kotlin {

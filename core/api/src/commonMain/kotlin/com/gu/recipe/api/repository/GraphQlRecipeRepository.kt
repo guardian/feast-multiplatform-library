@@ -54,11 +54,6 @@ class GraphQlRecipeRepository(
         is GraphQlError.Unexpected -> RecipeRepositoryError.Unexpected(cause)
         GraphQlError.MissingData -> RecipeRepositoryError.MissingData
     }
-
-    private fun GraphQlRecipe.toAPIResult(): FrontResponse =
-        FrontResponse(
-            id = id,
-        )
 }
 
 sealed class RecipeRepositoryError : Exception() {
