@@ -2,6 +2,7 @@ package com.gu.recipe.api.repository
 
 import com.gu.recipe.api.config.FeastApiConfig
 import com.gu.recipe.api.di.feastApiModule
+import com.gu.recipe.api.model.FeastEnvironment
 import com.gu.recipe.core.graphql.GraphQlResult
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
@@ -28,7 +29,7 @@ class GraphQlRepositoryImplRobolectricIntegrationTest {
             modules(
                 feastApiModule(
                     config = FeastApiConfig(
-                        networkConfig = NetworkConfig(endpoint = FeastNetworkApiEndpoint.CODE),
+                        environment = FeastEnvironment.CODE,
                     ),
                     ioDispatcher = Dispatchers.IO,
                 ),
