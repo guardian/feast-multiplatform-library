@@ -2,7 +2,9 @@ package com.gu.recipe.api
 
 import com.gu.recipe.api.config.FeastApiConfig
 import com.gu.recipe.api.di.iosFeastApiModule
+import com.gu.recipe.api.model.FeastEnvironment
 import com.gu.recipe.api.repository.GraphQLRepository
+import com.gu.recipe.core.networking.FeastEndpointType
 import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
 import com.gu.recipe.core.networking.NetworkConfig
 import org.koin.core.context.startKoin
@@ -11,11 +13,11 @@ import org.koin.mp.KoinPlatform
 
 object FeastIos {
     fun start(
-        endpoint: FeastNetworkApiEndpoint,
+        environment: FeastEnvironment,
     ) {
         start(
             FeastApiConfig(
-                networkConfig = NetworkConfig(endpoint = endpoint),
+                environment = environment,
             ),
         )
     }
