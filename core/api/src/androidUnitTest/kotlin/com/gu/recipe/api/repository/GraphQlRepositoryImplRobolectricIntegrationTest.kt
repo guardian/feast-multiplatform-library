@@ -6,8 +6,6 @@ import com.gu.recipe.api.model.FeastEnvironment
 import com.gu.recipe.core.graphql.GraphQlResult
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
-import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
-import com.gu.recipe.core.networking.NetworkConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.Ignore

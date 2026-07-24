@@ -58,7 +58,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":core:networking"))
                 api(libs.koin.core)
                 implementation(project(":core:graphql"))
                 implementation(libs.kotlinx.coroutines.core)

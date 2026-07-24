@@ -6,16 +6,14 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Query
 import com.apollographql.cache.normalized.FetchPolicy
 import com.apollographql.cache.normalized.fetchPolicy
-import com.apollographql.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.gu.recipe.core.graphql.client.ApolloClientFactory
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.config.GraphQlConfig
+import com.gu.recipe.core.graphql.config.GraphQlEnvironment
 import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
 import com.gu.recipe.core.graphql.repository.ApolloRecipeGraphQlDataSource
-import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
-import com.gu.recipe.core.networking.NetworkConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.Ignore
@@ -40,7 +38,7 @@ class GraphQlRobolectricIntegrationTest {
         val cacheName = "feast_graphql_test_${System.nanoTime()}.db"
         context.deleteDatabase(cacheName)
 
-        val apolloClient = createApolloClient(context, cacheName)
+        val apolloClient = createApolloClient()
         val query = query(region = Regions.northern, edition = Editions.all)
 
         try {
@@ -78,7 +76,7 @@ class GraphQlRobolectricIntegrationTest {
         context.deleteDatabase(cacheName)
 
         val dataSource = ApolloRecipeGraphQlDataSource(
-            FeastGraphQlClient(createApolloClient(context, cacheName)),
+            FeastGraphQlClient(createApolloClient()),
         )
 
         try {
@@ -99,17 +97,13 @@ class GraphQlRobolectricIntegrationTest {
         }
     }
 
-    private fun createApolloClient(context: Context, cacheName: String): ApolloClient {
+    private fun createApolloClient(): ApolloClient {
         val config = GraphQlConfig(
-            networkConfig = NetworkConfig(endpoint = FeastNetworkApiEndpoint.CODE),
+            environment = GraphQlEnvironment.CODE,
         )
 
         return ApolloClientFactory(Dispatchers.IO).create(
             config = config,
-            /*normalizedCacheFactory = SqlNormalizedCacheFactory(
-                context = context.applicationContext,
-                name = cacheName,
-            ),*/
         )
     }
 

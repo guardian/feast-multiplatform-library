@@ -1,7 +1,6 @@
 package com.gu.recipe.core.graphql
 
 import android.content.Context
-import com.gu.recipe.core.graphql.cache.platformNetworkModule
 import com.gu.recipe.core.graphql.config.GraphQlConfig
 import com.gu.recipe.core.graphql.di.GraphQlQualifiers
 import com.gu.recipe.core.graphql.di.graphQlModule
@@ -21,16 +20,12 @@ fun androidGraphQlModule(
     ioDispatcher = ioDispatcher,
 )
 
-/*
-    // TODO: we commented out platformNetworkModule, we will pick this later
- */
 fun androidGraphQlModule(
     context: Context,
     config: GraphQlConfig,
 ): Module = org.koin.dsl.module {
     single { context.applicationContext }
     includes(
-        //platformNetworkModule,
         graphQlModule(
             config = config,
             ioDispatcher = EntryPointAccessors.fromApplication(

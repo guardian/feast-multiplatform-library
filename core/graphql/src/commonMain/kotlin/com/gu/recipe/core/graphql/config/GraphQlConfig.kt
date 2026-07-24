@@ -2,12 +2,26 @@ package com.gu.recipe.core.graphql.config
 
 import com.gu.recipe.core.graphql.provider.DefaultFeastGraphQlServerUrlProvider
 import com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider
-import com.gu.recipe.core.networking.NetworkConfig
+
+enum class GraphQlEnvironment(
+    val baseUrl: String,
+) {
+    CODE("https://recipes.code.dev-guardianapis.com"),
+    PROD("https://recipes.guardianapis.com"),
+}
 
 data class GraphQlConfig(
-    val networkConfig: NetworkConfig,
+    val baseUrl: String,
     val serverUrlProvider: GraphQlServerUrlProvider = DefaultFeastGraphQlServerUrlProvider,
 ) {
+    constructor(
+        environment: GraphQlEnvironment,
+        serverUrlProvider: GraphQlServerUrlProvider = DefaultFeastGraphQlServerUrlProvider,
+    ) : this(
+        baseUrl = environment.baseUrl,
+        serverUrlProvider = serverUrlProvider,
+    )
+
     val serverUrl: String
-        get() = serverUrlProvider.serverUrl(networkConfig)
+        get() = serverUrlProvider.serverUrl(baseUrl)
 }

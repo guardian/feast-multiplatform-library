@@ -3,13 +3,12 @@ package com.gu.recipe.core.graphql
 import com.apollographql.apollo.ApolloClient
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.config.GraphQlConfig
+import com.gu.recipe.core.graphql.config.GraphQlEnvironment
 import com.gu.recipe.core.graphql.di.GraphQlQualifiers
 import com.gu.recipe.core.graphql.di.graphQlModule
 import com.gu.recipe.core.graphql.provider.FixedGraphQlServerUrlProvider
 import com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider
 import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
-import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
-import com.gu.recipe.core.networking.NetworkConfig
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,9 +19,21 @@ import org.koin.dsl.koinApplication
 
 class GraphQlConfigTest {
     @Test
-    fun `default GraphQL url is derived from the networking base url`() {
+    fun `graphql environment constructor derives the code url`() {
         val config = GraphQlConfig(
-            networkConfig = NetworkConfig(endpoint = FeastNetworkApiEndpoint.CODE),
+            environment = GraphQlEnvironment.CODE,
+        )
+
+        assertEquals(
+            expected = "https://recipes.code.dev-guardianapis.com/graphql",
+            actual = config.serverUrl,
+        )
+    }
+
+    @Test
+    fun `default GraphQL url is derived from the configured base url`() {
+        val config = GraphQlConfig(
+            baseUrl = "https://recipes.code.dev-guardianapis.com",
         )
 
         assertEquals(
@@ -34,7 +45,7 @@ class GraphQlConfigTest {
     @Test
     fun `fixed GraphQL url provider trims the trailing slash`() {
         val config = GraphQlConfig(
-            networkConfig = NetworkConfig(endpoint = FeastNetworkApiEndpoint.PROD),
+            baseUrl = "https://recipes.guardianapis.com",
             serverUrlProvider = FixedGraphQlServerUrlProvider("https://recipes.guardianapis.com/graphql/"),
         )
 
@@ -47,7 +58,7 @@ class GraphQlConfigTest {
     @Test
     fun `koin module exposes graphql dependencies`() {
         val config = GraphQlConfig(
-            networkConfig = NetworkConfig(endpoint = FeastNetworkApiEndpoint.PROD),
+            baseUrl = "https://recipes.guardianapis.com",
         )
         val application = koinApplication {
             modules(graphQlModule(config))

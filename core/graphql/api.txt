@@ -109,16 +109,24 @@ package com.gu.recipe.core.graphql.client {
 package com.gu.recipe.core.graphql.config {
 
   public final class GraphQlConfig {
-    ctor public GraphQlConfig(com.gu.recipe.core.networking.NetworkConfig networkConfig, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
-    method public com.gu.recipe.core.networking.NetworkConfig component1();
+    ctor public GraphQlConfig(com.gu.recipe.core.graphql.config.GraphQlEnvironment environment, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
+    ctor public GraphQlConfig(String baseUrl, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
+    method public String component1();
     method public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider component2();
-    method public com.gu.recipe.core.graphql.config.GraphQlConfig copy(optional com.gu.recipe.core.networking.NetworkConfig networkConfig, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
-    method @InaccessibleFromKotlin public com.gu.recipe.core.networking.NetworkConfig getNetworkConfig();
+    method public com.gu.recipe.core.graphql.config.GraphQlConfig copy(optional String baseUrl, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
+    method @InaccessibleFromKotlin public String getBaseUrl();
     method @InaccessibleFromKotlin public String getServerUrl();
     method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider getServerUrlProvider();
-    property public com.gu.recipe.core.networking.NetworkConfig networkConfig;
+    property public String baseUrl;
     property public String serverUrl;
     property public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider;
+  }
+
+  public enum GraphQlEnvironment {
+    method @InaccessibleFromKotlin public String getBaseUrl();
+    property public String baseUrl;
+    enum_constant public static final com.gu.recipe.core.graphql.config.GraphQlEnvironment CODE;
+    enum_constant public static final com.gu.recipe.core.graphql.config.GraphQlEnvironment PROD;
   }
 
 }
@@ -890,18 +898,18 @@ package com.gu.recipe.core.graphql.generated.type.adapter {
 package com.gu.recipe.core.graphql.provider {
 
   public final class DefaultFeastGraphQlServerUrlProvider implements com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider {
-    method public String serverUrl(com.gu.recipe.core.networking.NetworkConfig networkConfig);
+    method public String serverUrl(String baseUrl);
     field public static final com.gu.recipe.core.graphql.provider.DefaultFeastGraphQlServerUrlProvider INSTANCE;
   }
 
   public final class FixedGraphQlServerUrlProvider implements com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider {
     ctor public FixedGraphQlServerUrlProvider(String value);
     method public com.gu.recipe.core.graphql.provider.FixedGraphQlServerUrlProvider copy(optional String value);
-    method public String serverUrl(com.gu.recipe.core.networking.NetworkConfig networkConfig);
+    method public String serverUrl(String baseUrl);
   }
 
   public fun interface GraphQlServerUrlProvider {
-    method public String serverUrl(com.gu.recipe.core.networking.NetworkConfig networkConfig);
+    method public String serverUrl(String baseUrl);
   }
 
 }

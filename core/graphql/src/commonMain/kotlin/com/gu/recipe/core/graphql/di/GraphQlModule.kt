@@ -1,8 +1,6 @@
 package com.gu.recipe.core.graphql.di
 
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.cache.normalized.api.NormalizedCacheFactory
-import com.apollographql.cache.normalized.memory.MemoryCacheFactory
 import com.gu.recipe.core.graphql.client.ApolloClientFactory
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.config.GraphQlConfig
@@ -30,7 +28,6 @@ fun graphQlModule(
     single<ApolloClient> {
         get<ApolloClientFactory>().create(
             config = get(),
-            //normalizedCacheFactory = getOrNull<NormalizedCacheFactory>() ?: MemoryCacheFactory(),
         )
     }
     single { FeastGraphQlClient(get()) }

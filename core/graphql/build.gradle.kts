@@ -144,9 +144,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":core:networking"))
                 implementation(libs.apollo.runtime)
-                implementation(libs.normalised.cache)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.core)
             }
