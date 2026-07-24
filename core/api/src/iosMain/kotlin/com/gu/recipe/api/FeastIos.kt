@@ -4,9 +4,6 @@ import com.gu.recipe.api.config.FeastApiConfig
 import com.gu.recipe.api.di.iosFeastApiModule
 import com.gu.recipe.api.model.FeastEnvironment
 import com.gu.recipe.api.repository.GraphQLRepository
-import com.gu.recipe.core.networking.FeastEndpointType
-import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
-import com.gu.recipe.core.networking.NetworkConfig
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.mp.KoinPlatform
