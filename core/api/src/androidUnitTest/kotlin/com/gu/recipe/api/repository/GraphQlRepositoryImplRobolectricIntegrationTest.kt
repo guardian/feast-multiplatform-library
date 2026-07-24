@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config
 import org.koin.dsl.koinApplication
 import kotlin.test.assertTrue
 
-@Ignore("This test is ignored for CI, please use this locally to test the live GraphQL endpoint")
+@Ignore("Hits a live GraphQL endpoint; run locally when needed.")
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
 class GraphQlRepositoryImplRobolectricIntegrationTest {

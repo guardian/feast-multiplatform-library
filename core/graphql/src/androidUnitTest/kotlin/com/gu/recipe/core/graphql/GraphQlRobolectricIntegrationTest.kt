@@ -18,6 +18,7 @@ import com.gu.recipe.core.networking.FeastNetworkApiEndpoint
 import com.gu.recipe.core.networking.NetworkConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -28,6 +29,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
+@Ignore("Hits a live GraphQL endpoint; run locally when needed.")
 @RunWith(RobolectricTestRunner::class)
 @Config(manifest = Config.NONE)
 class GraphQlRobolectricIntegrationTest {
