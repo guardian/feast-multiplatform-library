@@ -1,219 +1,203 @@
-# GraphQL + Networking Rollout Plan
+# GraphQL Rollout Plan
 
-This document breaks the work into small steps so GraphQL support can be added to the KMP library with the **least possible change required in consuming projects**.
+This document reflects the current GraphQL architecture in the KMP library. The GraphQL-related work is now centered around **two modules only**:
+
+- `:core:graphql`
+- `:core:api`
+
+The old `:core:networking` layer is no longer part of the GraphQL rollout plan. Endpoint ownership, schema/codegen wiring, and GraphQL client setup now live in `:core:graphql`, while consumer-facing setup and repository access live in `:core:api`.
 
 ## Goals
 
-- Keep `:library` as the only module most consumer apps need to depend on.
-- Keep Retrofit and Apollo implementation details out of the public API.
-- Use Koin internally for dependency wiring while keeping DI details hidden from consuming apps.
-- Keep the networking layer structured so Retrofit can be replaced by Ktor later with minimal downstream impact.
-- Add a `:core:networking` module first as the internal foundation.
-- Add a fully working `:core:graphql` module second.
-- Ensure schema download + Apollo code generation happen automatically during builds.
+- Keep GraphQL implementation details out of the consumer-facing API.
+- Keep Apollo, generated query models, and Koin wiring hidden behind library-owned APIs where practical.
+- Keep `:core:graphql` focused on GraphQL-specific concerns only:
+  - schema download
+  - Apollo code generation
+  - Apollo client creation
+  - GraphQL endpoint/base URL ownership
+  - GraphQL-specific mapping and error handling
+- Keep `:core:api` focused on the SDK-facing surface:
+  - environment/config entrypoints
+  - bootstrap/wiring for Android and iOS
+  - repository interfaces and implementations exposed to consumers
+- Minimize change required in consuming Android and iOS projects.
+- Preserve freedom to evolve the transport implementation later without reintroducing unnecessary module boundaries too early.
 - Keep the design multiplatform-friendly.
+
+---
+
+## Current module responsibilities
+
+### `:core:graphql`
+Owns GraphQL implementation concerns.
+
+Responsibilities:
+- Apollo plugin configuration
+- schema refresh task
+- `.graphql` operations and generated Apollo models
+- GraphQL environment and base URL ownership
+- Apollo client factory/wrapper
+- GraphQL DI modules internal to the implementation
+- GraphQL result/error translation
+- GraphQL-specific integration tests and mapping tests
+
+### `:core:api`
+Owns the consumer-facing GraphQL SDK surface.
+
+Responsibilities:
+- public-facing config entrypoint
+- mapping from API environment/config to GraphQL config
+- Koin/bootstrap entrypoints for Android and iOS
+- repository implementations used by consuming apps
+- keeping consumer setup small and stable
+
+### Relationship between the two modules
+- `:core:api` depends on `:core:graphql`
+- `:core:graphql` does **not** depend on `:core:api`
+- GraphQL-related consumers should ideally need only `:core:api`
+- `:core:graphql` may remain published temporarily, but the long-term direction is to hide it from consumers when the public API surface is fully stabilized in `:core:api`
 
 ---
 
 ## Phase 0 — Principles and guardrails
 
-### Task 0.1 — Keep public API stable
-- Continue exposing consumer-facing APIs from `:library`.
-- Keep a clear distinction between consumer-facing API and internal module-to-module API.
-- Do not expose Retrofit service interfaces in public APIs.
-- Do not expose Apollo generated models in public APIs.
-- Return stable library-owned models or repository interfaces from `:library`.
-- It is acceptable for internal-only types to live in `:core:networking` or `:core:graphql` when consuming apps will not import them directly.
+### Task 0.1 — Keep public API intentional
+- Keep a clear distinction between SDK-facing APIs and internal implementation APIs.
+- Do not expose Apollo generated models in the long-term consumer contract.
+- Do not expose Apollo client setup details to Android/iOS consuming apps unless there is a deliberate advanced-use case.
+- Prefer library-owned configs, repositories, and models in `:core:api` for any surface that consumers are expected to call directly.
 
-### Task 0.2 — Use internal module boundaries
-- Put transport/infrastructure code in `:core:networking`.
-- Put GraphQL implementation/codegen in `:core:graphql`.
-- Keep HTTP client construction behind internal factories/adapters so the transport implementation can move from Retrofit/OkHttp to Ktor later.
+### Task 0.2 — Keep module boundaries simple
+- Put GraphQL implementation/codegen/configuration in `:core:graphql`.
+- Put consumer-facing GraphQL entrypoints in `:core:api`.
+- Avoid reintroducing extra infrastructure modules unless there is a clear benefit that outweighs the added complexity.
 - Keep dependency direction one-way:
-  - `:library` -> `:core:graphql`
-  - `:core:graphql` -> `:core:networking` (only if needed)
-  - avoid `:core:*` -> `:library`
+  - `:core:api` -> `:core:graphql`
+  - avoid `:core:graphql` -> `:core:api`
 
 ### Task 0.3 — Minimize downstream changes
-- Consumers should keep depending on the existing published `library` artifact.
-- Consumers should not need to know whether data comes from Retrofit or Apollo.
-- Any new setup needed by consumers should be limited to a small config/factory API.
+- Consumers should not need to know whether Apollo wiring, schema refresh, caching, or DI changes internally.
+- Any new required setup should be limited to a small configuration/bootstrap API.
+- Android and iOS consumers should move toward depending only on `:core:api`.
 
 Implementation note:
-- if a type is only used between modules inside this repository and is never imported by consuming apps, it does not need to be promoted into `:library`
-- only types that are part of the true external SDK surface should be treated as long-term public API
+- if a type is only used inside this repository and is not part of the intended SDK contract, it should stay internal to `:core:graphql` or `:core:api`
+- only true consumer-facing types should be treated as long-term public API
 
 ---
 
-## Phase 1 — Create the networking module foundation
+## Phase 1 — Stabilize the two-module architecture
 
-### Task 1.1 — Register the module in Gradle settings
-- Update `settings.gradle.kts`.
-- Include:
-  - `:core:networking`
+### Task 1.1 — Keep Gradle/module registration aligned
+- Ensure `settings.gradle.kts` reflects the active module layout.
+- GraphQL-related work should assume only:
   - `:core:graphql`
-- Keep `:library` included as before.
+  - `:core:api`
+- Remove rollout assumptions that require a dedicated GraphQL networking module.
 
-### Task 1.2 — Expand the version catalog
-- Update `gradle/libs.versions.toml` with versions and aliases needed for networking.
-- Add versions for likely dependencies:
-  - Retrofit
-  - OkHttp
-  - OkHttp logging interceptor
-  - Kotlin datetime if needed later
-  - Apollo plugin/runtime entries for next phase
-- Keep versions centralized in the catalog.
+### Task 1.2 — Keep version catalog focused on actual usage
+- Keep Apollo, Koin, Kotlin, and platform dependencies centralized in `gradle/libs.versions.toml`.
+- Only keep dependency aliases that are still needed by `:core:graphql` and `:core:api`.
+- Avoid documenting or planning around unused transport-layer dependencies as if they are part of the current GraphQL design.
 
-### Task 1.3 — Configure `core/networking/build.gradle.kts`
-- Make `:core:networking` a Kotlin Multiplatform module.
-- Add Android library plugin support if Android-specific code will live there.
-- Configure source sets:
-  - `commonMain`
-  - `commonTest`
-  - `androidMain`
-  - `androidUnitTest` if needed
-- Put only shared contracts/config in `commonMain`.
-- Put Retrofit/OkHttp dependencies in `androidMain` unless there is a real multiplatform use for shared pieces.
-- Keep the common API transport-agnostic so a future Ktor implementation can slot in without changing `:library`.
+### Task 1.3 — Keep endpoint ownership in `:core:graphql`
+- Define GraphQL environments and base URLs in `:core:graphql`.
+- Keep GraphQL URL resolution close to Apollo client creation.
+- Avoid extra mapping layers for endpoints unless they provide real value.
+- Keep `GraphQlConfig` GraphQL-native rather than delegating endpoint ownership elsewhere.
 
-### Task 1.4 — Add module namespace/build settings
-- Set Android namespace for `:core:networking`.
-- Align compile/min SDK and JVM target with existing project values.
-- Keep formatting and plugin style consistent with the existing repo.
+### Task 1.4 — Keep `:core:api` as the consumer bridge
+- `:core:api` should accept consumer-facing environment/config values.
+- `:core:api` should translate those values into `:core:graphql` configuration.
+- Consumers should not need to understand the details of `GraphQlConfig` unless explicitly intended.
 
-### Task 1.5 — Add initial networking abstractions
-Create minimal shared classes/interfaces in `:core:networking` so later modules depend on contracts, not implementation details.
-
-Suggested first set:
-- `NetworkEnvironment` or `BaseUrlProvider`
-- `RequestHeadersProvider` or `AuthTokenProvider`
-- `NetworkException` / `NetworkError`
-- `NetworkResult<T>` wrapper if useful
-- `NetworkLogger` abstraction if logging needs to be pluggable
-- `HttpEngineFactory` or similar transport abstraction if you want the eventual Ktor move to be mostly internal
-
-### Task 1.6 — Add Android transport implementation shell
-Create Android-side classes only as infrastructure, not public API.
-
-Suggested classes:
-- `OkHttpClientFactory`
-- `RetrofitFactory`
-- optional interceptors:
-  - auth header interceptor
-  - user agent/header interceptor
-  - logging interceptor
-
-Note:
-- treat these as replaceable adapters, not as the core contract of the networking module
-- avoid making repository code depend directly on Retrofit service interfaces
-
-### Task 1.7 — Decide publication strategy for internal modules
-Because `:library` will depend on internal modules, decide how they are published:
-- either publish `:core:networking` and `:core:graphql` as transitive artifacts
-- or embed/shade implementation where appropriate
-
-Recommended approach:
-- publish them normally as internal support artifacts
-- keep public entrypoint in `:library`
-
-### Task 1.8 — Verify networking module builds cleanly
-- Run Gradle sync/build for `:core:networking`.
-- Confirm no configuration or source set issues.
-- Confirm `:library` still builds after adding the module.
+### Task 1.5 — Keep bootstrap APIs multiplatform-friendly
+- Android and iOS setup should be small, explicit, and native-first where appropriate.
+- Shared bootstrap helpers may exist in `:core:api`, but platform apps should still own lifecycle decisions.
 
 ---
 
-## Phase 2 — Define the public API shape in `library`
+## Phase 2 — Define and refine the public API in `core:api`
 
-### Task 2.1 — Decide repository surface before implementation
-Before wiring GraphQL, define what consumers should call.
-
+### Task 2.1 — Decide the intended consumer surface
 Recommended shape:
-- one or more repository interfaces in `:library`
-- a small config object for environment/auth setup
-- one factory/builder to construct repositories/clients
+- a small `FeastApiConfig`-style config object
+- environment selection owned by `:core:api`
+- repository interfaces or SDK entrypoints in `:core:api`
+- platform-friendly bootstrap helpers for Android and iOS
 
-### Task 2.2 — Introduce config entrypoint in `:library`
-Add a stable public configuration API, for example:
-- base API URL / environment
-- auth token provider or header provider
-- timeout/logging flags if required
+### Task 2.2 — Keep configuration stable
+The public-facing config should be simple and durable.
 
-Keep this config owned by `:library`, even if values are passed down internally.
+Recommended characteristics:
+- environment-based by default
+- optional future extension points only when justified
+- avoid leaking Apollo-specific names into the public contract
 
-### Task 2.3 — Define stable consumer-facing models
-- Reuse existing models if they fit.
-- Add new public models in `:library` only where needed.
-- Avoid leaking Apollo generated response types into public method signatures.
+### Task 2.3 — Move toward API-owned consumer models
+- Do not mirror the full GraphQL schema 1:1.
+- Introduce API-owned models only for the subset that is intentionally exposed to consumers.
+- Keep Apollo generated types behind the `:core:graphql` boundary wherever possible.
 
-### Task 2.4 — Define internal-to-public mapping boundary
-- Decide where API models are transformed into library models.
-- Recommended location: `:core:graphql` maps GraphQL responses into stable library/domain shapes or internal DTOs that `:library` can safely use.
+### Task 2.4 — Keep mapping responsibilities explicit
+- `:core:graphql` should map raw GraphQL responses into shapes that are safe for upstream use.
+- `:core:api` should own any final translation needed for the public SDK surface.
+- Nullability and GraphQL-specific field quirks should stay out of consumer code.
 
 ---
 
-## Phase 3 — Implement the GraphQL module fully
+## Phase 3 — Implement and maintain `core:graphql`
 
 ### Task 3.1 — Configure `core/graphql/build.gradle.kts`
-- Make `:core:graphql` a Kotlin Multiplatform module.
-- Apply Apollo Kotlin plugin.
-- Configure Android/iOS/JS-compatible source sets as needed.
-- Add Apollo runtime dependencies in `commonMain` if GraphQL is shared across platforms.
-- Add dependency on `:core:networking` only for shared config/error abstractions if needed.
+- Keep `:core:graphql` as a Kotlin Multiplatform module.
+- Apply and maintain Apollo Kotlin plugin configuration.
+- Keep Android/iOS source sets aligned with actual supported targets.
+- Keep Apollo runtime and GraphQL-specific dependencies in the module.
+- Avoid unnecessary dependencies on extra infrastructure modules for endpoint configuration.
 
-### Task 3.2 — Choose the GraphQL package structure
+### Task 3.2 — Keep package structure clear
 Recommended structure inside `:core:graphql`:
-- `src/commonMain/graphql/` for `.graphql` operations/fragments
-- `src/commonMain/kotlin/...` for client wrappers, mappers, and repository-facing APIs
-- schema stored inside the module
+- `src/commonMain/graphql/` for GraphQL operations and schema
+- `src/commonMain/kotlin/...` for config, client wrappers, DI, repositories, and mappers
+- `src/androidMain/...` and `src/iosMain/...` only for platform-specific GraphQL concerns such as caching or platform DI wiring
 
-### Task 3.3 — Add Apollo service configuration
-- Configure one Apollo service in Gradle.
-- Set package name for generated code.
-- Enable codegen options appropriate for the project.
-- Keep generated package names stable to reduce churn.
+### Task 3.3 — Keep Apollo service configuration stable
+- Use a stable package name for generated code.
+- Keep generated package churn low.
+- Ensure Apollo generation is reproducible and predictable.
 
-### Task 3.4 — Implement a thin GraphQL client wrapper
-Create a small wrapper around Apollo so the rest of the project does not depend directly on Apollo APIs.
-
-Use Koin inside `:core:graphql` for wiring the Apollo client, GraphQL wrapper, and related configuration so dependency setup remains consistent across platforms without leaking DI decisions into the public SDK.
-
+### Task 3.4 — Keep the GraphQL client wrapper thin
 Suggested responsibilities:
 - create the Apollo client
 - execute queries/mutations
-- map low-level errors into project-level errors
-- inject auth headers and endpoint config
+- map low-level GraphQL/Apollo errors into project-level results
+- resolve the final GraphQL server URL from GraphQL-owned config
 
 Design note:
-- prefer passing Apollo an abstracted HTTP/config layer from `:core:networking` where practical so a future Ktor-based implementation can be introduced behind the same library-facing API
+- future transport changes should be handled inside `:core:graphql` unless there is a strong reason to re-extract a separate transport layer later
 
-### Task 3.5 — Add query/mutation files
-- Add `.graphql` files for the initial set of required operations.
-- Keep operations focused and version-controlled.
-- Organize by feature/domain if multiple APIs are added later.
+### Task 3.5 — Keep operations focused
+- Add `.graphql` files only for required use cases.
+- Organize operations by feature/domain where useful.
+- Keep operations version-controlled.
 
-### Task 3.6 — Add model mapping layer
-- Map Apollo generated models into stable library/internal models.
-- Handle nullability carefully.
+### Task 3.6 — Keep mapping and caching platform-aware
 - Keep all GraphQL-specific field-name quirks inside this module.
+- Handle nullability carefully.
+- Allow Android/iOS cache behavior to differ when necessary, as long as the consumer-facing API remains stable.
 
-### Task 3.7 — Add tests for mapping and error handling
-- Add unit tests for GraphQL response mapping.
-- Add tests for partial/null response scenarios.
-- Add tests for transport and GraphQL error conversion.
-
-### Task 3.8 — Connect `:library` to `:core:graphql`
-- Add dependency from `:library` to `:core:graphql`.
-- Implement repository implementations in `:library` using GraphQL-facing abstractions.
-- Keep repository interfaces and public entrypoints in `:library`.
+### Task 3.7 — Test GraphQL behavior thoroughly
+- Add or maintain tests for response mapping.
+- Cover partial/null response scenarios.
+- Cover GraphQL and transport-level error conversion.
+- Validate platform-specific GraphQL setup where possible.
 
 ---
 
 ## Phase 4 — Automate schema download and code generation
 
-### Task 4.1 — Decide where schema credentials come from
-Choose how schema download is authenticated/configured.
-
+### Task 4.1 — Keep schema refresh configurable
 Recommended inputs:
 - Gradle properties
 - environment variables
@@ -221,33 +205,30 @@ Recommended inputs:
 
 Avoid hardcoding secrets in the repo.
 
-### Task 4.2 — Add a schema download task
-Implement a Gradle task that:
+### Task 4.2 — Keep schema refresh owned by `:core:graphql`
+Implement and maintain a Gradle task that:
 - contacts the GraphQL server or introspection endpoint
-- downloads the latest schema
-- writes it to the `:core:graphql` module schema location
-- declares proper task inputs/outputs for Gradle caching
+- downloads the latest schema when configured
+- writes it to the `:core:graphql` schema location
+- declares proper task inputs/outputs as much as practical
 
-### Task 4.3 — Wire schema download before Apollo codegen
-- Make Apollo code generation depend on the schema refresh task.
-- Ensure build/codegen order is:
-  1. download schema
-  2. generate Apollo models
-  3. compile sources
+### Task 4.3 — Wire schema refresh before Apollo codegen
+Ensure build/codegen order is:
+1. refresh or validate schema source
+2. generate Apollo models
+3. compile sources
 
-### Task 4.4 — Add failure strategy
+### Task 4.4 — Keep failure strategy explicit
 Recommended behavior:
-- default: try to refresh schema, but allow fallback to last saved schema if remote call fails
-- CI or strict mode: fail build when schema refresh fails
+- default: allow fallback to the checked-in schema when no remote refresh is configured or when non-strict refresh is used
+- CI or strict mode: fail when schema refresh is required and cannot be completed
 
-This keeps local development resilient while allowing CI enforcement.
-
-### Task 4.5 — Decide whether schema file is committed
+### Task 4.5 — Keep the schema committed
 Recommended approach:
 - commit the schema file for reproducibility and offline fallback
 - do not commit generated Apollo classes unless there is a strong reason
 
-### Task 4.6 — Add developer documentation for schema refresh
+### Task 4.6 — Document developer workflow
 Document:
 - required env vars/properties
 - how to force-refresh schema
@@ -258,75 +239,48 @@ Document:
 
 ## Phase 5 — Publishing and consumer impact
 
-### Task 5.1 — Update publication configuration
-Because `:library` will now depend on internal modules:
-- ensure `:core:networking` and `:core:graphql` are also publishable artifacts
-- ensure metadata and transitive dependencies resolve correctly for KMP consumers
+### Task 5.1 — Keep `core:api` as the intended entrypoint
+- Document `:core:api` as the module Android/iOS consumers should prefer.
+- Treat `:core:graphql` as an implementation/support module unless a specific advanced use case requires direct consumption.
 
-### Task 5.2 — Keep `library` as the main consumer artifact
-- Maintain `:library` as the documented dependency for downstream projects.
-- Do not ask consuming apps to depend directly on `:core:*` modules unless there is a very specific need.
+### Task 5.2 — Keep publication metadata correct
+- Ensure `:core:api` and `:core:graphql` publish with correct metadata and transitive dependencies.
+- Ensure published artifacts no longer assume a GraphQL networking support module.
+- Verify that consumer runtime classpaths do not require removed implementation modules.
 
-### Task 5.3 — Verify transitive resolution in sample consumers
-Test at least conceptually for:
-- Android consumer
-- iOS framework/XCFramework consumer
-- JS consumer if GraphQL support should work there
+### Task 5.3 — Verify consumer resolution paths
+Conceptually validate:
+- Android consumer setup
+- iOS framework/XCFramework consumption
+- any other target that is expected to use the GraphQL stack
 
-### Task 5.4 — Check API compatibility impact
-- Review `library/api.txt` if public API changes are introduced.
-- Keep breaking public API changes to a minimum.
-- Prefer additive APIs for first rollout.
+### Task 5.4 — Check public API compatibility intentionally
+- Review `api.txt` baselines when public API changes are introduced.
+- Keep breaking changes intentional and documented.
+- Prefer additive change where possible, but update baselines when architectural cleanup requires an intentional break.
 
-### Task 5.5 — Preserve migration freedom for the transport layer
-- Review any newly added public APIs and remove references to Retrofit/OkHttp-specific concepts.
-- Ensure config objects use generic names like `baseUrl`, `headers`, `authProvider`, and `timeout`, not transport-specific terminology.
-- Ensure internal modules can be republished later with Ktor replacing Retrofit without forcing consumer API changes.
+### Task 5.5 — Keep consumer setup small
+- Consumers should not need Apollo types, GraphQL endpoint enums, or DI internals.
+- Consumers should not need to add an extra module just to satisfy an internal runtime dependency.
 
 ---
 
-## Phase 6 — Future migration path from Retrofit to Ktor
+## Phase 6 — Future transport evolution
 
-This phase is not required for the initial rollout, but the initial implementation should make it easy.
+This phase is not required immediately, but the architecture should leave room for it.
 
-### Task 6.1 — Audit Retrofit-specific assumptions
-- Identify any classes in `:core:networking`, `:core:graphql`, or `:library` that directly depend on Retrofit types.
-- Move those dependencies behind internal adapters or factories.
-- Confirm no public API references Retrofit, OkHttp interceptors, or Retrofit response wrappers.
+### Task 6.1 — Audit transport-specific assumptions inside `:core:graphql`
+- Identify any direct assumptions about the current transport stack.
+- Keep those assumptions localized to client creation and low-level adapters.
+- Confirm no consumer-facing API references transport-specific concepts.
 
-### Task 6.2 — Introduce Ktor-compatible transport abstractions
-- Define or refine transport-neutral contracts for:
-  - endpoint resolution
-  - auth/header injection
-  - request execution
-  - error mapping
-  - logging hooks
-- Keep these contracts in shared code where possible.
+### Task 6.2 — Prefer internal refactoring before new modules
+- If transport behavior changes later, first try to evolve the implementation inside `:core:graphql`.
+- Re-extract a separate transport/infrastructure module only if shared complexity actually justifies it.
 
-### Task 6.3 — Add Ktor implementation in `:core:networking`
-- Add Ktor client dependencies.
-- Implement a Ktor-based client factory.
-- Recreate existing auth/header/logging behavior in Ktor plugins/interceptors.
-- Ensure platform support can expand more naturally than Retrofit if needed.
-
-### Task 6.4 — Swap GraphQL/network integrations to the new transport path
-- Update internal wiring so GraphQL and any REST clients use the Ktor-backed implementation.
-- Keep repository and consumer-facing APIs unchanged.
-- Verify request/response behavior matches the Retrofit-based baseline.
-
-### Task 6.5 — Run side-by-side validation
-- Compare Retrofit and Ktor implementations for:
-  - headers
-  - timeouts
-  - error mapping
-  - serialization behavior
-  - performance-sensitive paths
-- Fix mismatches before removing Retrofit.
-
-### Task 6.6 — Remove Retrofit only after parity is proven
-- Remove Retrofit/OkHttp dependencies only after Ktor is functionally equivalent.
-- Update docs to reflect the internal transport migration.
-- Confirm that consuming projects require no code change beyond upgrading the published library version.
+### Task 6.3 — Keep future migration consumer-transparent
+- Any later move in the underlying HTTP stack should not force consumer API changes in `:core:api`.
+- Public config naming should remain generic enough to survive internal implementation swaps.
 
 ---
 
@@ -334,69 +288,62 @@ This phase is not required for the initial rollout, but the initial implementati
 
 ### Task 7.1 — Build each affected module independently
 Run builds for:
-- `:core:networking`
 - `:core:graphql`
-- `:library`
-- full project build
+- `:core:api`
+- full project build as needed
 
-### Task 7.2 — Test code generation path multiple times
+### Task 7.2 — Test code generation multiple times
 Validate these cases:
 - clean build with schema refresh
 - rebuild with no schema changes
 - schema refresh failure fallback path
 - strict mode failure behavior
 
-### Task 7.3 — Test auth/header propagation
-- verify headers are applied correctly to GraphQL requests
-- verify token refresh/provider hooks behave correctly if implemented
+### Task 7.3 — Test consumer-facing stability
+- instantiate the public API from `:core:api`
+- confirm Android and iOS setup remains small and clear
+- confirm Apollo/generated GraphQL types are not unintentionally required by consumers
 
-### Task 7.4 — Test consumer-facing API stability
-- instantiate the public API from `:library`
-- confirm consumer setup is small and clear
-- confirm no Apollo/Retrofit types leak into external usage
+### Task 7.4 — Test publication/runtime behavior
+- publish local artifacts
+- verify transitive dependency resolution
+- verify that consuming apps do not hit runtime classpath failures from removed internal module links
 
-### Task 7.5 — Update repository documentation
-Update `README.md` and/or docs to explain:
-- new module layout
+### Task 7.5 — Update repository documentation continuously
+Update `README.md` and related docs to explain:
+- the two-module GraphQL layout
 - high-level architecture
-- how GraphQL support works
 - how schema/codegen automation works
-- what consumer projects need to change
-- how the current Retrofit-based module is intentionally structured to allow a later move to Ktor
+- what Android/iOS consumers need to depend on
+- the long-term direction of hiding `:core:graphql` behind `:core:api`
 
 ---
 
 ## Recommended execution order
 
-1. Register modules in `settings.gradle.kts`
-2. Update `gradle/libs.versions.toml`
-3. Implement `core/networking/build.gradle.kts`
-4. Add basic networking abstractions and Android transport shell
-5. Ensure the networking contracts stay transport-agnostic so Retrofit can later be replaced with Ktor
-6. Define public config/repository shape in `:library`
-7. Implement `core/graphql/build.gradle.kts`
-8. Add Apollo service config and schema location
-9. Add schema download task and wire it into build/codegen
-10. Add `.graphql` operations
-11. Generate Apollo models
-12. Add GraphQL wrapper + mapping layer
-13. Connect `:library` repository implementations to GraphQL
-14. Update publication config for transitive modules
-15. Build/test all modules and edge cases
-16. Update docs/README for consumers
-17. When needed later, introduce a Ktor implementation behind the same contracts and validate parity before removing Retrofit
+1. Keep `:core:graphql` and `:core:api` module registration/build configuration aligned
+2. Define or refine the public configuration/repository shape in `:core:api`
+3. Keep `:core:graphql` configuration, endpoint ownership, and Apollo setup self-contained
+4. Maintain schema download and Apollo codegen wiring in `:core:graphql`
+5. Keep GraphQL wrapper/mapping logic inside `:core:graphql`
+6. Keep consumer-facing bootstrapping and repositories in `:core:api`
+7. Validate publication metadata and transitive runtime behavior
+8. Build/test all affected modules and edge cases
+9. Update docs/README for consumers
+10. Only reintroduce a separate lower-level transport module later if there is a proven need
 
 ---
 
 ## What to do next
 
 ### Immediate next step
-Implement **Phase 1** only:
-- update `settings.gradle.kts`
-- update `gradle/libs.versions.toml`
-- implement `core/networking/build.gradle.kts`
+Focus on these continuously:
+- keep `:core:graphql` implementation self-contained
+- keep `:core:api` as the intended consumer entrypoint
+- continue moving any exposed GraphQL implementation details behind API-owned contracts where it is worth the maintenance cost
 
 ### After that
-Move to **Phase 3 and Phase 4** together for `:core:graphql`, because schema download and Apollo codegen are best designed as part of the initial GraphQL module setup rather than bolted on later.
-
-
+The next meaningful follow-up is to further reduce direct consumer need for `:core:graphql` by:
+- exposing only stable repository/config surfaces from `:core:api`
+- introducing API-owned models for the subset of data intentionally shared with consumers
+- documenting `:core:graphql` as an implementation detail over time
