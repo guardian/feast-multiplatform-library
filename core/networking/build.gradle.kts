@@ -1,8 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-import java.io.FileInputStream
-import java.security.MessageDigest
 
 object NetworkingConfig {
 	const val SPM_FRAMEWORK_NAME = "FeastMultiplatformNetworking"
@@ -12,7 +10,6 @@ object NetworkingConfig {
 plugins {
 	alias(libs.plugins.kotlinMultiplatform)
 	alias(libs.plugins.androidLibrary)
-	alias(libs.plugins.metalava)
 	alias(libs.plugins.kotlinSerialization)
 }
 

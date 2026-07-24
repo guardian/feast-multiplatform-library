@@ -234,6 +234,18 @@ tasks.matching { task ->
         dependsOn(downloadGraphQlSchema)
     }
 
+listOf(
+    "metalavaCheckCompatibilityDebug",
+    "metalavaCheckCompatibilityRelease",
+).forEach { metalavaTaskName ->
+    tasks.matching { it.name == metalavaTaskName }.configureEach {
+        dependsOn(
+            "kspDebugKotlinAndroid",
+            "kspReleaseKotlinAndroid",
+        )
+    }
+}
+
 publishing {
     publications.withType<MavenPublication>().configureEach {
         groupId = GraphQLConfig.GROUP_ID

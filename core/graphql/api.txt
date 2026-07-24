@@ -1,0 +1,933 @@
+// Signature format: 4.0
+package com.gu.recipe.core.graphql {
+
+  @dagger.internal.DaggerGenerated @dagger.internal.QualifierMetadata("javax.inject.Named") @dagger.internal.ScopeMetadata @javax.annotation.processing.Generated(value="dagger.internal.codegen.ComponentProcessor", comments="https://dagger.dev") public final class GraphQlAndroidHiltBridgeModule_ProvideGraphQlIoDispatcherFactory implements dagger.internal.Factory<kotlinx.coroutines.CoroutineDispatcher!> {
+    ctor public GraphQlAndroidHiltBridgeModule_ProvideGraphQlIoDispatcherFactory();
+    method public static com.gu.recipe.core.graphql.GraphQlAndroidHiltBridgeModule_ProvideGraphQlIoDispatcherFactory! create();
+    method public kotlinx.coroutines.CoroutineDispatcher! get();
+    method public static kotlinx.coroutines.CoroutineDispatcher! provideGraphQlIoDispatcher();
+  }
+
+  public final class GraphQlAndroidModuleKt {
+    method public static org.koin.core.module.Module androidGraphQlModule(android.content.Context context, com.gu.recipe.core.graphql.config.GraphQlConfig config);
+    method public static org.koin.core.module.Module androidGraphQlModule(com.gu.recipe.core.graphql.config.GraphQlConfig config, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
+  }
+
+  public sealed exhaustive interface GraphQlError {
+  }
+
+  public static final class GraphQlError.GraphQl implements com.gu.recipe.core.graphql.GraphQlError {
+    ctor public GraphQlError.GraphQl(java.util.List<java.lang.String> messages);
+    method public java.util.List<java.lang.String> component1();
+    method public com.gu.recipe.core.graphql.GraphQlError.GraphQl copy(optional java.util.List<java.lang.String> messages);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getMessages();
+    property public java.util.List<java.lang.String> messages;
+  }
+
+  public static final class GraphQlError.MissingData implements com.gu.recipe.core.graphql.GraphQlError {
+    field public static final com.gu.recipe.core.graphql.GraphQlError.MissingData INSTANCE;
+  }
+
+  public static final class GraphQlError.Transport implements com.gu.recipe.core.graphql.GraphQlError {
+    ctor public GraphQlError.Transport(Throwable cause);
+    method public Throwable component1();
+    method public com.gu.recipe.core.graphql.GraphQlError.Transport copy(optional Throwable cause);
+    method @InaccessibleFromKotlin public Throwable getCause();
+    property public Throwable cause;
+  }
+
+  public static final class GraphQlError.Unexpected implements com.gu.recipe.core.graphql.GraphQlError {
+    ctor public GraphQlError.Unexpected(Throwable cause);
+    method public Throwable component1();
+    method public com.gu.recipe.core.graphql.GraphQlError.Unexpected copy(optional Throwable cause);
+    method @InaccessibleFromKotlin public Throwable getCause();
+    property public Throwable cause;
+  }
+
+  public final class GraphQlIosModuleKt {
+    method public static org.koin.core.module.Module iosGraphQlModule(com.gu.recipe.core.graphql.config.GraphQlConfig config, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
+  }
+
+  public sealed exhaustive interface GraphQlResult<T> {
+  }
+
+  public static final class GraphQlResult.Failure implements com.gu.recipe.core.graphql.GraphQlResult {
+    ctor public GraphQlResult.Failure(com.gu.recipe.core.graphql.GraphQlError error);
+    method public com.gu.recipe.core.graphql.GraphQlError component1();
+    method public com.gu.recipe.core.graphql.GraphQlResult.Failure copy(optional com.gu.recipe.core.graphql.GraphQlError error);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.GraphQlError getError();
+    property public com.gu.recipe.core.graphql.GraphQlError error;
+  }
+
+  public static final class GraphQlResult.Success<T> implements com.gu.recipe.core.graphql.GraphQlResult<T> {
+    ctor public GraphQlResult.Success(T value);
+    method public T component1();
+    method public com.gu.recipe.core.graphql.GraphQlResult.Success<T> copy(optional T value);
+    method @InaccessibleFromKotlin public T getValue();
+    property public T value;
+  }
+
+  public final class GraphQlResultKt {
+    method public static inline <T> T getOrElse(com.gu.recipe.core.graphql.GraphQlResult<? extends T>, kotlin.jvm.functions.Function1<? super com.gu.recipe.core.graphql.GraphQlError,? extends T> defaultValue);
+    method public static inline <T, R> com.gu.recipe.core.graphql.GraphQlResult<R> map(com.gu.recipe.core.graphql.GraphQlResult<? extends T>, kotlin.jvm.functions.Function1<? super T,? extends R> transform);
+  }
+
+  @dagger.hilt.EntryPoint @dagger.hilt.InstallIn(SingletonComponent.class) @dagger.hilt.codegen.OriginatingElement(topLevelClass=GraphQlAndroidDispatcherEntryPoint.class) @javax.annotation.processing.Generated("dagger.hilt.processor.internal.aggregateddeps.PkgPrivateEntryPointGenerator") public interface HiltWrapper_GraphQlAndroidDispatcherEntryPoint {
+  }
+
+  @dagger.Module(includes=GraphQlAndroidHiltBridgeModule.class) @dagger.hilt.InstallIn(SingletonComponent.class) @dagger.hilt.codegen.OriginatingElement(topLevelClass=GraphQlAndroidHiltBridgeModule.class) @javax.annotation.processing.Generated("dagger.hilt.processor.internal.aggregateddeps.PkgPrivateModuleGenerator") public final class HiltWrapper_GraphQlAndroidHiltBridgeModule {
+    ctor public HiltWrapper_GraphQlAndroidHiltBridgeModule();
+  }
+
+}
+
+package com.gu.recipe.core.graphql.cache {
+
+  public final class PlatformNetworkModuleKt {
+    method @InaccessibleFromKotlin public static org.koin.core.module.Module getPlatformNetworkModule();
+    property public static org.koin.core.module.Module platformNetworkModule;
+    property public static org.koin.core.module.Module platformNetworkModule;
+  }
+
+}
+
+package com.gu.recipe.core.graphql.client {
+
+  public final class ApolloClientFactory {
+    ctor public ApolloClientFactory(kotlinx.coroutines.CoroutineDispatcher dispatcher);
+    method public com.apollographql.apollo.ApolloClient create(com.gu.recipe.core.graphql.config.GraphQlConfig config);
+  }
+
+  public final class FeastGraphQlClient {
+    ctor public FeastGraphQlClient(com.apollographql.apollo.ApolloClient apolloClient);
+    method public suspend <D extends com.apollographql.apollo.api.Mutation.Data> Object? mutate(com.apollographql.apollo.api.Mutation<D> mutation, kotlin.coroutines.Continuation<? super com.gu.recipe.core.graphql.GraphQlResult<? extends D>>);
+    method public suspend <D extends com.apollographql.apollo.api.Query.Data> Object? query(com.apollographql.apollo.api.Query<D> query, kotlin.coroutines.Continuation<? super com.gu.recipe.core.graphql.GraphQlResult<? extends D>>);
+  }
+
+}
+
+package com.gu.recipe.core.graphql.config {
+
+  public final class GraphQlConfig {
+    ctor public GraphQlConfig(com.gu.recipe.core.networking.NetworkConfig networkConfig, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
+    method public com.gu.recipe.core.networking.NetworkConfig component1();
+    method public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider component2();
+    method public com.gu.recipe.core.graphql.config.GraphQlConfig copy(optional com.gu.recipe.core.networking.NetworkConfig networkConfig, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.networking.NetworkConfig getNetworkConfig();
+    method @InaccessibleFromKotlin public String getServerUrl();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider getServerUrlProvider();
+    property public com.gu.recipe.core.networking.NetworkConfig networkConfig;
+    property public String serverUrl;
+    property public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider;
+  }
+
+}
+
+package com.gu.recipe.core.graphql.di {
+
+  public final class GraphQlModuleKt {
+    method public static org.koin.core.module.Module graphQlModule(com.gu.recipe.core.graphql.config.GraphQlConfig config, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
+  }
+
+}
+
+package com.gu.recipe.core.graphql.generated {
+
+  public final class GetFrontsByRegionQuery implements com.apollographql.apollo.api.Query<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data> {
+    ctor public GetFrontsByRegionQuery(com.gu.recipe.core.graphql.generated.type.Regions region, com.gu.recipe.core.graphql.generated.type.Editions edition, int recipesLimit2);
+    method public com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data> adapter();
+    method public com.gu.recipe.core.graphql.generated.type.Regions component1();
+    method public com.gu.recipe.core.graphql.generated.type.Editions component2();
+    method public int component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery copy(optional com.gu.recipe.core.graphql.generated.type.Regions region, optional com.gu.recipe.core.graphql.generated.type.Editions edition, optional int recipesLimit2);
+    method public String document();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.type.Editions getEdition();
+    method @InaccessibleFromKotlin public int getRecipesLimit2();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.type.Regions getRegion();
+    method public String id();
+    method public String name();
+    method public com.apollographql.apollo.api.CompiledField rootField();
+    method public void serializeVariables(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, boolean withDefaultValues);
+    property public com.gu.recipe.core.graphql.generated.type.Editions edition;
+    property public int recipesLimit2;
+    property public com.gu.recipe.core.graphql.generated.type.Regions region;
+    field public static final com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Companion Companion;
+    field public static final String OPERATION_ID = "69f151ea74059af38aae4b2b42a76f8496b7c745191734a4fd4bc6d9bc59e0d6";
+    field public static final String OPERATION_NAME = "GetFrontsByRegion";
+  }
+
+  public static final class GetFrontsByRegionQuery.Chef {
+    ctor public GetFrontsByRegionQuery.Chef(String id, String? backgroundHex, String? image, String? bio, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta? meta);
+    method public String component1();
+    method public String? component2();
+    method public String? component3();
+    method public String? component4();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta? component5();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef copy(optional String id, optional String? backgroundHex, optional String? image, optional String? bio, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta? meta);
+    method @InaccessibleFromKotlin public String? getBackgroundHex();
+    method @InaccessibleFromKotlin public String? getBio();
+    method @InaccessibleFromKotlin public String getId();
+    method @InaccessibleFromKotlin public String? getImage();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta? getMeta();
+    property public String? backgroundHex;
+    property public String? bio;
+    property public String id;
+    property public String? image;
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta? meta;
+  }
+
+  public static final class GetFrontsByRegionQuery.Collection {
+    ctor public GetFrontsByRegionQuery.Collection(String title, java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2> recipes);
+    method public String component1();
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2> component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection copy(optional String title, optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2> recipes);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2> getRecipes();
+    method @InaccessibleFromKotlin public String getTitle();
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2> recipes;
+    property public String title;
+  }
+
+  public static final class GetFrontsByRegionQuery.Companion implements com.apollographql.apollo.api.ExecutableDefinition<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data> {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data> getADAPTER();
+    method @InaccessibleFromKotlin public String getOPERATION_DOCUMENT();
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CompiledField getROOT_FIELD();
+    property public com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data> ADAPTER;
+    property public String OPERATION_DOCUMENT;
+    property public static String OPERATION_ID;
+    property public static String OPERATION_NAME;
+    property public com.apollographql.apollo.api.CompiledField ROOT_FIELD;
+  }
+
+  public static final class GetFrontsByRegionQuery.Contributor {
+    ctor public GetFrontsByRegionQuery.Contributor(String webTitle);
+    method public String component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor copy(optional String webTitle);
+    method @InaccessibleFromKotlin public String getWebTitle();
+    property public String webTitle;
+  }
+
+  @com.apollographql.apollo.annotations.ApolloAdaptableWith(adapter=GetFrontsByRegionQuery_ResponseAdapter.Data::class) public static final class GetFrontsByRegionQuery.Data implements com.apollographql.apollo.api.Query.Data {
+    ctor public GetFrontsByRegionQuery.Data(java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front> Front);
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front> component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data copy(optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front> Front);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front> getFront();
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front> Front;
+  }
+
+  public static final class GetFrontsByRegionQuery.DurationInMins {
+    ctor public GetFrontsByRegionQuery.DurationInMins(Double? min, Double? max);
+    method public Double? component1();
+    method public Double? component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins copy(optional Double? min, optional Double? max);
+    method @InaccessibleFromKotlin public Double? getMax();
+    method @InaccessibleFromKotlin public Double? getMin();
+    property public Double? max;
+    property public Double? min;
+  }
+
+  public static final class GetFrontsByRegionQuery.DurationInMins1 {
+    ctor public GetFrontsByRegionQuery.DurationInMins1(Double? min, Double? max);
+    method public Double? component1();
+    method public Double? component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 copy(optional Double? min, optional Double? max);
+    method @InaccessibleFromKotlin public Double? getMax();
+    method @InaccessibleFromKotlin public Double? getMin();
+    property public Double? max;
+    property public Double? min;
+  }
+
+  public static final class GetFrontsByRegionQuery.Front {
+    ctor public GetFrontsByRegionQuery.Front(String title, java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item> items);
+    method public String component1();
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item> component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front copy(optional String title, optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item> items);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item> getItems();
+    method @InaccessibleFromKotlin public String getTitle();
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item> items;
+    property public String title;
+  }
+
+  public static final class GetFrontsByRegionQuery.Item {
+    ctor public GetFrontsByRegionQuery.Item(String __typename, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference? onRecipeReference, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef? onChef, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection? onSubCollection);
+    method public String component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference? component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef? component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection? component4();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item copy(optional String __typename, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference? onRecipeReference, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef? onChef, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection? onSubCollection);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef? getOnChef();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference? getOnRecipeReference();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection? getOnSubCollection();
+    method @InaccessibleFromKotlin public String get__typename();
+    property public String __typename;
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef? onChef;
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference? onRecipeReference;
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection? onSubCollection;
+  }
+
+  public static final class GetFrontsByRegionQuery.Meta {
+    ctor public GetFrontsByRegionQuery.Meta(String? bylineImageUrl, String? bio, java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1> recipes);
+    method public String? component1();
+    method public String? component2();
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1> component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta copy(optional String? bylineImageUrl, optional String? bio, optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1> recipes);
+    method @InaccessibleFromKotlin public String? getBio();
+    method @InaccessibleFromKotlin public String? getBylineImageUrl();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1> getRecipes();
+    property public String? bio;
+    property public String? bylineImageUrl;
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1> recipes;
+  }
+
+  public static final class GetFrontsByRegionQuery.OnChef {
+    ctor public GetFrontsByRegionQuery.OnChef(com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef chef);
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef copy(optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef chef);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef getChef();
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef chef;
+  }
+
+  public static final class GetFrontsByRegionQuery.OnRecipeReference {
+    ctor public GetFrontsByRegionQuery.OnRecipeReference(com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe? recipe);
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe? component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference copy(optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe? recipe);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe? getRecipe();
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe? recipe;
+  }
+
+  public static final class GetFrontsByRegionQuery.OnSubCollection {
+    ctor public GetFrontsByRegionQuery.OnSubCollection(com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection collection);
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection copy(optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection collection);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection getCollection();
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection collection;
+  }
+
+  public static final class GetFrontsByRegionQuery.PreviewImage {
+    ctor public GetFrontsByRegionQuery.PreviewImage(String? templateUrl, String? caption, Boolean? displayCredit);
+    method public String? component1();
+    method public String? component2();
+    method public Boolean? component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage copy(optional String? templateUrl, optional String? caption, optional Boolean? displayCredit);
+    method @InaccessibleFromKotlin public String? getCaption();
+    method @InaccessibleFromKotlin public Boolean? getDisplayCredit();
+    method @InaccessibleFromKotlin public String? getTemplateUrl();
+    property public String? caption;
+    property public Boolean? displayCredit;
+    property public String? templateUrl;
+  }
+
+  public static final class GetFrontsByRegionQuery.PreviewImage1 {
+    ctor public GetFrontsByRegionQuery.PreviewImage1(String? templateUrl, String? caption, Boolean? displayCredit);
+    method public String? component1();
+    method public String? component2();
+    method public Boolean? component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1 copy(optional String? templateUrl, optional String? caption, optional Boolean? displayCredit);
+    method @InaccessibleFromKotlin public String? getCaption();
+    method @InaccessibleFromKotlin public Boolean? getDisplayCredit();
+    method @InaccessibleFromKotlin public String? getTemplateUrl();
+    property public String? caption;
+    property public Boolean? displayCredit;
+    property public String? templateUrl;
+  }
+
+  public static final class GetFrontsByRegionQuery.PreviewImage2 {
+    ctor public GetFrontsByRegionQuery.PreviewImage2(String? templateUrl, String? caption, Boolean? displayCredit);
+    method public String? component1();
+    method public String? component2();
+    method public Boolean? component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2 copy(optional String? templateUrl, optional String? caption, optional Boolean? displayCredit);
+    method @InaccessibleFromKotlin public String? getCaption();
+    method @InaccessibleFromKotlin public Boolean? getDisplayCredit();
+    method @InaccessibleFromKotlin public String? getTemplateUrl();
+    property public String? caption;
+    property public Boolean? displayCredit;
+    property public String? templateUrl;
+  }
+
+  public static final class GetFrontsByRegionQuery.Recipe {
+    ctor public GetFrontsByRegionQuery.Recipe(String id, String? title, java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing> timings, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage? previewImage, java.util.List<java.lang.String> diets, java.util.List<java.lang.String> mealTypes);
+    method public String component1();
+    method public String? component2();
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing> component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage? component4();
+    method public java.util.List<java.lang.String> component5();
+    method public java.util.List<java.lang.String> component6();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe copy(optional String id, optional String? title, optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing> timings, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage? previewImage, optional java.util.List<java.lang.String> diets, optional java.util.List<java.lang.String> mealTypes);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getDiets();
+    method @InaccessibleFromKotlin public String getId();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getMealTypes();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage? getPreviewImage();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing> getTimings();
+    method @InaccessibleFromKotlin public String? getTitle();
+    property public java.util.List<java.lang.String> diets;
+    property public String id;
+    property public java.util.List<java.lang.String> mealTypes;
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage? previewImage;
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing> timings;
+    property public String? title;
+  }
+
+  public static final class GetFrontsByRegionQuery.Recipe1 {
+    ctor public GetFrontsByRegionQuery.Recipe1(String? title, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1? previewImage, Object? publishedDate);
+    method public String? component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1? component2();
+    method public Object? component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1 copy(optional String? title, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1? previewImage, optional Object? publishedDate);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1? getPreviewImage();
+    method @InaccessibleFromKotlin public Object? getPublishedDate();
+    method @InaccessibleFromKotlin public String? getTitle();
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1? previewImage;
+    property public Object? publishedDate;
+    property public String? title;
+  }
+
+  public static final class GetFrontsByRegionQuery.Recipe2 {
+    ctor public GetFrontsByRegionQuery.Recipe2(String? title, java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor> contributors, java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1> timings, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2? previewImage);
+    method public String? component1();
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor> component2();
+    method public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1> component3();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2? component4();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2 copy(optional String? title, optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor> contributors, optional java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1> timings, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2? previewImage);
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor> getContributors();
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2? getPreviewImage();
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1> getTimings();
+    method @InaccessibleFromKotlin public String? getTitle();
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor> contributors;
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2? previewImage;
+    property public java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1> timings;
+    property public String? title;
+  }
+
+  public static final class GetFrontsByRegionQuery.Timing {
+    ctor public GetFrontsByRegionQuery.Timing(String? qualifier, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins durationInMins);
+    method public String? component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing copy(optional String? qualifier, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins durationInMins);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins getDurationInMins();
+    method @InaccessibleFromKotlin public String? getQualifier();
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins durationInMins;
+    property public String? qualifier;
+  }
+
+  public static final class GetFrontsByRegionQuery.Timing1 {
+    ctor public GetFrontsByRegionQuery.Timing1(String? qualifier, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 durationInMins);
+    method public String? component1();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 component2();
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1 copy(optional String? qualifier, optional com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 durationInMins);
+    method @InaccessibleFromKotlin public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 getDurationInMins();
+    method @InaccessibleFromKotlin public String? getQualifier();
+    property public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 durationInMins;
+    property public String? qualifier;
+  }
+
+}
+
+package com.gu.recipe.core.graphql.generated.adapter {
+
+  public final class GetFrontsByRegionQuery_ResponseAdapter {
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Chef implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Chef value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Chef INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Collection implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Collection value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Collection INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Contributor implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Contributor value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Contributor INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Data implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Data value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Data INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.DurationInMins implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.DurationInMins INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.DurationInMins1 implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.DurationInMins1 value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.DurationInMins1 INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Front implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Front INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Item implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Item value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Item INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Meta implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Meta value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Meta INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.OnChef implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnChef value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.OnChef INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.OnRecipeReference implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnRecipeReference value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.OnRecipeReference INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.OnSubCollection implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.OnSubCollection value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.OnSubCollection INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.PreviewImage implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.PreviewImage INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.PreviewImage1 implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1 fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage1 value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.PreviewImage1 INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.PreviewImage2 implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2 fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.PreviewImage2 value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.PreviewImage2 INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Recipe implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Recipe INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Recipe1 implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1 fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe1 value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Recipe1 INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Recipe2 implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2 fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Recipe2 value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Recipe2 INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Timing implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Timing INSTANCE;
+  }
+
+  public static final class GetFrontsByRegionQuery_ResponseAdapter.Timing1 implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1> {
+    method public com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1 fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String> getRESPONSE_NAMES();
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Timing1 value);
+    property public java.util.List<java.lang.String> RESPONSE_NAMES;
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_ResponseAdapter.Timing1 INSTANCE;
+  }
+
+  public final class GetFrontsByRegionQuery_VariablesAdapter {
+    method public void serializeVariables(com.apollographql.apollo.api.json.JsonWriter writer, com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery value, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, boolean withDefaultValues);
+    field public static final com.gu.recipe.core.graphql.generated.adapter.GetFrontsByRegionQuery_VariablesAdapter INSTANCE;
+  }
+
+}
+
+package com.gu.recipe.core.graphql.generated.selections {
+
+  public final class GetFrontsByRegionQuerySelections {
+    method @InaccessibleFromKotlin public java.util.List<com.apollographql.apollo.api.CompiledSelection> get__root();
+    property public java.util.List<com.apollographql.apollo.api.CompiledSelection> __root;
+    field public static final com.gu.recipe.core.graphql.generated.selections.GetFrontsByRegionQuerySelections INSTANCE;
+  }
+
+}
+
+package com.gu.recipe.core.graphql.generated.type {
+
+  public final class Chef {
+    ctor public Chef();
+    field public static final com.gu.recipe.core.graphql.generated.type.Chef.Companion Companion;
+  }
+
+  public static final class Chef.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface Chef.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class ChefBio {
+    ctor public ChefBio();
+    field public static final com.gu.recipe.core.graphql.generated.type.ChefBio.Companion Companion;
+  }
+
+  public static final class ChefBio.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CompiledArgumentDefinition get__recipes_limit();
+    property public com.apollographql.apollo.api.CompiledArgumentDefinition __recipes_limit;
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface ChefBio.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class ChefData {
+    ctor public ChefData();
+    field public static final com.gu.recipe.core.graphql.generated.type.ChefData.Companion Companion;
+  }
+
+  public static final class ChefData.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface ChefData.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public enum Editions {
+    method @InaccessibleFromKotlin public String getRawValue();
+    property public String rawValue;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Editions UNKNOWN__;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Editions all;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Editions meatfree;
+    field public static final com.gu.recipe.core.graphql.generated.type.Editions.Companion Companion;
+  }
+
+  public static final class Editions.Companion {
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.type.Editions> getKnownEntries();
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.EnumType getType();
+    method @Deprecated public com.gu.recipe.core.graphql.generated.type.Editions[] knownValues();
+    method public com.gu.recipe.core.graphql.generated.type.Editions safeValueOf(String rawValue);
+    property public java.util.List<com.gu.recipe.core.graphql.generated.type.Editions> knownEntries;
+    property public com.apollographql.apollo.api.EnumType type;
+  }
+
+  public final class FeastAppContainer {
+    ctor public FeastAppContainer();
+    field public static final com.gu.recipe.core.graphql.generated.type.FeastAppContainer.Companion Companion;
+  }
+
+  public static final class FeastAppContainer.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface FeastAppContainer.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class GraphQLBoolean {
+    ctor public GraphQLBoolean();
+    field public static final com.gu.recipe.core.graphql.generated.type.GraphQLBoolean.Companion Companion;
+  }
+
+  public static final class GraphQLBoolean.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CustomScalarType getType();
+    property public com.apollographql.apollo.api.CustomScalarType type;
+  }
+
+  public final class GraphQLFloat {
+    ctor public GraphQLFloat();
+    field public static final com.gu.recipe.core.graphql.generated.type.GraphQLFloat.Companion Companion;
+  }
+
+  public static final class GraphQLFloat.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CustomScalarType getType();
+    property public com.apollographql.apollo.api.CustomScalarType type;
+  }
+
+  public final class GraphQLInt {
+    ctor public GraphQLInt();
+    field public static final com.gu.recipe.core.graphql.generated.type.GraphQLInt.Companion Companion;
+  }
+
+  public static final class GraphQLInt.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CustomScalarType getType();
+    property public com.apollographql.apollo.api.CustomScalarType type;
+  }
+
+  public final class GraphQLString {
+    ctor public GraphQLString();
+    field public static final com.gu.recipe.core.graphql.generated.type.GraphQLString.Companion Companion;
+  }
+
+  public static final class GraphQLString.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CustomScalarType getType();
+    property public com.apollographql.apollo.api.CustomScalarType type;
+  }
+
+  public final class Image {
+    ctor public Image();
+    field public static final com.gu.recipe.core.graphql.generated.type.Image.Companion Companion;
+  }
+
+  public static final class Image.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface Image.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class Item {
+    ctor public Item();
+    field public static final com.gu.recipe.core.graphql.generated.type.Item.Companion Companion;
+  }
+
+  public static final class Item.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.UnionType getType();
+    property public com.apollographql.apollo.api.UnionType type;
+  }
+
+  public static interface Item.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class LocalDateTime {
+    ctor public LocalDateTime();
+    field public static final com.gu.recipe.core.graphql.generated.type.LocalDateTime.Companion Companion;
+  }
+
+  public static final class LocalDateTime.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CustomScalarType getType();
+    property public com.apollographql.apollo.api.CustomScalarType type;
+  }
+
+  public final class Minmax {
+    ctor public Minmax();
+    field public static final com.gu.recipe.core.graphql.generated.type.Minmax.Companion Companion;
+  }
+
+  public static final class Minmax.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface Minmax.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class Query {
+    ctor public Query();
+    field public static final com.gu.recipe.core.graphql.generated.type.Query.Companion Companion;
+  }
+
+  public static final class Query.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CompiledArgumentDefinition get__curation_edition();
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.CompiledArgumentDefinition get__curation_region();
+    property public com.apollographql.apollo.api.CompiledArgumentDefinition __curation_edition;
+    property public com.apollographql.apollo.api.CompiledArgumentDefinition __curation_region;
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface Query.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class Recipe {
+    ctor public Recipe();
+    field public static final com.gu.recipe.core.graphql.generated.type.Recipe.Companion Companion;
+  }
+
+  public static final class Recipe.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface Recipe.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class RecipeReference {
+    ctor public RecipeReference();
+    field public static final com.gu.recipe.core.graphql.generated.type.RecipeReference.Companion Companion;
+  }
+
+  public static final class RecipeReference.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface RecipeReference.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public enum Regions {
+    method @InaccessibleFromKotlin public String getRawValue();
+    property public String rawValue;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Regions UNKNOWN__;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Regions northern;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Regions southern;
+    enum_constant public static final com.gu.recipe.core.graphql.generated.type.Regions us;
+    field public static final com.gu.recipe.core.graphql.generated.type.Regions.Companion Companion;
+  }
+
+  public static final class Regions.Companion {
+    method @InaccessibleFromKotlin public java.util.List<com.gu.recipe.core.graphql.generated.type.Regions> getKnownEntries();
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.EnumType getType();
+    method @Deprecated public com.gu.recipe.core.graphql.generated.type.Regions[] knownValues();
+    method public com.gu.recipe.core.graphql.generated.type.Regions safeValueOf(String rawValue);
+    property public java.util.List<com.gu.recipe.core.graphql.generated.type.Regions> knownEntries;
+    property public com.apollographql.apollo.api.EnumType type;
+  }
+
+  public final class SubCollection {
+    ctor public SubCollection();
+    field public static final com.gu.recipe.core.graphql.generated.type.SubCollection.Companion Companion;
+  }
+
+  public static final class SubCollection.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface SubCollection.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class SubCollectionData {
+    ctor public SubCollectionData();
+    field public static final com.gu.recipe.core.graphql.generated.type.SubCollectionData.Companion Companion;
+  }
+
+  public static final class SubCollectionData.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface SubCollectionData.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+  public final class Timing {
+    ctor public Timing();
+    field public static final com.gu.recipe.core.graphql.generated.type.Timing.Companion Companion;
+  }
+
+  public static final class Timing.Companion {
+    method @InaccessibleFromKotlin public com.apollographql.apollo.api.ObjectType getType();
+    property public com.apollographql.apollo.api.ObjectType type;
+  }
+
+  public static interface Timing.Data extends com.apollographql.apollo.api.Fragment.Data {
+  }
+
+}
+
+package com.gu.recipe.core.graphql.generated.type.adapter {
+
+  public final class Editions_ResponseAdapter implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.type.Editions> {
+    method public com.gu.recipe.core.graphql.generated.type.Editions fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.type.Editions value);
+    field public static final com.gu.recipe.core.graphql.generated.type.adapter.Editions_ResponseAdapter INSTANCE;
+  }
+
+  public final class Regions_ResponseAdapter implements com.apollographql.apollo.api.Adapter<com.gu.recipe.core.graphql.generated.type.Regions> {
+    method public com.gu.recipe.core.graphql.generated.type.Regions fromJson(com.apollographql.apollo.api.json.JsonReader reader, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters);
+    method public void toJson(com.apollographql.apollo.api.json.JsonWriter writer, com.apollographql.apollo.api.CustomScalarAdapters customScalarAdapters, com.gu.recipe.core.graphql.generated.type.Regions value);
+    field public static final com.gu.recipe.core.graphql.generated.type.adapter.Regions_ResponseAdapter INSTANCE;
+  }
+
+}
+
+package com.gu.recipe.core.graphql.provider {
+
+  public final class DefaultFeastGraphQlServerUrlProvider implements com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider {
+    method public String serverUrl(com.gu.recipe.core.networking.NetworkConfig networkConfig);
+    field public static final com.gu.recipe.core.graphql.provider.DefaultFeastGraphQlServerUrlProvider INSTANCE;
+  }
+
+  public final class FixedGraphQlServerUrlProvider implements com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider {
+    ctor public FixedGraphQlServerUrlProvider(String value);
+    method public com.gu.recipe.core.graphql.provider.FixedGraphQlServerUrlProvider copy(optional String value);
+    method public String serverUrl(com.gu.recipe.core.networking.NetworkConfig networkConfig);
+  }
+
+  public fun interface GraphQlServerUrlProvider {
+    method public String serverUrl(com.gu.recipe.core.networking.NetworkConfig networkConfig);
+  }
+
+}
+
+package com.gu.recipe.core.graphql.repository {
+
+  public final class ApolloRecipeGraphQlDataSource implements com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource {
+    ctor public ApolloRecipeGraphQlDataSource(com.gu.recipe.core.graphql.client.FeastGraphQlClient feastGraphQlClient);
+    method public suspend Object? getFrontByRegion(com.gu.recipe.core.graphql.generated.type.Regions region, com.gu.recipe.core.graphql.generated.type.Editions edition, int recipesLimit, kotlin.coroutines.Continuation<? super com.gu.recipe.core.graphql.GraphQlResult<? extends java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front>>>);
+  }
+
+  public interface RecipeGraphQlDataSource {
+    method public suspend Object? getFrontByRegion(com.gu.recipe.core.graphql.generated.type.Regions region, com.gu.recipe.core.graphql.generated.type.Editions edition, int recipesLimit, kotlin.coroutines.Continuation<? super com.gu.recipe.core.graphql.GraphQlResult<? extends java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front>>>);
+  }
+
+}
+
+package hilt_aggregated_deps {
+
+  @dagger.hilt.processor.internal.aggregateddeps.AggregatedDeps(components="dagger.hilt.components.SingletonComponent", entryPoints="com.gu.recipe.core.graphql.HiltWrapper_GraphQlAndroidDispatcherEntryPoint") @javax.annotation.processing.Generated("dagger.hilt.processor.internal.aggregateddeps.AggregatedDepsGenerator") public class _com_gu_recipe_core_graphql_HiltWrapper_GraphQlAndroidDispatcherEntryPoint {
+    ctor public _com_gu_recipe_core_graphql_HiltWrapper_GraphQlAndroidDispatcherEntryPoint();
+  }
+
+  @dagger.hilt.processor.internal.aggregateddeps.AggregatedDeps(components="dagger.hilt.components.SingletonComponent", modules="com.gu.recipe.core.graphql.HiltWrapper_GraphQlAndroidHiltBridgeModule") @javax.annotation.processing.Generated("dagger.hilt.processor.internal.aggregateddeps.AggregatedDepsGenerator") public class _com_gu_recipe_core_graphql_HiltWrapper_GraphQlAndroidHiltBridgeModule {
+    ctor public _com_gu_recipe_core_graphql_HiltWrapper_GraphQlAndroidHiltBridgeModule();
+  }
+
+}
+
