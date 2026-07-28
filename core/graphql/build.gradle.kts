@@ -135,7 +135,7 @@ kotlin {
             // Specify CFBundleIdentifier to uniquely identify the framework
             binaryOption("bundleId", GraphQLConfig.BUNDLE_ID)
             xcf.add(this)
-            isStatic = true
+            isStatic = false
         }
     }
 

@@ -49,7 +49,7 @@ kotlin {
             // Specify CFBundleIdentifier to uniquely identify the framework
             binaryOption("bundleId", APIConfig.BUNDLE_ID)
             xcf.add(this)
-            isStatic = true
+            isStatic = false
         }
     }
 
