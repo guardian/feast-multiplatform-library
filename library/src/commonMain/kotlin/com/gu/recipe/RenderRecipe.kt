@@ -271,7 +271,9 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                             ingredient.copy(
                                 text = applyTerminology(ingredient.text),
                                 ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
-                                template = applyTerminology(ingredient.template)
+                                template = applyTerminology(ingredient.template),
+                                ukGuidance = getUkGuidanceForUkTerm(ingredient.text), // Pass the ukGuidance to the ingredient
+                                usGuidance = null
                             )
                         },
                         recipeSection = applyTerminology(ingredientSection.recipeSection)
@@ -293,13 +295,14 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         )
     }
 
+
     /**
      * Applies terminology conversion to a recipe title for US combined measurements when enabled.
      * Returns the original title when terminology conversion is disabled or not applicable.
      */
     fun applyTerminologyToRecipeTitle(title: String, targetMeasuringSystem: MeasuringSystem): String {
         return if (convertTerminologies == true && targetMeasuringSystem == MeasuringSystem.USCombined) {
-            applyTerminology(title) ?: title
+            terminologyTable?.convertTerm(title)?.replacedString ?: title
         } else {
             title
         }
@@ -310,8 +313,31 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 
     internal fun applyTerminology(text: String?): String? {
-        return terminologyTable?.convertTerm(text) ?: text
+        println("applyTerminology: Input text='$text'")
+        val result = terminologyTable?.convertTerm(text)?.replacedString ?: text
+        println("applyTerminology: Result='$result'")
+        return result
     }
+    /**
+     * Retrieves the ukGuidance associated with a given ukTerm.
+     *
+     * @param ukTerm The UK term to look up in the terminology table.
+     * @return The associated ukGuidance string, or null if not found.
+     */
+    fun getUkGuidanceForUkTerm(ukTerm: String?): String? {
+        println("getUkGuidanceForUkTerm: Input ukTerm='$ukTerm'")
+        if (ukTerm.isNullOrBlank()) {
+            println("getUkGuidanceForUkTerm: ukTerm is null or blank")
+            return null
+        }
+        val result = terminologyTable?.convertTerm(ukTerm)
+        println("getUkGuidanceForUkTerm: Retrieved ukGuidance='${result?.terminologyEntry?.ukGuidance}'")
+        return result?.terminologyEntry?.ukGuidance
+    }
+
+
+
+
 }
 
 fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String? = null, convertTerminologies: Boolean? = null): Result<RenderSession> {
