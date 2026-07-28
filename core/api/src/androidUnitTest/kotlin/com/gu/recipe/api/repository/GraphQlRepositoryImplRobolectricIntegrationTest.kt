@@ -1,8 +1,6 @@
 package com.gu.recipe.api.repository
 
-import com.gu.recipe.api.config.FeastApiConfig
 import com.gu.recipe.api.di.feastApiModule
-import com.gu.recipe.api.model.FeastEnvironment
 import com.gu.recipe.core.graphql.GraphQlResult
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
@@ -26,9 +24,7 @@ class GraphQlRepositoryImplRobolectricIntegrationTest {
         val application = koinApplication {
             modules(
                 feastApiModule(
-                    config = FeastApiConfig(
-                        environment = FeastEnvironment.CODE,
-                    ),
+                    baseUrl = "https://recipes.code.dev-guardianapis.com",
                     ioDispatcher = Dispatchers.IO,
                 ),
             )

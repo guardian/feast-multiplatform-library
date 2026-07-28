@@ -99,7 +99,6 @@ package com.gu.recipe.core.graphql.client {
 package com.gu.recipe.core.graphql.config {
 
   public final class GraphQlConfig {
-    ctor public GraphQlConfig(com.gu.recipe.core.graphql.config.GraphQlEnvironment environment, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
     ctor public GraphQlConfig(String baseUrl, optional com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider);
     method public String component1();
     method public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider component2();
@@ -110,13 +109,6 @@ package com.gu.recipe.core.graphql.config {
     property public String baseUrl;
     property public String serverUrl;
     property public com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider serverUrlProvider;
-  }
-
-  public enum GraphQlEnvironment {
-    method @InaccessibleFromKotlin public String getBaseUrl();
-    property public String baseUrl;
-    enum_constant public static final com.gu.recipe.core.graphql.config.GraphQlEnvironment CODE;
-    enum_constant public static final com.gu.recipe.core.graphql.config.GraphQlEnvironment PROD;
   }
 
 }

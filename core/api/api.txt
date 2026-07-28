@@ -3,22 +3,9 @@ package com.gu.recipe.api {
 
   public final class FeastIos {
     method public com.gu.recipe.api.repository.GraphQLRepository recipeRepository();
-    method public void start(com.gu.recipe.api.config.FeastApiConfig config);
-    method public void start(com.gu.recipe.api.model.FeastEnvironment environment);
+    method public void start(String baseUrl);
     method public void stop();
     field public static final com.gu.recipe.api.FeastIos INSTANCE;
-  }
-
-}
-
-package com.gu.recipe.api.config {
-
-  public final class FeastApiConfig {
-    ctor public FeastApiConfig(com.gu.recipe.api.model.FeastEnvironment environment);
-    method public com.gu.recipe.api.model.FeastEnvironment component1();
-    method public com.gu.recipe.api.config.FeastApiConfig copy(optional com.gu.recipe.api.model.FeastEnvironment environment);
-    method @InaccessibleFromKotlin public com.gu.recipe.api.model.FeastEnvironment getEnvironment();
-    property public com.gu.recipe.api.model.FeastEnvironment environment;
   }
 
 }
@@ -26,25 +13,16 @@ package com.gu.recipe.api.config {
 package com.gu.recipe.api.di {
 
   public final class FeastAndroidApiModuleKt {
-    method public static org.koin.core.module.Module androidFeastApiModule(android.content.Context context, com.gu.recipe.api.config.FeastApiConfig config);
-    method public static org.koin.core.module.Module androidFeastApiModule(com.gu.recipe.api.config.FeastApiConfig config, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
+    method public static org.koin.core.module.Module androidFeastApiModule(android.content.Context context, String baseUrl);
+    method public static org.koin.core.module.Module androidFeastApiModule(String baseUrl, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
   }
 
   public final class FeastApiModuleKt {
-    method public static org.koin.core.module.Module feastApiModule(com.gu.recipe.api.config.FeastApiConfig config, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
+    method public static org.koin.core.module.Module feastApiModule(String baseUrl, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
   }
 
   public final class FeastIosApiModuleKt {
-    method public static org.koin.core.module.Module iosFeastApiModule(com.gu.recipe.api.config.FeastApiConfig config, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
-  }
-
-}
-
-package com.gu.recipe.api.model {
-
-  public enum FeastEnvironment {
-    enum_constant public static final com.gu.recipe.api.model.FeastEnvironment CODE;
-    enum_constant public static final com.gu.recipe.api.model.FeastEnvironment PROD;
+    method public static org.koin.core.module.Module iosFeastApiModule(String baseUrl, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
   }
 
 }

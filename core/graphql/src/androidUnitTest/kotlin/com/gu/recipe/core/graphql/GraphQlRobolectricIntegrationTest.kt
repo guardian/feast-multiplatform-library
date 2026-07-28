@@ -9,7 +9,6 @@ import com.apollographql.cache.normalized.fetchPolicy
 import com.gu.recipe.core.graphql.client.ApolloClientFactory
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.config.GraphQlConfig
-import com.gu.recipe.core.graphql.config.GraphQlEnvironment
 import com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.core.graphql.generated.type.Editions
 import com.gu.recipe.core.graphql.generated.type.Regions
@@ -101,7 +100,7 @@ class GraphQlRobolectricIntegrationTest {
 
     private fun createApolloClient(): ApolloClient {
         val config = GraphQlConfig(
-            environment = GraphQlEnvironment.CODE,
+            baseUrl = "https://recipes.code.dev-guardianapis.com",
         )
 
         return ApolloClientFactory(Dispatchers.IO).create(

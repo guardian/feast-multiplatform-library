@@ -3,7 +3,6 @@ package com.gu.recipe.core.graphql
 import com.apollographql.apollo.ApolloClient
 import com.gu.recipe.core.graphql.client.FeastGraphQlClient
 import com.gu.recipe.core.graphql.config.GraphQlConfig
-import com.gu.recipe.core.graphql.config.GraphQlEnvironment
 import com.gu.recipe.core.graphql.di.GraphQlQualifiers
 import com.gu.recipe.core.graphql.di.graphQlModule
 import com.gu.recipe.core.graphql.provider.FixedGraphQlServerUrlProvider
@@ -18,17 +17,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class GraphQlConfigTest {
-    @Test
-    fun `graphql environment constructor derives the code url`() {
-        val config = GraphQlConfig(
-            environment = GraphQlEnvironment.CODE,
-        )
-
-        assertEquals(
-            expected = "https://recipes.code.dev-guardianapis.com/graphql",
-            actual = config.serverUrl,
-        )
-    }
 
     @Test
     fun `default GraphQL url is derived from the configured base url`() {

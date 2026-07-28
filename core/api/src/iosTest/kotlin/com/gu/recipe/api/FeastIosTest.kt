@@ -1,6 +1,5 @@
 package com.gu.recipe.api
 
-import com.gu.recipe.api.model.FeastEnvironment
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -13,7 +12,7 @@ class FeastIosTest {
 
     @Test
     fun startExposesRecipeRepositoryForNativeConsumers() {
-        FeastIos.start(environment = FeastEnvironment.CODE)
+        FeastIos.start(baseUrl = "https://recipes.code.dev-guardianapis.com")
 
         val repository = FeastIos.recipeRepository()
 
