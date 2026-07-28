@@ -81,16 +81,6 @@ package com.gu.recipe.core.graphql {
 
 }
 
-package com.gu.recipe.core.graphql.cache {
-
-  public final class PlatformNetworkModuleKt {
-    method @InaccessibleFromKotlin public static org.koin.core.module.Module getPlatformNetworkModule();
-    property public static org.koin.core.module.Module platformNetworkModule;
-    property public static org.koin.core.module.Module platformNetworkModule;
-  }
-
-}
-
 package com.gu.recipe.core.graphql.client {
 
   public final class ApolloClientFactory {
