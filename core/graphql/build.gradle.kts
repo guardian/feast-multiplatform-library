@@ -80,7 +80,6 @@ plugins {
     `maven-publish`
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.metalava)
     alias(libs.plugins.apollo)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.ksp)
@@ -201,23 +200,23 @@ android {
         singleVariant("release") {
             withSourcesJar()
             withJavadocJar()
+        }
     }
-}
 
-apollo {
-    service("feast") {
-        packageName.set("com.gu.recipe.core.graphql.generated")
-        srcDir("src/commonMain/graphql")
-        schemaFile.set(localSchemaFile)
-        graphQlIntrospectionUrl.orNull
-            ?.trim()
-            ?.takeIf(String::isNotEmpty)
-            ?.let { introspectionUrl ->
-                introspection {
-                    endpointUrl.set(introspectionUrl)
-                    schemaFile.set(localSchemaFile)
+    apollo {
+        service("feast") {
+            packageName.set("com.gu.recipe.core.graphql.generated")
+            srcDir("src/commonMain/graphql")
+            schemaFile.set(localSchemaFile)
+            graphQlIntrospectionUrl.orNull
+                ?.trim()
+                ?.takeIf(String::isNotEmpty)
+                ?.let { introspectionUrl ->
+                    introspection {
+                        endpointUrl.set(introspectionUrl)
+                        schemaFile.set(localSchemaFile)
+                    }
                 }
-            }
         }
     }
 }
@@ -231,18 +230,6 @@ tasks.matching { task ->
     .configureEach {
         dependsOn(downloadGraphQlSchema)
     }
-
-listOf(
-    "metalavaCheckCompatibilityDebug",
-    "metalavaCheckCompatibilityRelease",
-).forEach { metalavaTaskName ->
-    tasks.matching { it.name == metalavaTaskName }.configureEach {
-        dependsOn(
-            "kspDebugKotlinAndroid",
-            "kspReleaseKotlinAndroid",
-        )
-    }
-}
 
 publishing {
     publications.withType<MavenPublication>().configureEach {
@@ -304,7 +291,8 @@ publishing {
 tasks.register("zipXCFramework", Zip::class) {
     dependsOn("assemble${GraphQLConfig.SPM_FRAMEWORK_NAME}XCFramework")
 
-    val xcframeworkPath = layout.buildDirectory.dir("XCFrameworks/release/${GraphQLConfig.SPM_FRAMEWORK_NAME}.xcframework")
+    val xcframeworkPath =
+        layout.buildDirectory.dir("XCFrameworks/release/${GraphQLConfig.SPM_FRAMEWORK_NAME}.xcframework")
     from(xcframeworkPath) {
         into("${GraphQLConfig.SPM_FRAMEWORK_NAME}.xcframework")
     }
@@ -321,7 +309,8 @@ tasks.register("publishXCFrameworkToGitHub") {
 
     // Use Provider APIs for configuration cache compatibility
     val versionFile = layout.projectDirectory.file("../version.txt")
-    val zipFileProvider = layout.buildDirectory.file("distributions/${GraphQLConfig.SPM_FRAMEWORK_NAME}.xcframework.zip")
+    val zipFileProvider =
+        layout.buildDirectory.file("distributions/${GraphQLConfig.SPM_FRAMEWORK_NAME}.xcframework.zip")
     val packageSwiftFile = layout.projectDirectory.file("../Package.swift")
     val iosVersion = libs.versions.ios.get()
 
