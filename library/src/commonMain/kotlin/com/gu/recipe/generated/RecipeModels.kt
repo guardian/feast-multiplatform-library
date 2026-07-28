@@ -269,7 +269,17 @@ data class IngredientItem (
     /**
      * Unit of measurement for the ingredient
      */
-    val unit: String? = null
+    val unit: String? = null,
+
+    /**
+     * Guidance notes for any UK term to highlight the context
+     */
+    val ukGuidance: String? = null,
+
+    /**
+     * Guidance notes for any US term to highlight the context
+     */
+    val usGuidance: String? = null
 )
 
 /**
