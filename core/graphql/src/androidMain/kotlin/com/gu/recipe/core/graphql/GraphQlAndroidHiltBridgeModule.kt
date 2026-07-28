@@ -16,4 +16,3 @@ internal object GraphQlAndroidHiltBridgeModule {
     @Named(GraphQlQualifiers.IoDispatcher)
     fun provideGraphQlIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
-
