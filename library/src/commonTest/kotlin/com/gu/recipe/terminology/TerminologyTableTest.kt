@@ -13,14 +13,16 @@ class TerminologyTableTest {
                     id = 1,
                     ukTerm = "pepper",
                     usTerm = "black pepper",
-                    block = listOf(blockedPhrase)
+                    block = listOf(blockedPhrase),
+                    ukGuidance = "",
+                    usGuidance = ""
                 )
             )
         )
 
         assertEquals(
             blockedPhrase,
-            table.convertTerm(blockedPhrase)
+            table.convertTerm(blockedPhrase)!!.replacedString
         )
     }
 
@@ -32,14 +34,16 @@ class TerminologyTableTest {
                     id = 1,
                     ukTerm = "pepper",
                     usTerm = "black pepper",
-                    block = listOf("red pepper")
+                    block = listOf("red pepper"),
+                    ukGuidance = "",
+                    usGuidance = ""
                 )
             )
         )
 
         assertEquals(
             "tired black pepper",
-            table.convertTerm("tired pepper")
+            table.convertTerm("tired pepper")!!.replacedString
         )
     }
 
@@ -52,14 +56,16 @@ class TerminologyTableTest {
                     id = 1,
                     ukTerm = "sponge",
                     usTerm = "cake",
-                    block = listOf("victoria sponge", "sponge cake")
+                    block = listOf("victoria sponge", "sponge cake"),
+                    ukGuidance = "",
+                    usGuidance = ""
                 )
             )
         )
 
         assertEquals(
             "Victoria sponge with Cake and SPONGE CAKE.",
-            table.convertTerm("Victoria sponge with Sponge and SPONGE CAKE.")
+            table.convertTerm("Victoria sponge with Sponge and SPONGE CAKE.")!!.replacedString
         )
     }
 
@@ -71,14 +77,16 @@ class TerminologyTableTest {
                     id = 1,
                     ukTerm = "pepper",
                     usTerm = "black pepper",
-                    block = listOf("red pepper", "green pepper")
+                    block = listOf("red pepper", "green pepper"),
+                    ukGuidance = "",
+                    usGuidance = ""
                 )
             )
         )
 
         assertEquals(
             "black pepper, red pepper, black pepper, green pepper, black pepper.",
-            table.convertTerm("pepper, red pepper, pepper, green pepper, pepper.")
+            table.convertTerm("pepper, red pepper, pepper, green pepper, pepper.")!!.replacedString
         )
     }
 }
