@@ -2,7 +2,6 @@ package com.gu.recipe.terminology
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-//import com.gu.recipe.generated.TerminologyFixture
 import com.gu.recipe.generated.internalTerminologyData
 
 @Serializable
@@ -14,7 +13,14 @@ data class TerminologySchema(
 
 
 @Serializable
-data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String, val block: List<String>)
+data class TerminologyEntry(
+    val id: Int,
+    val ukTerm: String,
+    val usTerm: String,
+    val block: List<String>,
+    val ukGuidance: String?,
+    val usGuidance: String?
+)
 
 /**
  * Converts UK terminology to US terminology.
@@ -96,33 +102,59 @@ class TerminologyTable(
     }
 
     /**
-     * Converts terminology in [text], returning null when [text] is null.
+     * Converts UK terminology to US terminology and provides extra notes about the conversion.
      *
-     * Blocked phrase ranges are cached per matched term for this invocation only. This avoids
-     * repeated scans for the same term in long strings while keeping singleton memory usage low.
+     * Each [TerminologyEntry.block] value is treated as a protected phrase span: a matched UK term is
+     * not replaced only when that exact match sits inside one of its blocked phrases. For example,
+     * `pepper` may be replaced generally, while the `pepper` in `red pepper` remains unchanged.
+     *
+     * The [convertTerm] function returns a [ConversionResult] containing the modified string and the
+     * last matched terminology entry, or null if no conversion occurred.
      */
-    internal fun convertTerm(text: String?): String? {
-        val source = text ?: return null
-        val regex = replacementRegex ?: return source
-        val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
+    data class ConversionResult(
+        val replacedString: String,
+        val terminologyEntry: TerminologyEntry?
+    )
 
-        return regex.replace(source) { match ->
+    internal fun convertTerm(text: String?): ConversionResult? {
+        val source = text ?: return null
+        println("Converting text: $source")
+        val regex = replacementRegex ?: return null
+        println("Replacement regex: $regex")
+        val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
+        println("Blocked ranges by term: $blockedRangesByTerm")
+
+        val replacements = mutableListOf<Pair<IntRange, String>>()
+        var lastMatchedEntry: TerminologyEntry? = null
+
+        regex.findAll(source).forEach { match ->
             val matchedTerm = match.value.lowercase()
+            println("Matched term: $matchedTerm")
             val replacementEntry = replacementMap[matchedTerm]
+            println("Replacement entry: $replacementEntry")
             if (replacementEntry != null) {
                 val blockedRanges = blockedRangesByTerm.getOrPut(matchedTerm) {
                     findBlockedRanges(source, replacementEntry)
                 }
                 if (!isBlocked(blockedRanges, match.range)) {
-                    replacementFor(match.value, replacementEntry)
-                } else {
-                    match.value
+                    val replacement = replacementFor(match.value, replacementEntry)
+                    println("Replaced term: $replacement")
+                    replacements.add(match.range to replacement)
+                    lastMatchedEntry = replacementEntry
                 }
-            } else {
-                match.value
             }
         }
+
+        // Apply replacements in reverse order to avoid invalidating ranges
+        var replacedString = source
+        for ((range, replacement) in replacements.asReversed()) {
+            replacedString = replacedString.replaceRange(range, replacement)
+        }
+
+        return ConversionResult(replacedString, lastMatchedEntry)
     }
+
+
 }
 
 fun loadInternalTerminologyTable(): Result<TerminologyTable> {
@@ -138,7 +170,9 @@ fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
             val ukTerm = row[1].jsonPrimitive.content
             val usTerm = row[2].jsonPrimitive.content
             val block = row[3].jsonArray.map { it.jsonPrimitive.content }
-            ukTerm to TerminologyEntry(id = id, ukTerm = ukTerm, usTerm = usTerm, block = block)
+            val ukGuidance = row[4].jsonPrimitive.content
+            val usGuidance = row[5].jsonPrimitive.content
+            ukTerm to TerminologyEntry(id = id, ukTerm = ukTerm, usTerm = usTerm, block = block, ukGuidance = ukGuidance, usGuidance = usGuidance)
         }
 
         val table = TerminologyTable(terminologyMap)
