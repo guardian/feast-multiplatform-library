@@ -59,7 +59,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.koin.core)
-                api(project(":core:graphql"))
+                api(projects.core.graphql)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.serialization.json)
             }
