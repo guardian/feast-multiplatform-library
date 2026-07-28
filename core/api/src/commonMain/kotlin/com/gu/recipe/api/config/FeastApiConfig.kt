@@ -1,8 +1,8 @@
 package com.gu.recipe.api.config
 
 import com.gu.recipe.api.model.FeastEnvironment
-import com.gu.recipe.core.graphql.config.GraphQlEnvironment
 import com.gu.recipe.core.graphql.config.GraphQlConfig
+import com.gu.recipe.core.graphql.config.GraphQlEnvironment
 
 data class FeastApiConfig(
     val environment: FeastEnvironment,

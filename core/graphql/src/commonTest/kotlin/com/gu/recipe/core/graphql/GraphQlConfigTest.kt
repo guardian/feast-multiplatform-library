@@ -10,12 +10,12 @@ import com.gu.recipe.core.graphql.provider.FixedGraphQlServerUrlProvider
 import com.gu.recipe.core.graphql.provider.GraphQlServerUrlProvider
 import com.gu.recipe.core.graphql.repository.RecipeGraphQlDataSource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import org.koin.core.context.stopKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.koinApplication
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class GraphQlConfigTest {
     @Test

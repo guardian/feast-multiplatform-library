@@ -3,8 +3,8 @@ package com.gu.recipe.api.di
 import android.content.Context
 import com.gu.recipe.api.config.FeastApiConfig
 import com.gu.recipe.api.config.toGraphQlConfig
-import com.gu.recipe.api.repository.GraphQlRepositoryImpl
 import com.gu.recipe.api.repository.GraphQLRepository
+import com.gu.recipe.api.repository.GraphQlRepositoryImpl
 import com.gu.recipe.core.graphql.androidGraphQlModule
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
