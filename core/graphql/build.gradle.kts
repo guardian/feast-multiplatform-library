@@ -15,7 +15,7 @@ object GraphQLConfig {
 }
 
 group = GraphQLConfig.GROUP_ID
-version = file("../../version.txt").readText().trim()
+version = file("../version.txt").readText().trim()
 
 abstract class DownloadGraphQlSchemaTask : DefaultTask() {
     @get:OutputFile

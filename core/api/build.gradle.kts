@@ -14,7 +14,7 @@ object APIConfig {
 }
 
 group = APIConfig.GROUP_ID
-version = file("../../version.txt").readText().trim()
+version = file("../version.txt").readText().trim()
 
 plugins {
     `maven-publish`
