@@ -272,8 +272,8 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 text = applyTerminology(ingredient.text),
                                 ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
                                 template = applyTerminology(ingredient.template),
-                                ukGuidance = getUkGuidanceForUkTerm(ingredient.text), // Pass the ukGuidance to the ingredient
-                                usGuidance = null
+                                ukGuidance = getGuidanceForTerm(ingredient.text, "uk"), // Pass the ukGuidance to the ingredient
+                                usGuidance = getGuidanceForTerm(ingredient.text, "us")
                             )
                         },
                         recipeSection = applyTerminology(ingredientSection.recipeSection)
@@ -318,21 +318,28 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         println("applyTerminology: Result='$result'")
         return result
     }
+
     /**
-     * Retrieves the ukGuidance associated with a given ukTerm.
+     * Retrieves the guidance associated with a given term based on the country code.
      *
-     * @param ukTerm The UK term to look up in the terminology table.
-     * @return The associated ukGuidance string, or null if not found.
+     * @param term The term to look up in the terminology table.
+     * @param countryCode The country code ("uk" or "us") to determine which guidance to retrieve.
+     * @return The associated guidance string, or null if not found.
      */
-    fun getUkGuidanceForUkTerm(ukTerm: String?): String? {
-        println("getUkGuidanceForUkTerm: Input ukTerm='$ukTerm'")
-        if (ukTerm.isNullOrBlank()) {
-            println("getUkGuidanceForUkTerm: ukTerm is null or blank")
+    fun getGuidanceForTerm(term: String?, countryCode: String): String? {
+        println("getGuidanceForTerm: Input term='$term', countryCode='$countryCode'")
+        if (term.isNullOrBlank()) {
+            println("getGuidanceForTerm: term is null or blank")
             return null
         }
-        val result = terminologyTable?.convertTerm(ukTerm)
-        println("getUkGuidanceForUkTerm: Retrieved ukGuidance='${result?.terminologyEntry?.ukGuidance}'")
-        return result?.terminologyEntry?.ukGuidance
+        val result = terminologyTable?.convertTerm(term)
+        val guidance = when (countryCode.lowercase()) {
+            "uk" -> result?.terminologyEntry?.ukGuidance
+            "us" -> result?.terminologyEntry?.usGuidance
+            else -> null
+        }
+        println("getGuidanceForTerm: Retrieved guidance='$guidance'")
+        return guidance
     }
 
 
