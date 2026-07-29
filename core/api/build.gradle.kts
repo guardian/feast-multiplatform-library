@@ -108,41 +108,44 @@ android {
 }
 
 publishing {
-    publications.withType<MavenPublication>().configureEach {
-        groupId = APIConfig.GROUP_ID
-        version = project.version.toString()
-        artifactId = when (name) {
-            "kotlinMultiplatform" -> APIConfig.MAVEN_ARTIFACT_ID
-            "release" -> "${APIConfig.MAVEN_ARTIFACT_ID}-android"
-            else -> "${APIConfig.MAVEN_ARTIFACT_ID}-$name"
-        }
+    publications {
+        register<MavenPublication>("release") {
+            groupId = APIConfig.GROUP_ID
+            version = project.version.toString()
+            artifactId = APIConfig.MAVEN_ARTIFACT_ID
 
-        pom {
-            name.set("Feast Multiplatform Library")
-            description.set(APIConfig.PACKAGE_DESCRIPTION)
-            url.set("https://github.com/${APIConfig.GITHUB_REPO}")
-            licenses {
-                license {
-                    name.set("Apache License, Version 2.0")
-                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                }
-            }
-            developers {
-                developer {
-                    id.set("guardian/android-developers")
-                    name.set("The Guardian")
-                    email.set("contact@guardian.co.uk")
-                    url.set("https://github.com/guardian")
-                }
-            }
-            organization {
-                name.set("Guardian News & Media")
-                url.set("https://www.theguardian.com")
-            }
-            scm {
-                connection.set("scm:git:git://github.com/${APIConfig.GITHUB_REPO}.git")
-                developerConnection.set("scm:git:git://github.com/${APIConfig.GITHUB_REPO}.git")
+            pom {
+                name.set("Feast Multiplatform Library")
+                description.set(APIConfig.PACKAGE_DESCRIPTION)
                 url.set("https://github.com/${APIConfig.GITHUB_REPO}")
+                licenses {
+                    license {
+                        name.set("Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("guardian/android-developers")
+                        name.set("The Guardian")
+                        email.set("contact@guardian.co.uk")
+                        url.set("https://github.com/guardian")
+                    }
+                }
+                organization {
+                    name.set("Guardian News & Media")
+                    url.set("https://www.theguardian.com")
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/${APIConfig.GITHUB_REPO}.git")
+                    developerConnection.set("scm:git:git://github.com/${APIConfig.GITHUB_REPO}.git")
+                    url.set("https://github.com/${APIConfig.GITHUB_REPO}")
+                }
+            }
+
+            // Use the artifacts called "release" for publishing.
+            afterEvaluate {
+                from(components["release"])
             }
         }
     }
