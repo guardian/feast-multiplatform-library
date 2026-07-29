@@ -50,6 +50,7 @@ kotlin {
             binaryOption("bundleId", APIConfig.BUNDLE_ID)
             xcf.add(this)
             isStatic = false
+            export(projects.core.graphql)
         }
     }
 
