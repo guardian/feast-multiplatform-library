@@ -1,7 +1,5 @@
 # Feast Multiplatform Library - GraphQL
 
-**Current Version:** `1.0.0-alpha01` (defined in `core/version.txt`)
-
 ## What is it?
 
 This is a Kotlin Multiplatform (KMP) library that provides GraphQL network integration and data fetching repositories for Guardian Feast client applications on both **Android** and **iOS**.
