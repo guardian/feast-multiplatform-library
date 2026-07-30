@@ -13,7 +13,7 @@ import org.koin.dsl.module
  * Creates the iOS API Koin module for Feast.
  *
  * @param baseUrl Base URL used to configure GraphQL.
- * @param ioDispatcher Coroutine dispatcher used by GraphQL dependencies.
+ * @param ioDispatcher Coroutine dispatcher used by GraphQL dependencies (defaults to Dispatchers.Default).
  * @return Koin [Module] with GraphQL and repository bindings.
  */
 fun iosFeastApiModule(
