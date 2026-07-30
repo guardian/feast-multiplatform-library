@@ -63,5 +63,5 @@ Consumers only need to depend on `core:api`. Transitive dependencies (including 
 // build.gradle.kts (module level)
 
 dependencies {
-implementation("com.gu:feast-multiplatform-api-android:<latest-version>>") // e.g. 1.0.0-alpha01
+implementation("com.gu:feast-multiplatform-api:<latest-version>") // e.g. 1.0.0-alpha01
 }
