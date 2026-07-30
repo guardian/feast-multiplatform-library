@@ -153,7 +153,7 @@ publishing {
 
     repositories {
         // Adds a task for publishing locally to the build directory.
-        // Use as `./gradlew :library:publishReleasePublicationToCustomRepository`
+        // Use as `./gradlew :core:api:publishReleasePublicationToCustomRepository`
         // Use with -Prepo.local=$LOCAL_ARTIFACTS_STAGING_PATH to output to a custom path.
         maven {
             name = "custom"
