@@ -28,10 +28,9 @@ It encapsulates network communication, Apollo GraphQL query execution, response 
 
 ---
 
-## How to publish to maven central?
+## How to publish to Maven Central?
 
-<This section will be filled once we have a release yml file ready for CI pipeline to publish on maven central.>
-
+> This section will be filled once we have a release YAML file ready in the CI pipeline to publish to Maven Central.
 ## How to publish on local maven?
 
 Follow the steps below to publish the `core` library to your local maven repository(run command in terminal at the root of the project):
