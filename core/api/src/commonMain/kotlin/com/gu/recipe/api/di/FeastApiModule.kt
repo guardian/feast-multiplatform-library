@@ -9,6 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
+/**
+ * Creates the Koin module for the Feast API layer.
+ *
+ * @param baseUrl Base URL used to configure GraphQL networking.
+ * @param ioDispatcher Dispatcher used for GraphQL I/O work.
+ * @return A configured Koin [Module] with GraphQL and repository bindings.
+ */
 fun feastApiModule(
     baseUrl: String,
     ioDispatcher: CoroutineDispatcher = Dispatchers.Default,
@@ -16,4 +23,3 @@ fun feastApiModule(
     includes(graphQlModule(GraphQlConfig(baseUrl = baseUrl), ioDispatcher))
     single<GraphQLRepository> { GraphQlRepositoryImpl(get()) }
 }
-
