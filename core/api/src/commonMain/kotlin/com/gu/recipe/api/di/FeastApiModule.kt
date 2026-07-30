@@ -13,7 +13,7 @@ import org.koin.dsl.module
  * Creates the Koin module for the Feast API layer.
  *
  * @param baseUrl Base URL used to configure GraphQL networking.
- * @param ioDispatcher Dispatcher used for GraphQL I/O work.
+ * @param ioDispatcher Dispatcher used by GraphQL dependencies (defaults to Dispatchers.Default).
  * @return A configured Koin [Module] with GraphQL and repository bindings.
  */
 fun feastApiModule(
