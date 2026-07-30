@@ -29,7 +29,9 @@ object FeastIos {
     /**
      * Returns the configured GraphQL repository instance.
      *
-     * @return the resolved `GraphQLRepository`
+     * Requires [start] to be called first; otherwise Koin is not initialised.
+     *
+     * @return the resolved [GraphQLRepository]
      */
     fun recipeRepository(): GraphQLRepository = KoinPlatform.getKoin().get()
 
