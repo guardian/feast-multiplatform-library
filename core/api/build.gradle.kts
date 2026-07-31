@@ -127,7 +127,7 @@ publishing {
                 }
                 developers {
                     developer {
-                        id.set("guardian/android-developers")
+                        id.set("guardian/feast")
                         name.set("The Guardian")
                         email.set("contact@guardian.co.uk")
                         url.set("https://github.com/guardian")
