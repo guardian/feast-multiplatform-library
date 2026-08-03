@@ -9,9 +9,6 @@ metalava = "0.5.0"
 kotlinx-serialization-json = "1.11.0"
 kotlinx-coroutines = "1.10.2"
 okio = "3.17.0"
-netty = "4.1.135.Final"
-bouncycastle = "1.84"
-jackson = "2.18.8"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
