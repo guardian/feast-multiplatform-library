@@ -5,14 +5,11 @@ plugins {
 }
 
 
-// Fix CVE-2025-14813: force patched Bouncy Castle provider when pulled transitively.
 // Fix CVEs: CVE-2026-54512, CVE-2026-54513
 // Force jackson-databind and related artifacts to patched version (transitive via AGP/Kotlin tooling)
 allprojects {
     configurations.all {
         resolutionStrategy {
-            force("org.bouncycastle:bcprov-jdk18on:${libs.versions.bouncycastle.get()}")
-            force("org.bouncycastle:bcprov-jdk15to18:${libs.versions.bouncycastle.get()}")
             force("com.fasterxml.jackson.core:jackson-databind:${libs.versions.jackson.get()}")
             force("com.fasterxml.jackson.core:jackson-core:${libs.versions.jackson.get()}")
             force("com.fasterxml.jackson.core:jackson-annotations:${libs.versions.jackson.get()}")
