@@ -232,47 +232,44 @@ tasks.matching { task ->
     }
 
 publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = GraphQLConfig.GROUP_ID
-            version = project.version.toString()
-            artifactId = GraphQLConfig.MAVEN_ARTIFACT_ID
+    publications.withType<MavenPublication>().configureEach {
+        groupId = GraphQLConfig.GROUP_ID
+        version = project.version.toString()
+        artifactId = when (name) {
+            "kotlinMultiplatform" -> GraphQLConfig.MAVEN_ARTIFACT_ID
+            "release" -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-android"
+            else -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-$name"
+        }
 
-            pom {
-                name.set("Feast Multiplatform Library")
-                description.set(GraphQLConfig.PACKAGE_DESCRIPTION)
-                url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
+        pom {
+            name.set("Feast Multiplatform Library")
+            description.set(GraphQLConfig.PACKAGE_DESCRIPTION)
+            url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
 
-                licenses {
-                    license {
-                        name.set("Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("guardian/feast")
-                        name.set("The Guardian")
-                        email.set("contact@guardian.co.uk")
-                        url.set("https://github.com/guardian")
-                    }
-                }
-
-                organization {
-                    name.set("Guardian News & Media")
-                    url.set("https://www.theguardian.com")
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/${GraphQLConfig.GITHUB_REPO}.git")
-                    developerConnection.set("scm:git:git://github.com/${GraphQLConfig.GITHUB_REPO}.git")
-                    url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
+            licenses {
+                license {
+                    name.set("Apache License, Version 2.0")
+                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                 }
             }
 
-            // Use the artifacts called "release" for publishing.
-            afterEvaluate {
-                from(components["release"])
+            developers {
+                developer {
+                    id.set("guardian/feast")
+                    name.set("The Guardian")
+                    email.set("contact@guardian.co.uk")
+                    url.set("https://github.com/guardian")
+                }
+            }
+
+            organization {
+                name.set("Guardian News & Media")
+                url.set("https://www.theguardian.com")
+            }
+            scm {
+                connection.set("scm:git:git://github.com/${GraphQLConfig.GITHUB_REPO}.git")
+                developerConnection.set("scm:git:git://github.com/${GraphQLConfig.GITHUB_REPO}.git")
+                url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
             }
         }
     }
