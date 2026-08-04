@@ -6,6 +6,9 @@
 package com.gu.recipe.generated
 
 import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.encoding.*
 
 /**
  * Complete recipe with metadata, ingredients, instructions, and categorization
@@ -262,8 +265,8 @@ data class IngredientItem (
     val text: String? = null,
 
     /**
-     * What is `text` minus the `suffix`
-     */
+      * What is `text` minus the `suffix`
+    */
     val ingredientWithoutSuffix: String? = null,
 
     /**
@@ -304,9 +307,19 @@ data class Instruction (
     val descriptionTemplate: String? = null,
 
     /**
+     * Array of formatted ingredient strings for this step (provided by runtime library)
+     */
+    val formattedIngredients: List<String>? = null,
+
+    /**
      * Array of image URLs or identifiers for this step
      */
     val images: List<String>? = null,
+
+    /**
+     * Array of indexes referring to ingredients used in this step
+     */
+    val ingredientIndexes: List<Double>? = null,
 
     /**
      * The sequential number of this instruction step
