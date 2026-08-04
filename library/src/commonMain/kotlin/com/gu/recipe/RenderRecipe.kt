@@ -210,7 +210,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         val updatedSteps = (recipe.instructions ?: emptyList()).map { instruction ->
             val filteredIndices = (instruction.ingredientIndexes ?: emptyList()).map { it.toInt() }.filter { it >= 0 && it < flattenedIngredients.size }
             val ingredients = filteredIndices.map { flattenedIngredients[it] }
-            instruction.copy( formattedIngredients = if(ingredients.isNotEmpty()) ingredients.map { it.text ?: "" } else null)
+            instruction.copy( formattedIngredients = if(ingredients.isNotEmpty()) ingredients.map { it.name ?: "" } else null)
         }
         return recipe.copy(instructions = if (updatedSteps.isNotEmpty()) updatedSteps else null)
     }
