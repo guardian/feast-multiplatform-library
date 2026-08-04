@@ -272,8 +272,9 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 text = applyTerminology(ingredient.text),
                                 ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
                                 template = applyTerminology(ingredient.template),
-                                ukGuidance = getGuidanceForTerm(ingredient.text, "uk"), // Pass the ukGuidance to the ingredient
-                                usGuidance = getGuidanceForTerm(ingredient.text, "us")
+                                ukGuidance = getGuidanceForTerm(ingredient.text, "uk"),
+                                usGuidance = getGuidanceForTerm(ingredient.text, "us"),
+                                highlights = getHighlightsForTerm(ingredient.text)
                             )
                         },
                         recipeSection = applyTerminology(ingredientSection.recipeSection)
@@ -342,7 +343,18 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         return guidance
     }
 
-
+    /**
+     * Retrieves the list of highlights from the result of terminologyTable?.convertTerm(term).
+     *
+     * @param term The term to look up in the terminology table.
+     * @return A list of Highlight objects, or an empty list if no highlights are found.
+     */
+    fun getHighlightsForTerm(term: String?): List<Highlight>? {
+        println("getHighlightsForTerm: Input term='$term'")
+        val highlights = terminologyTable?.convertTerm(term)?.highlights
+        println("getHighlightsForTerm: Retrieved highlights='$highlights'")
+        return highlights
+    }
 
 
 }

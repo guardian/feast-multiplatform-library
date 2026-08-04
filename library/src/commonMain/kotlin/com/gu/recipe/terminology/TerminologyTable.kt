@@ -1,5 +1,7 @@
 package com.gu.recipe.terminology
 
+import com.gu.recipe.generated.Highlight
+import com.gu.recipe.generated.TermType
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import com.gu.recipe.generated.internalTerminologyData
@@ -11,7 +13,6 @@ data class TerminologySchema(
     val values: List<List<JsonElement>>
 )
 
-
 @Serializable
 data class TerminologyEntry(
     val id: Int,
@@ -19,7 +20,7 @@ data class TerminologyEntry(
     val usTerm: String,
     val block: List<String>,
     val ukGuidance: String?,
-    val usGuidance: String?
+    val usGuidance: String?,
 )
 
 /**
@@ -101,6 +102,41 @@ class TerminologyTable(
         }
     }
 
+
+    /**
+     * Finds highlights for the given text and terminology mapping.
+     */
+    private fun findHighlights(
+        text: String,
+        mapping: TerminologyEntry
+    ): List<Highlight> {
+        val highlights = mutableListOf<Highlight>()
+
+        val termsToCheck = listOf(
+            //mapping.ukTerm to TermType.ukTerm,
+            mapping.usTerm to TermType.usTerm
+        )
+
+        for ((term, termType) in termsToCheck) {
+            val regex = Regex("\\b${Regex.escape(term)}\\b", RegexOption.IGNORE_CASE)
+            regex.findAll(text).forEach { match ->
+                highlights.add(
+                    Highlight(
+                        matchedTerm = match.value,
+                        startIndex = match.range.first,
+                        endIndex = match.range.last + 1, // Include the last character,
+                        termType = termType,
+                    )
+                )
+            }
+        }
+
+        highlights.forEach { highlight ->
+            println("Highlights ----->> Matched Word: ${highlight.matchedTerm}, Start Index: ${highlight.startIndex}, End Index: ${highlight.endIndex}, Term Type: ${highlight.termType}")
+        }
+        return highlights
+    }
+
     /**
      * Converts UK terminology to US terminology and provides extra notes about the conversion.
      *
@@ -113,7 +149,8 @@ class TerminologyTable(
      */
     data class ConversionResult(
         val replacedString: String,
-        val terminologyEntry: TerminologyEntry?
+        val terminologyEntry: TerminologyEntry?,
+        val highlights: List<Highlight>? // Add highlights property
     )
 
     internal fun convertTerm(text: String?): ConversionResult? {
@@ -125,6 +162,7 @@ class TerminologyTable(
         println("Blocked ranges by term: $blockedRangesByTerm")
 
         val replacements = mutableListOf<Pair<IntRange, String>>()
+        var highlights: List<Highlight>? = mutableListOf() // Collect highlights
         var lastMatchedEntry: TerminologyEntry? = null
 
         regex.findAll(source).forEach { match ->
@@ -151,7 +189,15 @@ class TerminologyTable(
             replacedString = replacedString.replaceRange(range, replacement)
         }
 
-        return ConversionResult(replacedString, lastMatchedEntry)
+        // Add highlight for the matched term only if guidance notes are available
+        highlights = if (lastMatchedEntry != null && (lastMatchedEntry.ukGuidance?.isNotEmpty() == true || lastMatchedEntry.usGuidance?.isNotEmpty() == true)) {
+            findHighlights(replacedString, lastMatchedEntry)
+        } else {
+            null
+        }
+
+        println("Highlights: $highlights") // Debug output for highlights
+        return ConversionResult(replacedString, lastMatchedEntry, highlights) // Include highlights in the result//return ConversionResult(replacedString, lastMatchedEntry)
     }
 
 

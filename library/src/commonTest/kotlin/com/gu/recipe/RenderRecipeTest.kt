@@ -920,7 +920,70 @@ class RenderRecipeTest {
         assertEquals("This is uk guidance notes for aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.ukGuidance)
         assertEquals("This is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
         assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
-        assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)}
+        assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)
+    }
+
+    @Test
+    fun `renderRecipeForTerminology ALL converts every section with block list and return notes with highlight indexes`() {
+        val session = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+                terminologyMap = mapOf(
+                    "aubergine" to TerminologyEntry(
+                        id = 1,
+                        ukTerm = "aubergine",
+                        usTerm = "eggplant",
+                        block = listOf("eggplant"),
+                        ukGuidance = "This is uk guidance notes for aubergine",
+                        usGuidance = "This is us guidance notes for eggplant"
+                    ),
+                    "aubergines" to TerminologyEntry(
+                        id = 2,
+                        ukTerm = "aubergines",
+                        usTerm = "eggplants",
+                        block = listOf("eggplants"),
+                        ukGuidance = "This is uk guidance notes for aubergines",
+                        usGuidance = "This is us guidance notes for eggplants"
+                    )
+                )
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            title = "Tamarind aubergine curry",
+            description = "The aubergine curry needs to be hot and tangy. We need green chillies and soaked tamarind.",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            text = "1 aubergine",
+                            template = "medium size aubergines"
+                        )
+                    )
+                )
+            ),
+            instructions = listOf(
+                Instruction(description = "Cut aubergines meanwhile soak tamarind in a water"),
+                Instruction(description = "Get portion of aubergine curry in a serving plate")
+            )
+        )
+
+        val rendered = session.renderRecipeForTerminology(recipe, TerminologySection.ALL)
+
+        assertEquals("Tamarind eggplant curry", rendered.title)
+        assertEquals("The eggplant curry needs to be hot and tangy. We need green chillies and soaked tamarind.", rendered.description)
+        assertEquals("1 eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+        assertEquals("medium size eggplants", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
+        assertEquals("This is uk guidance notes for aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.ukGuidance)
+        assertEquals("This is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
+        assertEquals(2, rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.startIndex)
+        assertEquals(10, rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.endIndex)
+        assertEquals(TermType.usTerm, rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.termType)
+        assertEquals("eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.matchedTerm)
+        assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
+        assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)
+    }
+
 
 
 }
