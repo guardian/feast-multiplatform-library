@@ -257,19 +257,25 @@ package com.gu.recipe.generated {
   }
 
   @kotlinx.serialization.Serializable public final class Instruction {
-    ctor public Instruction(String description, optional String? descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
+    ctor public Instruction(String description, optional String? descriptionTemplate, optional java.util.List<java.lang.String>? formattedIngredients, optional java.util.List<java.lang.String>? images, optional java.util.List<java.lang.Double>? ingredientIndexes, optional Double? stepNumber);
     method public String component1();
     method public String? component2();
     method public java.util.List<java.lang.String>? component3();
-    method public Double? component4();
-    method public com.gu.recipe.generated.Instruction copy(optional String description, optional String? descriptionTemplate, optional java.util.List<java.lang.String>? images, optional Double? stepNumber);
+    method public java.util.List<java.lang.String>? component4();
+    method public java.util.List<java.lang.Double>? component5();
+    method public Double? component6();
+    method public com.gu.recipe.generated.Instruction copy(optional String description, optional String? descriptionTemplate, optional java.util.List<java.lang.String>? formattedIngredients, optional java.util.List<java.lang.String>? images, optional java.util.List<java.lang.Double>? ingredientIndexes, optional Double? stepNumber);
     method @InaccessibleFromKotlin public String getDescription();
     method @InaccessibleFromKotlin public String? getDescriptionTemplate();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.String>? getFormattedIngredients();
     method @InaccessibleFromKotlin public java.util.List<java.lang.String>? getImages();
+    method @InaccessibleFromKotlin public java.util.List<java.lang.Double>? getIngredientIndexes();
     method @InaccessibleFromKotlin public Double? getStepNumber();
     property public String description;
     property public String? descriptionTemplate;
+    property public java.util.List<java.lang.String>? formattedIngredients;
     property public java.util.List<java.lang.String>? images;
+    property public java.util.List<java.lang.Double>? ingredientIndexes;
     property public Double? stepNumber;
   }
 
