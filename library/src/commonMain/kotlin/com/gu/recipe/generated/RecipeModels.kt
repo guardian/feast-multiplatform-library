@@ -265,6 +265,11 @@ data class IngredientItem (
     val text: String? = null,
 
     /**
+      * What is `text` minus the `suffix`
+    */
+    val ingredientWithoutSuffix: String? = null,
+
+    /**
      * Unit of measurement for the ingredient
      */
     val unit: String? = null
