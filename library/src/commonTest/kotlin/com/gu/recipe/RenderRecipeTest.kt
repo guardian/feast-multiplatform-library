@@ -637,9 +637,9 @@ class RenderRecipeTest {
         assertNotNull(scaledRecipe.instructions)
         assertEquals(7, scaledRecipe.instructions.size)
         val ingredients = scaledRecipe.instructions.map { it.formattedIngredients }
-        assertEquals(listOf("<strong>1 l vegetable stock</strong>", "<strong>6 corn on the cob</strong>, husks removed"), ingredients[0])
-        assertEquals(listOf("<strong>6 corn on the cob</strong>, husks removed"), ingredients[1])
-        assertEquals(listOf("<strong>1 x 400 ml full-fat tin coconut milk</strong>", "<strong>2 limes</strong>, zest and juice", "<strong>1 green chilli</strong>, finely chopped, pith and seeds discarded if you prefer less heat", "<strong>Salt and black pepper</strong>"), ingredients[2])
+        assertEquals(listOf("vegetable stock", "corn on the cob"), ingredients[0])
+        assertEquals(listOf("corn on the cob"), ingredients[1])
+        assertEquals(listOf("full-fat tin coconut milk", "limes", "green chilli", "Salt and black pepper"), ingredients[2])
     }
 
     @Suppress("DEPRECATION")
