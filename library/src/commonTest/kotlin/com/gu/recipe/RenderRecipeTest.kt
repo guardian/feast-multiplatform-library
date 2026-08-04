@@ -8,6 +8,7 @@ import com.gu.recipe.terminology.TerminologyEntry
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class RenderRecipeTest {
     @Test
@@ -349,6 +350,296 @@ class RenderRecipeTest {
         assertEquals("<strong>2 onions</strong>", ingredients?.get(2)?.ingredientWithoutSuffix)
         assertEquals("<strong>150 g egg</strong>", ingredients?.get(3)?.ingredientWithoutSuffix)
         assertEquals("<strong>150 g mayonnaise</strong>", ingredients?.get(4)?.ingredientWithoutSuffix)
+    }
+
+    val fixtureWithIngredientIndexes = """{
+    "id": "2feb28d1cc9f4bef93ac7e9779cbd5ae",
+    "appExclusiveBranding": false,
+    "canonicalArticle": "food/2020/jul/04/andi-oliver-antiguan-feast-recipes-slow-cooked-pork-belly-corn-chilli-lime-mango-chow-spiced-bread-butter-pudding",
+    "composerId": "5eeb491d8f08b8bbd22a4c7d",
+    "title": "Corn on the cob with lime, green chilli and coconut butter",
+    "description": "A tangy version of a barbecue classic",
+    "bookCredit": "Andi Oliver is chef/owner Andi’s Wadadli Kitchen, London E5",
+    "serves": [
+        {
+            "amount": {
+                "min": 6,
+                "max": 6
+            },
+            "unit": "people",
+            "text": "Serves 6"
+        }
+    ],
+    "featuredImage": {
+        "url": "https://i.guim.co.uk/img/media/bb22b73d8907a0e2b12194b1fedf8b46f8cde447/230_1109_3774_4718/master/3774.jpg?width=1600&dpr=1&s=none",
+        "mediaId": "bb22b73d8907a0e2b12194b1fedf8b46f8cde447",
+        "cropId": "230_1109_3774_4718",
+        "source": "The Guardian",
+        "photographer": "Ola O Smit",
+        "caption": "Andi Oliver's corn on the cob. 7816"
+    },
+    "timings": [
+        {
+            "qualifier": "prep-time",
+            "durationInMins": {
+                "min": 10,
+                "max": 10
+            },
+            "text": "Prep 10 min"
+        },
+        {
+            "qualifier": "cook-time",
+            "durationInMins": {
+                "min": 30,
+                "max": 30
+            },
+            "text": "Cook 30 min"
+        }
+    ],
+    "instructions": [
+        {
+            "stepNumber": 1,
+            "description": "Bring the stock to a rolling boil in a big, deep pan. Slip in the cobs, leave to cook for about five minutes, then turn off the heat and leave the corn to sit in the stock as it cools.",
+            "descriptionTemplate": "Bring the stock to a rolling boil in a big, deep pan. Slip in the cobs, leave to cook for about five minutes, then turn off the heat and leave the corn to sit in the stock as it cools.",
+            "ingredientIndexes": [
+                0,
+                1
+            ]
+        },
+        {
+            "stepNumber": 2,
+            "description": "Put a heavy-based dry frying pan on a high heat and, once hot, lay the drained corn in the pan and char for a couple of minutes on each side – you’ll probably need to cook them two or three at a time, so you don’t overcrowd the pan.",
+            "descriptionTemplate": "Put a heavy-based dry frying pan on a high heat and, once hot, lay the drained corn in the pan and char for a couple of minutes on each side - you'll probably need to cook them two or three at a time, so you don't overcrowd the pan.",
+            "ingredientIndexes": [
+                1
+            ]
+        },
+        {
+            "stepNumber": 3,
+            "description": "Put the coconut milk, lime juice and chillies in a small saucepan, season lightly, then bring up to a gentle simmer.",
+            "descriptionTemplate": "Put the coconut milk, lime juice and chillies in a small saucepan, season lightly, then bring up to a gentle simmer.",
+            "ingredientIndexes": [
+                2,
+                3,
+                4,
+                5
+            ]
+        },
+        {
+            "stepNumber": 4,
+            "description": "Stir in the butter, turn off the heat and set aside.",
+            "descriptionTemplate": "Stir in the butter, turn off the heat and set aside.",
+            "ingredientIndexes": [
+                6
+            ]
+        },
+        {
+            "stepNumber": 5,
+            "description": "For the topping, toast the coconut flakes in a hot dry frying pan – coconut burns very easily, so keep them moving and keep your eye on them.",
+            "descriptionTemplate": "For the topping, toast the coconut flakes in a hot dry frying pan - coconut burns very easily, so keep them moving and keep your eye on them.",
+            "ingredientIndexes": [
+                7
+            ]
+        },
+        {
+            "stepNumber": 6,
+            "description": "As soon as the coconut has a golden, burnished, toasted colour, tip it into a bowl, leave to cool, then mix with the crispy shallots and herbs, and season to taste.",
+            "descriptionTemplate": "As soon as the coconut has a golden, burnished, toasted colour, tip it into a bowl, leave to cool, then mix with the crispy shallots and herbs, and season to taste.",
+            "ingredientIndexes": [
+                7,
+                8,
+                9,
+                10,
+                5
+            ]
+        },
+        {
+            "stepNumber": 7,
+            "description": "To serve, spoon some of the coconut milk mixture over each cob, sprinkle with the toasted coconut mix and lime zest, and tuck in.",
+            "descriptionTemplate": "To serve, spoon some of the coconut milk mixture over each cob, sprinkle with the toasted coconut mix and lime zest, and tuck in.",
+            "ingredientIndexes": [
+                2,
+                7,
+                3
+            ]
+        }
+    ],
+    "contributors": [
+        "profile/andi-oliver"
+    ],
+    "byline": [],
+    "ingredients": [
+        {
+            "recipeSection": "",
+            "ingredientsList": [
+                {
+                    "name": "vegetable stock",
+                    "amount": {
+                        "min": 1,
+                        "max": 1
+                    },
+                    "unit": "litre",
+                    "optional": false,
+                    "text": "1 litre vegetable stock",
+                    "template": "{\"min\":1, \"unit\":\"l\", \"scale\":true, \"ingredient\":\"vegetable stock\", \"usCust\":true} vegetable stock"
+                },
+                {
+                    "name": "corn on the cob",
+                    "amount": {
+                        "min": 6,
+                        "max": 6
+                    },
+                    "suffix": "husks removed",
+                    "optional": false,
+                    "text": "6 corn on the cob, husks removed",
+                    "template": "{\"min\":6, \"scale\":true, \"ingredient\":\"corn on the cob\"} corn on the cob, husks removed"
+                },
+                {
+                    "name": "full-fat tin coconut milk",
+                    "amount": {
+                        "min": 400,
+                        "max": 400
+                    },
+                    "unit": "ml",
+                    "optional": false,
+                    "text": "400 ml full-fat tin coconut milk",
+                    "template": "{\"min\":1, \"scale\":true} x {\"min\":400, \"unit\":\"ml\"} full-fat tin coconut milk"
+                },
+                {
+                    "name": "limes",
+                    "amount": {
+                        "min": 2,
+                        "max": 2
+                    },
+                    "suffix": "zest and juice",
+                    "optional": false,
+                    "text": "2 limes, zest and juice",
+                    "template": "{\"min\":2, \"scale\":true, \"ingredient\":\"lime\"} limes, zest and juice"
+                },
+                {
+                    "name": "green chilli",
+                    "amount": {
+                        "min": 1,
+                        "max": 1
+                    },
+                    "suffix": "finely chopped, pith and seeds discarded if you prefer less heat",
+                    "optional": false,
+                    "text": "1 green chilli, finely chopped, pith and seeds discarded if you prefer less heat",
+                    "template": "{\"min\":1, \"scale\":true, \"ingredient\":\"chopped green chilli\", \"usCust\":true} green chilli, finely chopped, pith and seeds discarded if you prefer less heat"
+                },
+                {
+                    "name": "Salt and black pepper",
+                    "optional": false,
+                    "text": "Salt and black pepper",
+                    "template": "Salt and black pepper"
+                },
+                {
+                    "name": "butter",
+                    "amount": {
+                        "min": 25,
+                        "max": 25
+                    },
+                    "unit": "g",
+                    "suffix": "(if you want to make this vegan, use vegan butter or leave it out altogether)",
+                    "optional": false,
+                    "text": "25 g butter, (if you want to make this vegan, use vegan butter or leave it out altogether)",
+                    "template": "{\"min\":25, \"unit\":\"g\", \"scale\":true, \"ingredient\":\"butter\"} butter, (if you want to make this vegan, use vegan butter or leave it out altogether)"
+                }
+            ]
+        },
+        {
+            "recipeSection": "For the topping",
+            "ingredientsList": [
+                {
+                    "name": "desiccated coconut",
+                    "amount": {
+                        "min": 100,
+                        "max": 100
+                    },
+                    "unit": "g",
+                    "optional": false,
+                    "text": "100 g desiccated coconut",
+                    "template": "{\"min\":100, \"unit\":\"g\", \"scale\":true, \"ingredient\":\"desiccated coconut\", \"usCust\":true} desiccated coconut"
+                },
+                {
+                    "name": "crispy shallots",
+                    "amount": {
+                        "min": 100,
+                        "max": 100
+                    },
+                    "unit": "g",
+                    "suffix": "(you can get these ready-made from many Asian and Caribbean food stores; they’re a great standby)",
+                    "optional": false,
+                    "text": "100 g crispy shallots, (you can get these ready-made from many Asian and Caribbean food stores; they’re a great standby)",
+                    "template": "{\"min\":100, \"unit\":\"g\", \"scale\":true, \"ingredient\":\"crispy shallot\", \"usCust\":true} crispy shallots, (you can get these ready-made from many Asian and Caribbean food stores; they're a great standby)"
+                },
+                {
+                    "name": "chopped fresh coriander",
+                    "amount": {
+                        "min": 10,
+                        "max": 10
+                    },
+                    "unit": "g",
+                    "prefix": "finely",
+                    "optional": false,
+                    "text": "10 g finely chopped fresh coriander",
+                    "template": "{\"min\":10, \"unit\":\"g\", \"scale\":true, \"ingredient\":\"coriander\"} finely chopped fresh coriander"
+                },
+                {
+                    "name": "chopped fresh flat-leaf parsley",
+                    "amount": {
+                        "min": 10,
+                        "max": 10
+                    },
+                    "unit": "g",
+                    "prefix": "finely",
+                    "optional": false,
+                    "text": "10 g finely chopped fresh flat-leaf parsley",
+                    "template": "{\"min\":10, \"unit\":\"g\", \"scale\":true, \"ingredient\":\"parsley\"} finely chopped fresh flat-leaf parsley"
+                }
+            ]
+        }
+    ],
+    "celebrationIds": [],
+    "cuisineIds": [
+        "antiguan"
+    ],
+    "mealTypeIds": [
+        "side",
+        "lunch",
+        "dinner",
+        "starter"
+    ],
+    "suitableForDietIds": [
+        "pescatarian",
+        "vegetarian",
+        "dairy-free",
+        "meat-free",
+        "gluten-free"
+    ],
+    "utensilsAndApplianceIds": [],
+    "techniquesUsedIds": [],
+    "difficultyLevel": "easy",
+    "originalMeasuringSystem": "metric"
+}""".trimIndent()
+
+    @Test
+    fun `renderRecipe correctly resolves ingredient indices and renders the output`() {
+        val densityTable = DensityTable("test", HashMap(), HashMap())
+        val session = RenderSession(densityTable)
+
+        val recipe: RecipeV3 = Json.decodeFromString(fixtureWithIngredientIndexes)
+
+        val scaledRecipe = session.renderRecipe(recipe, 1.0f, MeasuringSystem.Metric)
+
+        println(scaledRecipe)
+
+        assertNotNull(scaledRecipe.instructions)
+        assertEquals(7, scaledRecipe.instructions.size)
+        val ingredients = scaledRecipe.instructions.map { it.formattedIngredients }
+        assertEquals(listOf("<strong>1 l vegetable stock</strong>", "<strong>6 corn on the cob</strong>, husks removed"), ingredients[0])
+        assertEquals(listOf("<strong>6 corn on the cob</strong>, husks removed"), ingredients[1])
+        assertEquals(listOf("<strong>1 x 400 ml full-fat tin coconut milk</strong>", "<strong>2 limes</strong>, zest and juice", "<strong>1 green chilli</strong>, finely chopped, pith and seeds discarded if you prefer less heat", "<strong>Salt and black pepper</strong>"), ingredients[2])
     }
 
     @Suppress("DEPRECATION")
