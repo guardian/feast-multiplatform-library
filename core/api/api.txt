@@ -13,7 +13,6 @@ package com.gu.recipe.api {
 package com.gu.recipe.api.di {
 
   public final class FeastAndroidApiModuleKt {
-    method public static org.koin.core.module.Module androidFeastApiModule(android.content.Context context, String baseUrl);
     method public static org.koin.core.module.Module androidFeastApiModule(String baseUrl, optional kotlinx.coroutines.CoroutineDispatcher ioDispatcher);
   }
 
