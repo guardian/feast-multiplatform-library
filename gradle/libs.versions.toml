@@ -14,8 +14,6 @@ bouncycastle = "1.84"
 jackson = "2.18.8"
 apollo = "5.0.1"
 koin = "4.2.2"
-hilt = "2.58"
-ksp = "2.3.9"
 graphql-cache = "1.0.5"
 junit4 = "4.13.2"
 robolectric = "4.16.1"
@@ -30,8 +28,6 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 normalised-cache = { group = "com.apollographql.cache", name = "normalized-cache", version.ref = "graphql-cache" }
 normalised-cache-sqlite = { group = "com.apollographql.cache", name = "normalized-cache-sqlite", version.ref = "graphql-cache" }
 junit4 = { module = "junit:junit", version.ref = "junit4" }
@@ -45,6 +41,4 @@ vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.36
 metalava = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava"}
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
-hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 apolloCacheCompiler = { id = "com.apollographql.cache:normalized-cache-apollo-compiler-plugin", version.ref = "graphql-cache" }

@@ -81,8 +81,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.apollo)
-    alias(libs.plugins.hiltAndroid)
-    alias(libs.plugins.ksp)
 }
 
 val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
@@ -159,7 +157,6 @@ kotlin {
             dependencies {
                 implementation(libs.normalised.cache.sqlite)
                 implementation(libs.koin.android)
-                implementation(libs.hilt.android)
             }
         }
         val androidUnitTest by getting {
@@ -173,9 +170,6 @@ kotlin {
     }
 }
 
-dependencies {
-    add("kspAndroid", libs.hilt.compiler)
-}
 
 android {
     namespace = GraphQLConfig.BUNDLE_ID
