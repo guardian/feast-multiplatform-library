@@ -135,14 +135,14 @@ class TerminologyTable(
     }
 
     /**
-     * Converts UK terminology to US terminology and provides extra notes about the conversion.
+     * Converts UK terminology to US terminology and provides extra notes and highlights for the conversion.
      *
      * Each [TerminologyEntry.block] value is treated as a protected phrase span: a matched UK term is
      * not replaced only when that exact match sits inside one of its blocked phrases. For example,
      * `pepper` may be replaced generally, while the `pepper` in `red pepper` remains unchanged.
      *
-     * The [convertTerm] function returns a [ConversionResult] containing the modified string and the
-     * last matched terminology entry, or null if no conversion occurred.
+     * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
+     * last matched terminology entry, and any associated highlights( indexes for usTerms in the ingredeint sentence), or null if no conversion occurred.
      */
     data class ConversionResult(
         val replacedString: String,
