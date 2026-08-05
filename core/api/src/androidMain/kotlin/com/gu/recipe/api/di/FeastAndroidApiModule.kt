@@ -1,6 +1,5 @@
 package com.gu.recipe.api.di
 
-import android.content.Context
 import com.gu.recipe.api.repository.GraphQLRepository
 import com.gu.recipe.api.repository.GraphQlRepositoryImpl
 import com.gu.recipe.core.graphql.config.GraphQlConfig
@@ -17,10 +16,4 @@ fun androidFeastApiModule(
     includes(graphQlModule(GraphQlConfig(baseUrl = baseUrl), ioDispatcher))
     single<GraphQLRepository> { GraphQlRepositoryImpl(get()) }
 }
-
-@Suppress("UNUSED_PARAMETER")
-fun androidFeastApiModule(
-    context: Context,
-    baseUrl: String,
-): Module = androidFeastApiModule(baseUrl)
 
