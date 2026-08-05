@@ -35,20 +35,12 @@ Follow the steps below to publish the `core` library to your local maven reposit
 1. Gradle sync to make sure all dependencies are downloaded
 
 #### For Android:
-1. ./gradlew :core:graphql:assemble
-2. ./gradlew :core:graphql:build
-3. ./gradlew :core:graphql:publishToMavenLocal 
-4. ./gradlew :core:api:assemble
-5. ./gradlew :core:api:build
-6. ./gradlew :core:api:publishToMavenLocal
+1. ./gradlew :core:graphql:publishToMavenLocal
+2. ./gradlew :core:api:publishToMavenLocal
 
 #### For iOS:
-1. ./gradlew :core:graphql:assemble
-2. ./gradlew :core:graphql:build
-3. ./gradlew :core:graphql:assembleFeastMultiplatformGraphQLXCFramework
-4. ./gradlew :core:api:assemble
-5. ./gradlew :core:api:build
-6. ./gradlew :core:api:assembleFeastMultiplatformAPIXCFramework
+1. ./gradlew :core:graphql:assembleFeastMultiplatformGraphQLXCFramework
+2. /gradlew :core:api:assembleFeastMultiplatformAPIXCFramework
 
 ## iOS Setup
 
