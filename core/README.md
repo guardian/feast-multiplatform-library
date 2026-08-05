@@ -37,14 +37,19 @@ Follow the steps below to publish the `core` library to your local maven reposit
 #### For Android:
 1. ./gradlew :core:graphql:publishToMavenLocal
 2. ./gradlew :core:api:publishToMavenLocal
+3. Published artifacts can be found in `~/.m2/repository/com/gu/feast-multiplatform-api/<version>` and `~/.m2/repository/com/gu/feast-multiplatform-graphql/<version>` respectively.
+
+> Both need to be published for Android. We have defined the :api dependency in the consuming app. :graphql is pulled automatically by Gradle when building - but it still needs to be available independently on mavencentral/mavenlocal.
 
 #### For iOS:
-1. ./gradlew :core:graphql:assembleFeastMultiplatformGraphQLXCFramework
-2. /gradlew :core:api:assembleFeastMultiplatformAPIXCFramework
+1. ./gradlew :core:api:assembleFeastMultiplatformAPIXCFramework
+2. The XCFramework can be found in `core/api/build/XCFrameworks/release/FeastMultiplatformAPI.xcframework`. You can copy this framework to your iOS project and link it manually.
+
+> We don't need to publish the :graphql module for iOS, as it is only used internally by the :api module and also exported in api module's XCFramework.
 
 ## iOS Setup
 
-<This section will be filled up after confirming or by an iOS develper>
+> This section will be filled up after confirming or by an iOS develper
 
 ## Android Setup
 

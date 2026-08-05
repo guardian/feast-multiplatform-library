@@ -255,7 +255,7 @@ publishing {
 
             developers {
                 developer {
-                    id.set("guardian/android-developers")
+                    id.set("guardian/feast")
                     name.set("The Guardian")
                     email.set("contact@guardian.co.uk")
                     url.set("https://github.com/guardian")
@@ -273,9 +273,10 @@ publishing {
             }
         }
     }
+
     repositories {
         // Adds a task for publishing locally to the build directory.
-        // Use as `./gradlew :library:publishReleasePublicationToCustomRepository`
+        // Use as `./gradlew :core:graphql:publishReleasePublicationToCustomRepository`
         // Use with -Prepo.local=$LOCAL_ARTIFACTS_STAGING_PATH to output to a custom path.
         maven {
             name = "custom"
