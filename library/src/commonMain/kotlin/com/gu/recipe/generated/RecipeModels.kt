@@ -400,12 +400,4 @@ data class Highlight(
      */
     val endIndex: Int,
 
-    /**
-     * The type of term (e.g., ukterm or usterm)
-     */
-    val termType: TermType
-)
-@Serializable
-enum class TermType {
-    ukTerm, usTerm
-}
+    )

@@ -1,7 +1,6 @@
 package com.gu.recipe.terminology
 
 import com.gu.recipe.generated.Highlight
-import com.gu.recipe.generated.TermType
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import com.gu.recipe.generated.internalTerminologyData
@@ -105,34 +104,32 @@ class TerminologyTable(
 
     /**
      * Finds highlights for the given text and terminology mapping.
+     * Collecting "highlights" (matches) of specific terms within a given text, this is to used for underlining these terms in APP UI.
      */
+
+    private val regexCache = mutableMapOf<String, Regex>()
+
     private fun findHighlights(
         text: String,
         mapping: TerminologyEntry
     ): List<Highlight> {
         val highlights = mutableListOf<Highlight>()
 
-        val termsToCheck = listOf(
-            //mapping.ukTerm to TermType.ukTerm,
-            mapping.usTerm to TermType.usTerm
-        )
+        val termsToCheck = listOf(mapping.usTerm)
 
-        for ((term, termType) in termsToCheck) {
-            val regex = Regex("\\b${Regex.escape(term)}\\b", RegexOption.IGNORE_CASE)
+        for (term in termsToCheck) {
+            val regex = regexCache.getOrPut(term) {
+                Regex("\\b${Regex.escape(term)}\\b", RegexOption.IGNORE_CASE)
+            }
             regex.findAll(text).forEach { match ->
                 highlights.add(
                     Highlight(
                         matchedTerm = match.value,
                         startIndex = match.range.first,
-                        endIndex = match.range.last + 1, // Include the last character,
-                        termType = termType,
+                        endIndex = match.range.last + 1, // Include the last character
                     )
                 )
             }
-        }
-
-        highlights.forEach { highlight ->
-            println("Highlights ----->> Matched Word: ${highlight.matchedTerm}, Start Index: ${highlight.startIndex}, End Index: ${highlight.endIndex}, Term Type: ${highlight.termType}")
         }
         return highlights
     }
@@ -150,16 +147,13 @@ class TerminologyTable(
     data class ConversionResult(
         val replacedString: String,
         val terminologyEntry: TerminologyEntry?,
-        val highlights: List<Highlight>? // Add highlights property
+        val highlights: List<Highlight>? // Include highlights in the result
     )
 
     internal fun convertTerm(text: String?): ConversionResult? {
         val source = text ?: return null
-        println("Converting text: $source")
         val regex = replacementRegex ?: return null
-        println("Replacement regex: $regex")
         val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
-        println("Blocked ranges by term: $blockedRangesByTerm")
 
         val replacements = mutableListOf<Pair<IntRange, String>>()
         var highlights: List<Highlight>? = mutableListOf() // Collect highlights
@@ -167,16 +161,13 @@ class TerminologyTable(
 
         regex.findAll(source).forEach { match ->
             val matchedTerm = match.value.lowercase()
-            println("Matched term: $matchedTerm")
             val replacementEntry = replacementMap[matchedTerm]
-            println("Replacement entry: $replacementEntry")
             if (replacementEntry != null) {
                 val blockedRanges = blockedRangesByTerm.getOrPut(matchedTerm) {
                     findBlockedRanges(source, replacementEntry)
                 }
                 if (!isBlocked(blockedRanges, match.range)) {
                     val replacement = replacementFor(match.value, replacementEntry)
-                    println("Replaced term: $replacement")
                     replacements.add(match.range to replacement)
                     lastMatchedEntry = replacementEntry
                 }
@@ -189,15 +180,13 @@ class TerminologyTable(
             replacedString = replacedString.replaceRange(range, replacement)
         }
 
-        // Add highlight for the matched term only if guidance notes are available
+        // Add highlight for the matched term - only if their associated guidance notes are available otherwise skip
         highlights = if (lastMatchedEntry != null && (lastMatchedEntry.ukGuidance?.isNotEmpty() == true || lastMatchedEntry.usGuidance?.isNotEmpty() == true)) {
             findHighlights(replacedString, lastMatchedEntry)
         } else {
             null
         }
-
-        println("Highlights: $highlights") // Debug output for highlights
-        return ConversionResult(replacedString, lastMatchedEntry, highlights) // Include highlights in the result//return ConversionResult(replacedString, lastMatchedEntry)
+        return ConversionResult(replacedString, lastMatchedEntry, highlights)
     }
 
 

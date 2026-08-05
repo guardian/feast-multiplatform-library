@@ -978,7 +978,6 @@ class RenderRecipeTest {
         assertEquals("This is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
         assertEquals(2, rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.startIndex)
         assertEquals(10, rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.endIndex)
-        assertEquals(TermType.usTerm, rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.termType)
         assertEquals("eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.highlights?.first()?.matchedTerm)
         assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
         assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)

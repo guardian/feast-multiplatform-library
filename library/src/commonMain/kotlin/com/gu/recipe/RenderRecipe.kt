@@ -314,10 +314,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 
     internal fun applyTerminology(text: String?): String? {
-        println("applyTerminology: Input text='$text'")
-        val result = terminologyTable?.convertTerm(text)?.replacedString ?: text
-        println("applyTerminology: Result='$result'")
-        return result
+        return terminologyTable?.convertTerm(text)?.replacedString ?: text
     }
 
     /**
@@ -328,9 +325,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
      * @return The associated guidance string, or null if not found.
      */
     fun getGuidanceForTerm(term: String?, countryCode: String): String? {
-        println("getGuidanceForTerm: Input term='$term', countryCode='$countryCode'")
         if (term.isNullOrBlank()) {
-            println("getGuidanceForTerm: term is null or blank")
             return null
         }
         val result = terminologyTable?.convertTerm(term)
@@ -339,7 +334,6 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
             "us" -> result?.terminologyEntry?.usGuidance
             else -> null
         }
-        println("getGuidanceForTerm: Retrieved guidance='$guidance'")
         return guidance
     }
 
@@ -350,10 +344,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
      * @return A list of Highlight objects, or an empty list if no highlights are found.
      */
     fun getHighlightsForTerm(term: String?): List<Highlight>? {
-        println("getHighlightsForTerm: Input term='$term'")
-        val highlights = terminologyTable?.convertTerm(term)?.highlights
-        println("getHighlightsForTerm: Retrieved highlights='$highlights'")
-        return highlights
+        return terminologyTable?.convertTerm(term)?.highlights
     }
 
 
