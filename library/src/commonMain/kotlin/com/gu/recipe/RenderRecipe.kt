@@ -269,12 +269,11 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                     ingredientSection.copy(
                         ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
                             ingredient.copy(
-                                text = applyTerminology(ingredient.text),
+                                text = applyTerminology(ingredient.text, true),
                                 ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
                                 template = applyTerminology(ingredient.template),
                                 ukGuidance = getGuidanceForTerm(ingredient.text, "uk"),
                                 usGuidance = getGuidanceForTerm(ingredient.text, "us"),
-                                highlights = getHighlightsForTerm(ingredient.text)
                             )
                         },
                         recipeSection = applyTerminology(ingredientSection.recipeSection)
@@ -313,8 +312,8 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         return section == TerminologySection.ALL || section == currentSection
     }
 
-    internal fun applyTerminology(text: String?): String? {
-        return terminologyTable?.convertTerm(text)?.replacedString ?: text
+    internal fun applyTerminology(text: String?, requireHighlight: Boolean = false): String? {
+        return terminologyTable?.convertTerm(text, requireHighlight)?.replacedString ?: text
     }
 
     /**
@@ -335,16 +334,6 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
             else -> null
         }
         return guidance
-    }
-
-    /**
-     * Retrieves the list of highlights from the result of terminologyTable?.convertTerm(term).
-     *
-     * @param term The term to look up in the terminology table.
-     * @return A list of Highlight objects, or an empty list if no highlights are found.
-     */
-    fun getHighlightsForTerm(term: String?): List<Highlight>? {
-        return terminologyTable?.convertTerm(term)?.highlights
     }
 
 

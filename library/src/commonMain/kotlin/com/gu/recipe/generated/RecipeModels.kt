@@ -280,11 +280,6 @@ data class IngredientItem (
      * Guidance notes for any US term to highlight the context
      */
     val usGuidance: String? = null,
-
-    /**
-     * Highlights for matched terms in the ingredient, we want to underline them in the App side of UI
-     */
-    val highlights: List<Highlight>? = null
 )
 
 /**
@@ -382,22 +377,3 @@ data class Timing (
      */
     val text: String? = null
 )
-
-@Serializable
-data class Highlight(
-    /**
-     * The term that was matched in the text
-     */
-    val matchedTerm: String,
-
-    /**
-     * The starting index of the matched term in the text
-     */
-    val startIndex: Int,
-
-    /**
-     * The ending index of the matched term in the text
-     */
-    val endIndex: Int,
-
-    )

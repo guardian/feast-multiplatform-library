@@ -1,6 +1,5 @@
 package com.gu.recipe.terminology
 
-import com.gu.recipe.generated.Highlight
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import com.gu.recipe.generated.internalTerminologyData
@@ -91,47 +90,19 @@ class TerminologyTable(
 
     /**
      * Returns the US replacement, preserving uppercase first-letter style from [matchValue].
+     * It also optionally wraps the replacement in an underline tag if [requireHighlight] is true.
      */
-    private fun replacementFor(matchValue: String, entry: TerminologyEntry): String {
-        val replacement = entry.usTerm
-        return if (matchValue.firstOrNull()?.isUpperCase() == true) {
-            replacement.replaceFirstChar { it.uppercase() }
+    private fun replacementFor(matchValue: String, entry: TerminologyEntry, requireHighlight: Boolean = false): String {
+        val replacement = if (matchValue.firstOrNull()?.isUpperCase() == true) {
+            entry.usTerm.replaceFirstChar { it.uppercase() }
+        } else {
+            entry.usTerm
+        }
+        return if (requireHighlight) {
+            "<u>$replacement</u>"
         } else {
             replacement
         }
-    }
-
-
-    /**
-     * Finds highlights for the given text and terminology mapping.
-     * Collecting "highlights" (matches) of specific terms within a given text, this is to used for underlining these terms in APP UI.
-     */
-
-    private val regexCache = mutableMapOf<String, Regex>()
-
-    private fun findHighlights(
-        text: String,
-        mapping: TerminologyEntry
-    ): List<Highlight> {
-        val highlights = mutableListOf<Highlight>()
-
-        val termsToCheck = listOf(mapping.usTerm)
-
-        for (term in termsToCheck) {
-            val regex = regexCache.getOrPut(term) {
-                Regex("\\b${Regex.escape(term)}\\b", RegexOption.IGNORE_CASE)
-            }
-            regex.findAll(text).forEach { match ->
-                highlights.add(
-                    Highlight(
-                        matchedTerm = match.value,
-                        startIndex = match.range.first,
-                        endIndex = match.range.last + 1, // Include the last character
-                    )
-                )
-            }
-        }
-        return highlights
     }
 
     /**
@@ -142,21 +113,19 @@ class TerminologyTable(
      * `pepper` may be replaced generally, while the `pepper` in `red pepper` remains unchanged.
      *
      * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
-     * last matched terminology entry, and any associated highlights( indexes for usTerms in the ingredeint sentence), or null if no conversion occurred.
+     * last matched terminology entry, and any associated highlights( <u> tag for usTerms in the ingredeint sentence), or null if no conversion occurred.
      */
     data class ConversionResult(
         val replacedString: String,
         val terminologyEntry: TerminologyEntry?,
-        val highlights: List<Highlight>? // Include highlights in the result
     )
 
-    internal fun convertTerm(text: String?): ConversionResult? {
+    internal fun convertTerm(text: String?, requireHighlight: Boolean = false): ConversionResult? {
         val source = text ?: return null
         val regex = replacementRegex ?: return null
         val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
 
         val replacements = mutableListOf<Pair<IntRange, String>>()
-        var highlights: List<Highlight>? = mutableListOf() // Collect highlights
         var lastMatchedEntry: TerminologyEntry? = null
 
         val replacedString = regex.replace(source) { match ->
@@ -168,7 +137,9 @@ class TerminologyTable(
                 }
                 if (!isBlocked(blockedRanges, match.range)) {
                     lastMatchedEntry = replacementEntry
-                    replacementFor(match.value, replacementEntry)
+                    //Check when section needs highlights, if they have got guidance notes associated with it or not?
+                    var requireHighlightWithNotes = requireHighlight && (replacementEntry != null && (replacementEntry.ukGuidance?.isNotEmpty() == true || replacementEntry.usGuidance?.isNotEmpty() == true))
+                    replacementFor(match.value, replacementEntry, requireHighlightWithNotes)
                 } else {
                     match.value // Keep the original term if blocked
                 }
@@ -177,13 +148,7 @@ class TerminologyTable(
             }
         }
 
-        // Add highlight for the matched term - only if their associated guidance notes are available otherwise skip
-        highlights = if (lastMatchedEntry != null && (lastMatchedEntry.ukGuidance?.isNotEmpty() == true || lastMatchedEntry.usGuidance?.isNotEmpty() == true)) {
-            findHighlights(replacedString, lastMatchedEntry)
-        } else {
-            null
-        }
-        return ConversionResult(replacedString, lastMatchedEntry, highlights)
+        return ConversionResult(replacedString, lastMatchedEntry)
     }
 
 
