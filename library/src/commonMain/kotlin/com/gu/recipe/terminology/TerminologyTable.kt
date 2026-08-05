@@ -159,7 +159,7 @@ class TerminologyTable(
         var highlights: List<Highlight>? = mutableListOf() // Collect highlights
         var lastMatchedEntry: TerminologyEntry? = null
 
-        regex.findAll(source).forEach { match ->
+        val replacedString = regex.replace(source) { match ->
             val matchedTerm = match.value.lowercase()
             val replacementEntry = replacementMap[matchedTerm]
             if (replacementEntry != null) {
@@ -167,17 +167,14 @@ class TerminologyTable(
                     findBlockedRanges(source, replacementEntry)
                 }
                 if (!isBlocked(blockedRanges, match.range)) {
-                    val replacement = replacementFor(match.value, replacementEntry)
-                    replacements.add(match.range to replacement)
                     lastMatchedEntry = replacementEntry
+                    replacementFor(match.value, replacementEntry)
+                } else {
+                    match.value // Keep the original term if blocked
                 }
+            } else {
+                match.value // Keep the original term if no replacement entry exists
             }
-        }
-
-        // Apply replacements in reverse order to avoid invalidating ranges
-        var replacedString = source
-        for ((range, replacement) in replacements.asReversed()) {
-            replacedString = replacedString.replaceRange(range, replacement)
         }
 
         // Add highlight for the matched term - only if their associated guidance notes are available otherwise skip
