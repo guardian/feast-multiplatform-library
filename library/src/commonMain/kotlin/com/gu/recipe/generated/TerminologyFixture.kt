@@ -2,713 +2,1163 @@
 package com.gu.recipe.generated
 
 val internalTerminologyData = """{
-  "prepared_at": "2026-07-17T14:17:40.492Z",
+  "prepared_at": "2026-07-23T14:33:07.361Z",
   "key": [
     "id",
     "ukTerm",
     "usTerm",
-    "block"
+    "block",
+    "ukGuidance",
+    "usGuidance"
   ],
   "values": [
     [
       1,
       "aubergine",
       "eggplant",
-      []
+      [
+        "eggplant"
+      ],
+      "Testing uk guidance notes for aubergine",
+      "Testing us guidance notes for eggplant"
     ],
     [
       2,
       "aubergines",
       "eggplants",
-      []
+      [
+        "eggplants"
+      ],
+      "",
+      ""
     ],
     [
       3,
       "streaky bacon",
       "American bacon",
-      []
+      [
+        "American bacon"
+      ],
+      "",
+      ""
     ],
     [
       4,
       "back bacon",
       "Canadian bacon",
-      []
+      [
+        "Canadian bacon"
+      ],
+      "",
+      ""
     ],
     [
       5,
       "square pan",
       "pan",
-      []
+      [
+        "pan"
+      ],
+      "",
+      ""
     ],
     [
       6,
       "loaf tin",
       "loaf pan",
-      []
+      [
+        "loaf pan"
+      ],
+      "",
+      ""
     ],
     [
       7,
       "banana shallots",
       "shallots",
-      []
+      [
+        "shallots"
+      ],
+      "",
+      ""
     ],
     [
       8,
       "bavette",
       "flap steak",
-      []
+      [
+        "flap steak"
+      ],
+      "",
+      ""
     ],
     [
       9,
       "beef mince",
       "ground beef",
-      []
+      [
+        "ground beef"
+      ],
+      "",
+      ""
     ],
     [
       10,
       "beetroot",
       "beets",
-      []
+      [
+        "beets"
+      ],
+      "",
+      ""
     ],
     [
       11,
       "bicarbonate of soda",
       "baking soda",
-      []
+      [
+        "baking soda"
+      ],
+      "",
+      ""
     ],
     [
       12,
       "Biscoff",
       "cookie butter",
-      []
+      [
+        "cookie butter"
+      ],
+      "",
+      ""
     ],
     [
       13,
       "blackcurrants",
       "berries",
-      []
+      [
+        "berries"
+      ],
+      "",
+      ""
     ],
     [
       14,
       "black-eyed beans",
       "black-eyed peas",
-      []
+      [
+        "black-eyed peas"
+      ],
+      "",
+      ""
     ],
     [
       15,
       "borlotti beans",
       "cranberry beans",
-      []
+      [
+        "cranberry beans"
+      ],
+      "",
+      ""
     ],
     [
       16,
       "braising steak",
       "stew beef",
-      []
+      [
+        "stew beef"
+      ],
+      "",
+      ""
     ],
     [
       17,
       "broad beans",
       "fava beans",
-      []
+      [
+        "fava beans"
+      ],
+      "",
+      ""
     ],
     [
       18,
       "butter beans",
       "lima beans",
-      []
+      [
+        "lima beans"
+      ],
+      "",
+      ""
     ],
     [
       19,
       "caster sugar",
       "superfine sugar",
-      []
+      [
+        "superfine sugar"
+      ],
+      "",
+      ""
     ],
     [
       20,
       "cavolo nero",
       "lacinato kale",
-      []
+      [
+        "lacinato kale"
+      ],
+      "",
+      ""
     ],
     [
       21,
       "celeriac",
       "celery root",
-      []
+      [
+        "celery root"
+      ],
+      "",
+      ""
     ],
     [
       22,
       "chestnut mushroom",
       "cremini mushroom",
-      []
+      [
+        "cremini mushroom"
+      ],
+      "",
+      ""
     ],
     [
       23,
       "chickpeas",
       "garbanzo beans",
-      []
+      [
+        "garbanzo beans"
+      ],
+      "",
+      ""
     ],
     [
       24,
       "Chinese leaf",
       "Napa cabbage",
-      []
+      [
+        "Napa cabbage"
+      ],
+      "",
+      ""
     ],
     [
       25,
       "chips",
       "French fries",
       [
+        "French fries",
         "chocolate chips",
         "tortilla chips",
         "corn chips",
         "butterscotch chips"
-      ]
+      ],
+      "",
+      ""
     ],
     [
       26,
       "chopped tomatoes",
       "canned diced tomatoes",
-      []
+      [
+        "canned diced tomatoes"
+      ],
+      "",
+      ""
     ],
     [
       27,
       "clingfilm",
       "plastic wrap",
-      []
+      [
+        "plastic wrap"
+      ],
+      "",
+      ""
     ],
     [
       28,
       "coriander",
       "cilantro",
       [
+        "cilantro",
         "coriander seed",
         "coriander seeds",
         "ground coriander",
         "coriander powder"
-      ]
+      ],
+      "",
+      ""
     ],
     [
       29,
       "cornflour",
       "cornstarch",
-      []
+      [
+        "cornstarch"
+      ],
+      "",
+      ""
     ],
     [
       30,
       "courgette",
       "zucchini",
-      []
+      [
+        "zucchini"
+      ],
+      "",
+      ""
     ],
     [
       31,
       "courgettes",
       "zucchinis",
-      []
+      [
+        "zucchinis"
+      ],
+      "",
+      ""
     ],
     [
       32,
       "single cream",
       "half-and-half",
-      []
+      [
+        "half-and-half"
+      ],
+      "",
+      ""
     ],
     [
       33,
       "double cream",
       "heavy cream",
-      []
+      [
+        "heavy cream"
+      ],
+      "",
+      ""
     ],
     [
       34,
       "crisps",
       "potato chips",
-      []
+      [
+        "potato chips"
+      ],
+      "",
+      ""
     ],
     [
       35,
       "Demerara sugar",
       "raw sugar",
-      []
+      [
+        "raw sugar"
+      ],
+      "",
+      ""
     ],
     [
       36,
       "desiccated coconut",
       "shredded unsweetened coconut",
-      []
+      [
+        "shredded unsweetened coconut"
+      ],
+      "",
+      ""
     ],
     [
       37,
       "digestive biscuits",
       "Graham crackers",
-      []
+      [
+        "Graham crackers"
+      ],
+      "",
+      ""
     ],
     [
       38,
       "medium eggs",
       "large eggs",
-      []
+      [
+        "eggs"
+      ],
+      "",
+      ""
     ],
     [
       39,
       "filo pastry",
       "phyllo pastry",
-      []
+      [
+        "phyllo pastry"
+      ],
+      "",
+      ""
     ],
     [
       40,
       "fish fingers",
       "fish sticks",
-      []
+      [
+        "fish sticks"
+      ],
+      "",
+      ""
     ],
     [
       41,
       "flat-leaf parsley",
       "Italian parsley",
-      []
+      [
+        "Italian parsley"
+      ],
+      "",
+      ""
     ],
     [
       42,
       "forced rhubarb",
       "hothouse rhubarb",
-      []
+      [
+        "hothouse rhubarb"
+      ],
+      "",
+      ""
     ],
     [
       43,
       "glace cherries",
       "candied cherries",
-      []
+      [
+        "candied cherries"
+      ],
+      "",
+      ""
     ],
     [
       44,
       "gooseberries",
       "berries",
-      []
+      [
+        "berries"
+      ],
+      "",
+      ""
     ],
     [
       45,
       "greengages",
       "plums",
-      []
+      [
+        "plums"
+      ],
+      "",
+      ""
     ],
     [
       46,
       "grill",
       "broil",
-      []
+      [
+        "broil"
+      ],
+      "",
+      ""
     ],
     [
       47,
       "ground almonds",
       "almond flour",
-      []
+      [
+        "almond flour"
+      ],
+      "",
+      ""
     ],
     [
       48,
       "groundnut oil",
       "peanut oil",
-      []
+      [
+        "peanut oil"
+      ],
+      "",
+      ""
     ],
     [
       49,
       "haricot beans",
       "navy beans",
-      []
+      [
+        "navy beans"
+      ],
+      "",
+      ""
     ],
     [
       50,
       "hispi cabbage",
       "pointed cabbage",
-      []
+      [
+        "pointed cabbage"
+      ],
+      "",
+      ""
     ],
     [
       51,
       "hob",
       "stovetop",
-      []
+      [
+        "stovetop"
+      ],
+      "",
+      ""
     ],
     [
       52,
       "ice lolly",
       "popsicle",
-      []
+      [
+        "popsicle"
+      ],
+      "",
+      ""
     ],
     [
       53,
       "icing sugar",
       "powdered sugar",
-      []
+      [
+        "powdered sugar"
+      ],
+      "",
+      ""
     ],
     [
       54,
       "jelly",
       "Jell-O",
-      []
+      [
+        "Jell-o"
+      ],
+      "",
+      ""
     ],
     [
       55,
       "Jersey Royals",
       "baby new potatoes",
-      []
+      [
+        "baby new potatoes"
+      ],
+      "",
+      ""
     ],
     [
       56,
       "jug",
       "pitcher",
-      []
+      [
+        "pitcher"
+      ],
+      "",
+      ""
     ],
     [
       57,
       "mangetout",
       "snow peas",
-      []
+      [
+        "snow peas"
+      ],
+      "",
+      ""
     ],
     [
       58,
       "milled chia seeds",
       "ground chia seeds",
-      []
+      [
+        "ground chia seeds"
+      ],
+      "",
+      ""
     ],
     [
       59,
       "mooli",
       "daikon radish",
-      []
+      [
+        "daikon radish"
+      ],
+      "",
+      ""
     ],
     [
       60,
       "muscovado sugar",
       "dark brown sugar",
-      []
+      [
+        "dark brown sugar"
+      ],
+      "",
+      ""
     ],
     [
       61,
       "onglet",
       "hanger steak",
-      []
+      [
+        "hanger steak"
+      ],
+      "",
+      ""
     ],
     [
       62,
       "pak choi",
       "bok choy",
-      []
+      [
+        "bok choy"
+      ],
+      "",
+      ""
     ],
     [
       63,
       "pepper",
       "black pepper",
       [
+        "black pepper",
         "bell pepper",
         "yellow pepper",
         "red pepper",
         "green pepper",
         "chilli pepper"
-      ]
+      ],
+      "",
+      ""
     ],
     [
       64,
       "plain flour",
       "all-purpose flour",
-      []
+      [
+        "all-purpose flour"
+      ],
+      "",
+      ""
     ],
     [
       65,
       "porridge oats",
       "oatmeal",
-      []
+      [
+        "oatmeal"
+      ],
+      "",
+      ""
     ],
     [
       66,
       "prawns",
       "shrimp",
-      []
+      [
+        "shrimp"
+      ],
+      "",
+      ""
     ],
     [
       67,
       "pudding",
       "dessert",
-      []
+      [
+        "dessert"
+      ],
+      "",
+      ""
     ],
     [
       68,
       "pudding rice",
       "short-grain rice",
-      []
+      [
+        "rice"
+      ],
+      "",
+      ""
     ],
     [
       69,
       "purple sprouting broccoli",
       "broccolini",
-      []
+      [
+        "broccolini"
+      ],
+      "",
+      ""
     ],
     [
       70,
       "rapeseed oil",
       "canola oil",
-      []
+      [
+        "canola oil"
+      ],
+      "",
+      ""
     ],
     [
       71,
       "rib roast",
       "prime rib",
-      []
+      [
+        "prime rib"
+      ],
+      "",
+      ""
     ],
     [
       72,
       "rocket",
       "arugula",
-      []
+      [
+        "arugula"
+      ],
+      "",
+      ""
     ],
     [
       73,
       "Scotch bonnet peppers",
       "habanero peppers",
-      []
+      [
+        "habanero peppers"
+      ],
+      "",
+      ""
     ],
     [
       74,
       "sea salt",
       "fine sea salt",
-      []
+      [
+        "fine sea salt"
+      ],
+      "",
+      ""
     ],
     [
       75,
       "self-raising flour",
       "self-rising flour",
-      []
+      [
+        "flour"
+      ],
+      "",
+      ""
     ],
     [
       76,
       "semi-skimmed milk",
       "low-fat milk",
-      []
+      [
+        "low-fat milk"
+      ],
+      "",
+      ""
     ],
     [
       77,
       "set honey",
       "creamed honey",
-      []
+      [
+        "creamed honey"
+      ],
+      "",
+      ""
     ],
     [
       78,
       "shin",
       "shank",
-      []
+      [
+        "shank"
+      ],
+      "",
+      ""
     ],
     [
       79,
       "shortcrust pastry",
       "pie crust",
-      []
+      [
+        "pie crust"
+      ],
+      "",
+      ""
     ],
     [
       80,
       "silverside",
       "bottom round",
-      []
+      [
+        "bottom round"
+      ],
+      "",
+      ""
     ],
     [
       81,
       "spring onion",
       "green onion",
-      []
+      [
+        "green onion"
+      ],
+      "",
+      ""
     ],
     [
       82,
       "strong white flour",
       "white bread flour",
-      []
+      [
+        "flour"
+      ],
+      "",
+      ""
     ],
     [
       83,
       "sultanas",
       "raisins",
-      []
+      [
+        "raisins"
+      ],
+      "",
+      ""
     ],
     [
       84,
       "swede",
       "rutabaga",
-      []
+      [
+        "rutabaga"
+      ],
+      "",
+      ""
     ],
     [
       85,
       "sweetcorn",
       "corn",
-      []
+      [
+        "corn"
+      ],
+      "",
+      ""
     ],
     [
       86,
       "Tenderstem broccoli",
       "broccolini",
-      []
+      [
+        "broccolini"
+      ],
+      "",
+      ""
     ],
     [
       87,
       "tomato puree",
       "tomato paste",
-      []
+      [
+        "tomato paste"
+      ],
+      "",
+      ""
     ],
     [
       88,
       "topside",
       "top round",
-      []
+      [
+        "top round"
+      ],
+      "",
+      ""
     ],
     [
       89,
       "treacle",
       "molasses",
-      []
+      [
+        "molasses"
+      ],
+      "",
+      ""
     ],
     [
       90,
       "wholemeal flour",
       "wholewheat flour",
-      []
+      [
+        "wholewheat flour"
+      ],
+      "",
+      ""
     ],
     [
       91,
       "dried active yeast",
       "active dry yeast",
-      []
+      [
+        "active dry yeast"
+      ],
+      "",
+      ""
     ],
     [
       92,
       "easy bake yeast",
       "instant yeast",
-      []
+      [
+        "instant yeast"
+      ],
+      "",
+      ""
     ],
     [
       93,
       "golden syrup",
       "light molasses or corn syrup",
-      []
+      [
+        "light molasses or corn syrup"
+      ],
+      "",
+      ""
     ],
     [
       94,
       "gammon",
       "cured ham",
-      []
+      [
+        "cured ham"
+      ],
+      "",
+      ""
     ],
     [
       95,
       "spring greens",
       "collard greens",
-      []
+      [
+        "collard greens"
+      ],
+      "",
+      ""
     ],
     [
       96,
       "gem lettuce",
       "Bibb lettuce",
-      []
+      [
+        "Bibb lettuce"
+      ],
+      "",
+      ""
     ],
     [
       97,
       "soured cream",
       "sour cream",
-      []
+      [
+        "sour cream"
+      ],
+      "",
+      ""
     ],
     [
       98,
       "fromage frais",
       "thick creamy yogurt",
-      []
+      [
+        "thick creamy yogurt"
+      ],
+      "",
+      ""
     ],
     [
       99,
       "suet",
       "beef fat",
-      []
+      [
+        "beef fat"
+      ],
+      "",
+      ""
     ],
     [
       100,
       "bangers",
       "sausages",
-      []
+      [
+        "sausages"
+      ],
+      "",
+      ""
     ],
     [
       101,
       "fairy cake",
       "cupcake",
-      []
+      [
+        "cupcake"
+      ],
+      "",
+      ""
     ],
     [
       102,
       "candy floss",
       "cotton candy",
-      []
+      [
+        "cotton candy"
+      ],
+      "",
+      ""
     ],
     [
       103,
       "greaseproof paper",
       "parchment paper",
-      []
+      [
+        "parchment paper"
+      ],
+      "",
+      ""
     ],
     [
       104,
       "tea towel",
       "dish towel",
-      []
+      [
+        "dish towel"
+      ],
+      "",
+      ""
     ],
     [
       105,
       "kitchen roll",
       "paper towels",
-      []
+      [
+        "paper towels"
+      ],
+      "",
+      ""
     ],
     [
       106,
       "washing-up liquid",
       "dish soap",
-      []
+      [
+        "dish soap"
+      ],
+      "",
+      ""
     ],
     [
       107,
       "gherkin",
       "pickle",
-      []
+      [
+        "pickle"
+      ],
+      "",
+      ""
     ],
     [
       108,
       "jacket potato",
       "baked potato",
-      []
+      [
+        "baked potato"
+      ],
+      "",
+      ""
     ],
     [
       109,
       "semolina",
       "farina",
-      []
+      [
+        "farina"
+      ],
+      "",
+      ""
     ],
     [
       110,
       "lemonade",
       "lemon-lime soda",
-      []
+      [
+        "lemon-lime soda"
+      ],
+      "",
+      ""
     ],
     [
       111,
       "bubble and squeak",
       "potato and cabbage hash",
-      []
+      [
+        "potato and cabbage hash"
+      ],
+      "",
+      ""
     ],
     [
       112,
       "saveloy",
       "frankfurter",
-      []
+      [
+        "frankfurter"
+      ],
+      "",
+      ""
     ],
     [
       113,
       "sponge",
-      "cake",
+      "frankfurter",
       [
+        "cake",
         "victoria sponge",
         "sponge cake",
         "bake sponge",
         "baked sponge",
         "sponge fingers"
-      ]
+      ],
+      "",
+      ""
     ]
   ]
 }"""

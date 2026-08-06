@@ -15,8 +15,9 @@ class DataLoaderTest {
 """.trimIndent()
 
     private val validTerminologyJson = """
-    {"prepared_at":"2026-01-01T00:00:00","key":["id","ukTerm","usTerm","block"],"values":[[1,"aubergine","eggplant",[]],[2,"courgette","zucchini",[]]]}
+    {"prepared_at":"2026-07-23T14:33:07.361Z","key":["id","ukTerm","usTerm","block","ukGuidance","usGuidance"],"values":[[1,"aubergine","eggplant",["eggplant"],"Testing uk guidance notes for aubergine","Testing us guidance notes for eggplant"],[2,"courgette","zucchini",["zucchini"],"",""]]}
 """.trimIndent()
+
 
     private val invalidJson = "not valid json at all"
 

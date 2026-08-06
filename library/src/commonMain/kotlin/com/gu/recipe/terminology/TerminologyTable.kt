@@ -2,7 +2,6 @@ package com.gu.recipe.terminology
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-//import com.gu.recipe.generated.TerminologyFixture
 import com.gu.recipe.generated.internalTerminologyData
 
 @Serializable
@@ -12,9 +11,15 @@ data class TerminologySchema(
     val values: List<List<JsonElement>>
 )
 
-
 @Serializable
-data class TerminologyEntry(val id: Int, val ukTerm: String, val usTerm: String, val block: List<String>)
+data class TerminologyEntry(
+    val id: Int,
+    val ukTerm: String,
+    val usTerm: String,
+    val block: List<String>,
+    val ukGuidance: String?,
+    val usGuidance: String?,
+)
 
 /**
  * Converts UK terminology to US terminology.
@@ -85,28 +90,43 @@ class TerminologyTable(
 
     /**
      * Returns the US replacement, preserving uppercase first-letter style from [matchValue].
+     * It also optionally wraps the replacement in an underline tag if [requireHighlight] is true.
      */
-    private fun replacementFor(matchValue: String, entry: TerminologyEntry): String {
-        val replacement = entry.usTerm
-        return if (matchValue.firstOrNull()?.isUpperCase() == true) {
-            replacement.replaceFirstChar { it.uppercase() }
+    private fun replacementFor(matchValue: String, entry: TerminologyEntry, requireHighlight: Boolean = false): String {
+        val replacement = if (matchValue.firstOrNull()?.isUpperCase() == true) {
+            entry.usTerm.replaceFirstChar { it.uppercase() }
+        } else {
+            entry.usTerm
+        }
+        return if (requireHighlight) {
+            "<u>$replacement</u>"
         } else {
             replacement
         }
     }
 
     /**
-     * Converts terminology in [text], returning null when [text] is null.
+     * Converts UK terminology to US terminology and provides extra notes and highlights for the conversion.
      *
-     * Blocked phrase ranges are cached per matched term for this invocation only. This avoids
-     * repeated scans for the same term in long strings while keeping singleton memory usage low.
+     * Each [TerminologyEntry.block] value is treated as a protected phrase span: a matched UK term is
+     * not replaced only when that exact match sits inside one of its blocked phrases. For example,
+     * `pepper` may be replaced generally, while the `pepper` in `red pepper` remains unchanged.
+     *
+     * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
+     * last matched terminology entry, and any associated highlights( <u> tag for usTerms in the ingredeint sentence), or null if no conversion occurred.
      */
-    internal fun convertTerm(text: String?): String? {
-        val source = text ?: return null
-        val regex = replacementRegex ?: return source
-        val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
+    data class ConversionResult(
+        val replacedString: String,
+        val terminologyEntry: TerminologyEntry?,
+    )
 
-        return regex.replace(source) { match ->
+    internal fun convertTerm(text: String?, requireHighlight: Boolean = false): ConversionResult? {
+        val source = text ?: return null
+        val regex = replacementRegex ?: return null
+        val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
+        var lastMatchedEntry: TerminologyEntry? = null
+
+        val replacedString = regex.replace(source) { match ->
             val matchedTerm = match.value.lowercase()
             val replacementEntry = replacementMap[matchedTerm]
             if (replacementEntry != null) {
@@ -114,15 +134,22 @@ class TerminologyTable(
                     findBlockedRanges(source, replacementEntry)
                 }
                 if (!isBlocked(blockedRanges, match.range)) {
-                    replacementFor(match.value, replacementEntry)
+                    lastMatchedEntry = replacementEntry
+                    //Check when section needs highlights, if they have got guidance notes associated with it or not?
+                    val shouldHighlight = requireHighlight && replacementEntry.usGuidance?.isNotEmpty() == true
+                    replacementFor(match.value, replacementEntry, shouldHighlight)
                 } else {
-                    match.value
+                    match.value // Keep the original term if blocked
                 }
             } else {
-                match.value
+                match.value // Keep the original term if no replacement entry exists
             }
         }
+
+        return ConversionResult(replacedString, lastMatchedEntry)
     }
+
+
 }
 
 fun loadInternalTerminologyTable(): Result<TerminologyTable> {
@@ -138,7 +165,9 @@ fun loadTerminologyTable(raw: String): Result<TerminologyTable> {
             val ukTerm = row[1].jsonPrimitive.content
             val usTerm = row[2].jsonPrimitive.content
             val block = row[3].jsonArray.map { it.jsonPrimitive.content }
-            ukTerm to TerminologyEntry(id = id, ukTerm = ukTerm, usTerm = usTerm, block = block)
+            val ukGuidance = row[4].jsonPrimitive.content
+            val usGuidance = row[5].jsonPrimitive.content
+            ukTerm to TerminologyEntry(id = id, ukTerm = ukTerm, usTerm = usTerm, block = block, ukGuidance = ukGuidance, usGuidance = usGuidance)
         }
 
         val table = TerminologyTable(terminologyMap)
