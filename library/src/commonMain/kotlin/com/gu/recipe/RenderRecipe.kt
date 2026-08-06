@@ -329,8 +329,8 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         }
         val result = terminologyTable?.convertTerm(term)
         val guidance = when (countryCode.lowercase()) {
-            "uk" -> result?.terminologyEntry?.ukGuidance?.let { "${result.terminologyEntry.ukTerm}\n$it" }
-            "us" -> result?.terminologyEntry?.usGuidance?.let { "${result.terminologyEntry.usTerm}\n$it" }
+            "uk" -> result?.terminologyEntry?.ukGuidance?.let { "<strong>${result.terminologyEntry.ukTerm}</strong>\n$it" }
+            "us" -> result?.terminologyEntry?.usGuidance?.let { "<strong>${result.terminologyEntry.usTerm}</strong>\n$it" }
             else -> null
         }
         return guidance
