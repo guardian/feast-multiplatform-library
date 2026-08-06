@@ -124,8 +124,6 @@ class TerminologyTable(
         val source = text ?: return null
         val regex = replacementRegex ?: return null
         val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
-
-        val replacements = mutableListOf<Pair<IntRange, String>>()
         var lastMatchedEntry: TerminologyEntry? = null
 
         val replacedString = regex.replace(source) { match ->
