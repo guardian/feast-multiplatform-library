@@ -2,7 +2,7 @@
 package com.gu.recipe.api {
 
   public final class FeastIos {
-    method public com.gu.recipe.api.repository.GraphQLRepository recipeRepository();
+    method public com.gu.recipe.api.repository.GraphQLRepository graphQLRepository();
     method public void start(String baseUrl);
     method public void stop();
     field public static final com.gu.recipe.api.FeastIos INSTANCE;

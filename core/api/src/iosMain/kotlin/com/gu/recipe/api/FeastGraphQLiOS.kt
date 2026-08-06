@@ -33,7 +33,7 @@ object FeastGraphQLiOS {
      *
      * @return the resolved [GraphQLRepository]
      */
-    fun recipeRepository(): GraphQLRepository = KoinPlatform.getKoin().get()
+    fun graphQLRepository(): GraphQLRepository = KoinPlatform.getKoin().get()
 
     /**
      * Stops the active Koin instance if one is running.

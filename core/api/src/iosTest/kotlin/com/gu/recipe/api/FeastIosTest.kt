@@ -11,10 +11,10 @@ class FeastIosTest {
     }
 
     @Test
-    fun startExposesRecipeRepositoryForNativeConsumers() {
+    fun startExposesGraphQLRepositoryForNativeConsumers() {
         FeastGraphQLiOS.start(baseUrl = "https://recipes.code.dev-guardianapis.com")
 
-        val repository = FeastGraphQLiOS.recipeRepository()
+        val repository = FeastGraphQLiOS.graphQLRepository()
 
         assertNotNull(repository)
     }
