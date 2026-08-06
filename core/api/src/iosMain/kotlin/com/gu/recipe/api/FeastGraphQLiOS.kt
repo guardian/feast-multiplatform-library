@@ -9,7 +9,7 @@ import org.koin.mp.KoinPlatform
 /**
  * iOS entry point for configuring and accessing Feast API dependencies.
  */
-object FeastIos {
+object FeastGraphQLiOS {
     /**
      * Starts the dependency container for iOS with the provided API base URL.
      *

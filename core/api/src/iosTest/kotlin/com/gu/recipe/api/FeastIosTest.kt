@@ -7,14 +7,14 @@ import kotlin.test.assertNotNull
 class FeastIosTest {
     @AfterTest
     fun tearDown() {
-        FeastIos.stop()
+        FeastGraphQLiOS.stop()
     }
 
     @Test
     fun startExposesRecipeRepositoryForNativeConsumers() {
-        FeastIos.start(baseUrl = "https://recipes.code.dev-guardianapis.com")
+        FeastGraphQLiOS.start(baseUrl = "https://recipes.code.dev-guardianapis.com")
 
-        val repository = FeastIos.recipeRepository()
+        val repository = FeastGraphQLiOS.recipeRepository()
 
         assertNotNull(repository)
     }
