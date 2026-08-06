@@ -4,7 +4,7 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-class FeastIosTest {
+class FeastGraphQLiOSTest {
     @AfterTest
     fun tearDown() {
         FeastGraphQLiOS.stop()
