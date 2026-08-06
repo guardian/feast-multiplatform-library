@@ -136,8 +136,8 @@ class TerminologyTable(
                 if (!isBlocked(blockedRanges, match.range)) {
                     lastMatchedEntry = replacementEntry
                     //Check when section needs highlights, if they have got guidance notes associated with it or not?
-                    var requireHighlightWithNotes = requireHighlight && (replacementEntry != null && (replacementEntry.ukGuidance?.isNotEmpty() == true || replacementEntry.usGuidance?.isNotEmpty() == true))
-                    replacementFor(match.value, replacementEntry, requireHighlightWithNotes)
+                    val shouldHighlight = requireHighlight && replacementEntry.usGuidance?.isNotEmpty() == true
+                    replacementFor(match.value, replacementEntry, shouldHighlight)
                 } else {
                     match.value // Keep the original term if blocked
                 }
