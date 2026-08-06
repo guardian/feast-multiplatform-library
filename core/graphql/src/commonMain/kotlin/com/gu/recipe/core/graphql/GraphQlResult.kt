@@ -6,7 +6,7 @@ sealed interface GraphQlResult<out T> {
     ) : GraphQlResult<T>
 
     data class Failure(
-        val error: GraphQlError,
+        val error: GraphQLError,
     ) : GraphQlResult<Nothing>
 }
 
@@ -15,7 +15,7 @@ inline fun <T, R> GraphQlResult<T>.map(transform: (T) -> R): GraphQlResult<R> = 
     is GraphQlResult.Failure -> this
 }
 
-inline fun <T> GraphQlResult<T>.getOrElse(defaultValue: (GraphQlError) -> T): T = when (this) {
+inline fun <T> GraphQlResult<T>.getOrElse(defaultValue: (GraphQLError) -> T): T = when (this) {
     is GraphQlResult.Success -> value
     is GraphQlResult.Failure -> defaultValue(error)
 }

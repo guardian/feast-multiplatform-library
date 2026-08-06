@@ -1,18 +1,18 @@
 package com.gu.recipe.core.graphql
 
-sealed interface GraphQlError {
-    data class GraphQl(
+sealed interface GraphQLError {
+    data class GraphQL(
         val messages: List<String>,
-    ) : GraphQlError
+    ) : GraphQLError
 
     data class Transport(
         val cause: Throwable,
-    ) : GraphQlError
+    ) : GraphQLError
 
     data class Unexpected(
         val cause: Throwable,
-    ) : GraphQlError
+    ) : GraphQLError
 
-    data object MissingData : GraphQlError
+    data object MissingData : GraphQLError
 }
 
