@@ -917,8 +917,8 @@ class RenderRecipeTest {
         assertEquals("The eggplant curry needs to be hot and tangy. We need green chillies and soaked tamarind.", rendered.description)
         assertEquals("1 <u>eggplant</u>", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
         assertEquals("medium size eggplants", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
-        assertEquals("This is uk guidance notes for aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.ukGuidance)
-        assertEquals("This is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
+        assertEquals("aubergine\nThis is uk guidance notes for aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.ukGuidance)
+        assertEquals("eggplant\nThis is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
         assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
         assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)
     }
@@ -974,8 +974,8 @@ class RenderRecipeTest {
         assertEquals("The eggplant curry needs to be hot and tangy. We need green chillies and soaked tamarind.", rendered.description)
         assertEquals("1 <u>eggplant</u>", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
         assertEquals("medium size eggplants", rendered.ingredients?.first()?.ingredientsList?.first()?.template)
-        assertEquals("This is uk guidance notes for aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.ukGuidance)
-        assertEquals("This is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
+        assertEquals("aubergine\nThis is uk guidance notes for aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.ukGuidance)
+        assertEquals("eggplant\nThis is us guidance notes for eggplant", rendered.ingredients?.first()?.ingredientsList?.first()?.usGuidance)
         assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
         assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)
     }

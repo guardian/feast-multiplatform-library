@@ -272,8 +272,8 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 text = applyTerminology(ingredient.text, true),
                                 ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
                                 template = applyTerminology(ingredient.template),
-                                ukGuidance = getGuidanceForTerm(ingredient.text, "uk"),
-                                usGuidance = getGuidanceForTerm(ingredient.text, "us"),
+                                ukGuidance = getGuidanceNotesForTerm(ingredient.text, "uk"),
+                                usGuidance = getGuidanceNotesForTerm(ingredient.text, "us"),
                             )
                         },
                         recipeSection = applyTerminology(ingredientSection.recipeSection)
@@ -323,14 +323,14 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
      * @param countryCode The country code ("uk" or "us") to determine which guidance to retrieve.
      * @return The associated guidance string, or null if not found.
      */
-    fun getGuidanceForTerm(term: String?, countryCode: String): String? {
+    fun getGuidanceNotesForTerm(term: String?, countryCode: String): String? {
         if (term.isNullOrBlank()) {
             return null
         }
         val result = terminologyTable?.convertTerm(term)
         val guidance = when (countryCode.lowercase()) {
-            "uk" -> result?.terminologyEntry?.ukGuidance
-            "us" -> result?.terminologyEntry?.usGuidance
+            "uk" -> result?.terminologyEntry?.ukGuidance?.let { "${result.terminologyEntry.ukTerm}\n$it" }
+            "us" -> result?.terminologyEntry?.usGuidance?.let { "${result.terminologyEntry.usTerm}\n$it" }
             else -> null
         }
         return guidance
