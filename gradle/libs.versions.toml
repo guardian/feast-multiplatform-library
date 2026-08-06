@@ -37,7 +37,7 @@ androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-te
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
+vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
 metalava = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava"}
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
