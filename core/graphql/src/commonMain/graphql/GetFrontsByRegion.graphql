@@ -1,0 +1,71 @@
+query GetFrontsByRegion($region: regions!, $edition: editions!, $recipesLimit2: Int!) {
+    Front: curation(region: $region, edition: $edition){
+        title
+        items {
+            ... on RecipeReference {
+                recipe {
+                    id
+                    title
+                    timings {
+                        qualifier
+                        durationInMins {
+                            min
+                            max
+                        }
+                    }
+                    previewImage {
+                        templateUrl
+                        caption
+                        displayCredit
+                    }
+                    diets
+                    mealTypes
+                }
+            }
+            ... on Chef {
+                chef {
+                    id
+                    backgroundHex
+                    image
+                    bio
+                    meta {
+                        bylineImageUrl
+                        bio
+                        recipes(limit: $recipesLimit2) {
+                            title
+                            previewImage {
+                                templateUrl
+                                caption
+                                displayCredit
+                            }
+                            publishedDate
+                        }
+                    }
+                }
+            }
+            ... on SubCollection {
+                collection {
+                    title
+                    recipes {
+                        title
+                        contributors {
+                            webTitle
+                        }
+                        timings {
+                            qualifier
+                            durationInMins {
+                                min
+                                max
+                            }
+                        }
+                        previewImage {
+                            templateUrl
+                            caption
+                            displayCredit
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

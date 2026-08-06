@@ -14,4 +14,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "feast-multiplatform-library"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include(":library")
+include(":core:api")
+include(":core:graphql")

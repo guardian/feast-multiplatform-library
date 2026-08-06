@@ -12,6 +12,12 @@ okio = "3.17.0"
 netty = "4.1.135.Final"
 bouncycastle = "1.84"
 jackson = "2.18.8"
+apollo = "5.0.1"
+koin = "4.2.2"
+graphql-cache = "1.0.5"
+junit4 = "4.13.2"
+robolectric = "4.16.1"
+androidx-test-core = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -19,6 +25,14 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+normalised-cache = { group = "com.apollographql.cache", name = "normalized-cache", version.ref = "graphql-cache" }
+normalised-cache-sqlite = { group = "com.apollographql.cache", name = "normalized-cache-sqlite", version.ref = "graphql-cache" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -26,3 +40,5 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
 metalava = { id = "me.tylerbwong.gradle.metalava", version.ref = "metalava"}
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
+apolloCacheCompiler = { id = "com.apollographql.cache:normalized-cache-apollo-compiler-plugin", version.ref = "graphql-cache" }
