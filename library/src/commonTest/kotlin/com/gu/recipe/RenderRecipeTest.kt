@@ -809,7 +809,7 @@ class RenderRecipeTest {
             ingredients = listOf(
                 IngredientsList(
                     ingredientsList = listOf(
-                        IngredientItem(text = "1 eggplant")
+                        IngredientItem(text = "1 eggplant", convertedTerm = "eggplant")
                     )
                 )
             )
@@ -918,8 +918,8 @@ class RenderRecipeTest {
         assertEquals("The eggplant curry needs to be hot and tangy. We need green chillies and soaked tamarind.", rendered.description)
         assertEquals("1 <u>eggplant</u>", ingredient?.text)
         assertEquals("medium size eggplants", ingredient?.template)
-        assertEquals("<strong>aubergine</strong>\n\nThis is uk guidance notes for aubergine", ingredient?.ukGuidance)
-        assertEquals("<strong>eggplant</strong>\n\nThis is us guidance notes for eggplant", ingredient?.usGuidance)
+        assertEquals("This is uk guidance notes for aubergine", ingredient?.ukGuidance)
+        assertEquals("This is us guidance notes for eggplant", ingredient?.usGuidance)
         assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
         assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)
     }
@@ -976,12 +976,9 @@ class RenderRecipeTest {
         assertEquals("The eggplant curry needs to be hot and tangy. We need green chillies and soaked tamarind.", rendered.description)
         assertEquals("1 <u>eggplant</u>", ingredient?.text)
         assertEquals("medium size eggplants", ingredient?.template)
-        assertEquals("<strong>aubergine</strong>\n\nThis is uk guidance notes for aubergine", ingredient?.ukGuidance)
-        assertEquals("<strong>eggplant</strong>\n\nThis is us guidance notes for eggplant", ingredient?.usGuidance)
+        assertEquals("This is uk guidance notes for aubergine", ingredient?.ukGuidance)
+        assertEquals("This is us guidance notes for eggplant", ingredient?.usGuidance)
         assertEquals("Cut eggplants meanwhile soak tamarind in a water", rendered.instructions?.get(0)?.description)
         assertEquals("Get portion of eggplant curry in a serving plate", rendered.instructions?.get(1)?.description)
     }
-
-
-
 }
