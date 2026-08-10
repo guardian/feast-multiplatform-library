@@ -94,6 +94,7 @@ package com.gu.recipe {
   public final class RenderSession {
     ctor public RenderSession(com.gu.recipe.density.DensityTable densityTable, optional com.gu.recipe.terminology.TerminologyTable? terminologyTable, optional Boolean? convertTerminologies);
     method public String applyTerminologyToRecipeTitle(String title, com.gu.recipe.unit.MeasuringSystem targetMeasuringSystem);
+    method public String? getGuidanceNotesForTerm(String? term, String countryCode);
     method public com.gu.recipe.generated.RecipeV3 renderRecipe(com.gu.recipe.generated.RecipeV3 recipe, float factor, com.gu.recipe.unit.MeasuringSystem measuringSystem);
     method public com.gu.recipe.generated.RecipeV3 renderRecipeForTerminology(com.gu.recipe.generated.RecipeV3 recipe, optional com.gu.recipe.TerminologySection section);
   }
@@ -210,9 +211,11 @@ package com.gu.recipe.generated {
 
   @kotlinx.serialization.Serializable public final class IngredientItem {
     ctor public IngredientItem();
-    ctor public IngredientItem(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? ingredientWithoutSuffix, optional String? unit);
+    ctor public IngredientItem(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? ingredientWithoutSuffix, optional String? unit, optional String? ukGuidance, optional String? usGuidance);
     method public com.gu.recipe.generated.Range? component1();
     method public String? component10();
+    method public String? component11();
+    method public String? component12();
     method public String? component2();
     method public String? component3();
     method public Boolean? component4();
@@ -221,7 +224,7 @@ package com.gu.recipe.generated {
     method public String? component7();
     method public String? component8();
     method public String? component9();
-    method public com.gu.recipe.generated.IngredientItem copy(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? ingredientWithoutSuffix, optional String? unit);
+    method public com.gu.recipe.generated.IngredientItem copy(optional com.gu.recipe.generated.Range? amount, optional String? ingredientId, optional String? name, optional Boolean? optional, optional String? prefix, optional String? suffix, optional String? template, optional String? text, optional String? ingredientWithoutSuffix, optional String? unit, optional String? ukGuidance, optional String? usGuidance);
     method @InaccessibleFromKotlin public com.gu.recipe.generated.Range? getAmount();
     method @InaccessibleFromKotlin public String? getIngredientId();
     method @InaccessibleFromKotlin public String? getIngredientWithoutSuffix();
@@ -231,7 +234,9 @@ package com.gu.recipe.generated {
     method @InaccessibleFromKotlin public String? getSuffix();
     method @InaccessibleFromKotlin public String? getTemplate();
     method @InaccessibleFromKotlin public String? getText();
+    method @InaccessibleFromKotlin public String? getUkGuidance();
     method @InaccessibleFromKotlin public String? getUnit();
+    method @InaccessibleFromKotlin public String? getUsGuidance();
     property public com.gu.recipe.generated.Range? amount;
     property public String? ingredientId;
     property public String? ingredientWithoutSuffix;
@@ -241,7 +246,9 @@ package com.gu.recipe.generated {
     property public String? suffix;
     property public String? template;
     property public String? text;
+    property public String? ukGuidance;
     property public String? unit;
+    property public String? usGuidance;
   }
 
   @kotlinx.serialization.Serializable public final class IngredientsList {
@@ -541,19 +548,25 @@ package com.gu.recipe.template {
 package com.gu.recipe.terminology {
 
   @kotlinx.serialization.Serializable public final class TerminologyEntry {
-    ctor public TerminologyEntry(int id, String ukTerm, String usTerm, java.util.List<java.lang.String> block);
+    ctor public TerminologyEntry(int id, String ukTerm, String usTerm, java.util.List<java.lang.String> block, String? ukGuidance, String? usGuidance);
     method public int component1();
     method public String component2();
     method public String component3();
     method public java.util.List<java.lang.String> component4();
-    method public com.gu.recipe.terminology.TerminologyEntry copy(optional int id, optional String ukTerm, optional String usTerm, optional java.util.List<java.lang.String> block);
+    method public String? component5();
+    method public String? component6();
+    method public com.gu.recipe.terminology.TerminologyEntry copy(optional int id, optional String ukTerm, optional String usTerm, optional java.util.List<java.lang.String> block, optional String? ukGuidance, optional String? usGuidance);
     method @InaccessibleFromKotlin public java.util.List<java.lang.String> getBlock();
     method @InaccessibleFromKotlin public int getId();
+    method @InaccessibleFromKotlin public String? getUkGuidance();
     method @InaccessibleFromKotlin public String getUkTerm();
+    method @InaccessibleFromKotlin public String? getUsGuidance();
     method @InaccessibleFromKotlin public String getUsTerm();
     property public java.util.List<java.lang.String> block;
     property public int id;
+    property public String? ukGuidance;
     property public String ukTerm;
+    property public String? usGuidance;
     property public String usTerm;
   }
 
@@ -575,6 +588,17 @@ package com.gu.recipe.terminology {
     ctor public TerminologyTable(java.util.Map<java.lang.String,com.gu.recipe.terminology.TerminologyEntry> terminologyMap);
     method @InaccessibleFromKotlin public java.util.Map<java.lang.String,com.gu.recipe.terminology.TerminologyEntry> getTerminologyMap();
     property public java.util.Map<java.lang.String,com.gu.recipe.terminology.TerminologyEntry> terminologyMap;
+  }
+
+  public static final class TerminologyTable.ConversionResult {
+    ctor public TerminologyTable.ConversionResult(String replacedString, com.gu.recipe.terminology.TerminologyEntry? terminologyEntry);
+    method public String component1();
+    method public com.gu.recipe.terminology.TerminologyEntry? component2();
+    method public com.gu.recipe.terminology.TerminologyTable.ConversionResult copy(optional String replacedString, optional com.gu.recipe.terminology.TerminologyEntry? terminologyEntry);
+    method @InaccessibleFromKotlin public String getReplacedString();
+    method @InaccessibleFromKotlin public com.gu.recipe.terminology.TerminologyEntry? getTerminologyEntry();
+    property public String replacedString;
+    property public com.gu.recipe.terminology.TerminologyEntry? terminologyEntry;
   }
 
   public final class TerminologyTableKt {
