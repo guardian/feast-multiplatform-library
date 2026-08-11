@@ -115,7 +115,7 @@ class TerminologyTable(
      * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
      * last matched terminology entry, and any associated highlights( <u> tag for usTerms in the ingredeint sentence), or null if no conversion occurred.
      */
-    data class ConversionResult(
+    internal data class ConversionResult(
         val replacedText: String,
         val terminologyEntry: TerminologyEntry?,
     ) {
