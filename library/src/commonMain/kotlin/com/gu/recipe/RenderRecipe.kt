@@ -268,12 +268,14 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                 recipe.ingredients?.map { ingredientSection ->
                     ingredientSection.copy(
                         ingredientsList = ingredientSection.ingredientsList?.map { ingredient ->
+                            val convertedResult = terminologyTable?.convertTerm(ingredient.text, true)
                             ingredient.copy(
-                                text = applyTerminology(ingredient.text, true),
+                                text = convertedResult?.replacedText ?: ingredient.text,
                                 ingredientWithoutSuffix = applyTerminology(ingredient.ingredientWithoutSuffix),
                                 template = applyTerminology(ingredient.template),
-                                ukGuidance = getGuidanceNotesForTerm(ingredient.text, "uk"),
-                                usGuidance = getGuidanceNotesForTerm(ingredient.text, "us"),
+                                ukGuidance = convertedResult?.ukGuidance,
+                                usGuidance = convertedResult?.usGuidance,
+                                convertedTerm = convertedResult?.convertedTerm
                             )
                         },
                         recipeSection = applyTerminology(ingredientSection.recipeSection)
@@ -302,7 +304,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
      */
     fun applyTerminologyToRecipeTitle(title: String, targetMeasuringSystem: MeasuringSystem): String {
         return if (convertTerminologies == true && targetMeasuringSystem == MeasuringSystem.USCombined) {
-            terminologyTable?.convertTerm(title)?.replacedString ?: title
+            terminologyTable?.convertTerm(title)?.replacedText ?: title
         } else {
             title
         }
@@ -312,31 +314,9 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         return section == TerminologySection.ALL || section == currentSection
     }
 
-    internal fun applyTerminology(text: String?, requireHighlight: Boolean = false): String? {
-        return terminologyTable?.convertTerm(text, requireHighlight)?.replacedString ?: text
+    internal fun applyTerminology(text: String?): String? {
+        return terminologyTable?.convertTerm(text)?.replacedText ?: text
     }
-
-    /**
-     * Retrieves the guidance associated with a given term based on the country code.
-     *
-     * @param term The term to look up in the terminology table.
-     * @param countryCode The country code ("uk" or "us") to determine which guidance to retrieve.
-     * @return The associated guidance string, or null if not found.
-     */
-    fun getGuidanceNotesForTerm(term: String?, countryCode: String): String? {
-        if (term.isNullOrBlank()) {
-            return null
-        }
-        val result = terminologyTable?.convertTerm(term)
-        val guidance = when (countryCode.lowercase()) {
-            "uk" -> result?.terminologyEntry?.ukGuidance?.let { "<strong>${result.terminologyEntry.ukTerm}</strong>\n\n$it" }
-            "us" -> result?.terminologyEntry?.usGuidance?.let { "<strong>${result.terminologyEntry.usTerm}</strong>\n\n$it" }
-            else -> null
-        }
-        return guidance
-    }
-
-
 }
 
 fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String? = null, convertTerminologies: Boolean? = null): Result<RenderSession> {

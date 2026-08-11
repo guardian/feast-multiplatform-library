@@ -90,15 +90,15 @@ class TerminologyTable(
 
     /**
      * Returns the US replacement, preserving uppercase first-letter style from [matchValue].
-     * It also optionally wraps the replacement in an underline tag if [requireHighlight] is true.
+     * It also optionally wraps the replacement in an underline tag if [requireUnderline] is true.
      */
-    private fun replacementFor(matchValue: String, entry: TerminologyEntry, requireHighlight: Boolean = false): String {
+    private fun replacementFor(matchValue: String, entry: TerminologyEntry, requireUnderline: Boolean = false): String {
         val replacement = if (matchValue.firstOrNull()?.isUpperCase() == true) {
             entry.usTerm.replaceFirstChar { it.uppercase() }
         } else {
             entry.usTerm
         }
-        return if (requireHighlight) {
+        return if (requireUnderline) {
             "<u>$replacement</u>"
         } else {
             replacement
@@ -115,12 +115,16 @@ class TerminologyTable(
      * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
      * last matched terminology entry, and any associated highlights( <u> tag for usTerms in the ingredeint sentence), or null if no conversion occurred.
      */
-    data class ConversionResult(
-        val replacedString: String,
+    internal data class ConversionResult(
+        val replacedText: String,
         val terminologyEntry: TerminologyEntry?,
-    )
+    ) {
+        val ukGuidance: String? = terminologyEntry?.ukGuidance
+        val usGuidance: String? = terminologyEntry?.usGuidance
+        val convertedTerm: String? = terminologyEntry?.usTerm
+    }
 
-    internal fun convertTerm(text: String?, requireHighlight: Boolean = false): ConversionResult? {
+    internal fun convertTerm(text: String?, requireUnderline: Boolean = false): ConversionResult? {
         val source = text ?: return null
         val regex = replacementRegex ?: return null
         val blockedRangesByTerm = mutableMapOf<String, List<IntRange>>()
@@ -136,8 +140,8 @@ class TerminologyTable(
                 if (!isBlocked(blockedRanges, match.range)) {
                     lastMatchedEntry = replacementEntry
                     //Check when section needs highlights, if they have got guidance notes associated with it or not?
-                    val shouldHighlight = requireHighlight && replacementEntry.usGuidance?.isNotEmpty() == true
-                    replacementFor(match.value, replacementEntry, shouldHighlight)
+                    val shouldAddUnderline = requireUnderline && replacementEntry.usGuidance?.isNotEmpty() == true
+                    replacementFor(match.value, replacementEntry, shouldAddUnderline)
                 } else {
                     match.value // Keep the original term if blocked
                 }
@@ -148,8 +152,6 @@ class TerminologyTable(
 
         return ConversionResult(replacedString, lastMatchedEntry)
     }
-
-
 }
 
 fun loadInternalTerminologyTable(): Result<TerminologyTable> {

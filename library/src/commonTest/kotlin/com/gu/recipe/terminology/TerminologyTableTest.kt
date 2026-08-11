@@ -22,7 +22,7 @@ class TerminologyTableTest {
 
         assertEquals(
             blockedPhrase,
-            table.convertTerm(blockedPhrase)!!.replacedString
+            table.convertTerm(blockedPhrase)!!.replacedText
         )
     }
 
@@ -43,7 +43,7 @@ class TerminologyTableTest {
 
         assertEquals(
             "tired black pepper",
-            table.convertTerm("tired pepper")!!.replacedString
+            table.convertTerm("tired pepper")!!.replacedText
         )
     }
 
@@ -65,7 +65,7 @@ class TerminologyTableTest {
 
         assertEquals(
             "Victoria sponge with Cake and SPONGE CAKE.",
-            table.convertTerm("Victoria sponge with Sponge and SPONGE CAKE.")!!.replacedString
+            table.convertTerm("Victoria sponge with Sponge and SPONGE CAKE.")!!.replacedText
         )
     }
 
@@ -86,7 +86,29 @@ class TerminologyTableTest {
 
         assertEquals(
             "black pepper, red pepper, black pepper, green pepper, black pepper.",
-            table.convertTerm("pepper, red pepper, pepper, green pepper, pepper.")!!.replacedString
+            table.convertTerm("pepper, red pepper, pepper, green pepper, pepper.")!!.replacedText
         )
+    }
+
+    @Test
+    fun `guidance notes are available directly from an existing conversion result`() {
+        val table = TerminologyTable(
+            terminologyMap = mapOf(
+                "aubergine" to TerminologyEntry(
+                    id = 1,
+                    ukTerm = "aubergine",
+                    usTerm = "eggplant",
+                    block = emptyList(),
+                    ukGuidance = "Use this note for UK readers",
+                    usGuidance = "Use this note for US readers"
+                )
+            )
+        )
+
+        val conversionResult = table.convertTerm("1 aubergine", requireUnderline = true)
+
+        assertEquals("1 <u>eggplant</u>", conversionResult?.replacedText)
+        assertEquals("Use this note for UK readers", conversionResult?.ukGuidance)
+        assertEquals("Use this note for US readers", conversionResult?.usGuidance)
     }
 }

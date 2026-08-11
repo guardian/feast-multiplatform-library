@@ -280,6 +280,11 @@ data class IngredientItem (
      * Guidance notes for any US term to highlight the context
      */
     val usGuidance: String? = null,
+
+    /**
+     * The part that has converted with terminology; this is often the ingredient name
+     */
+    val convertedTerm: String? = null,
 )
 
 /**
