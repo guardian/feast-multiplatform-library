@@ -29,7 +29,7 @@ package com.gu.recipe.api.di {
 package com.gu.recipe.api.repository {
 
   public interface GraphQLRepository {
-    method public suspend Object? getFrontByRegion(com.gu.recipe.core.graphql.generated.type.Regions region, com.gu.recipe.core.graphql.generated.type.Editions edition, int recipesLimit, kotlin.coroutines.Continuation<? super com.gu.recipe.core.graphql.GraphQlResult<? extends java.util.List<com.gu.recipe.core.graphql.generated.GetFrontsByRegionQuery.Front>>>);
+    method public suspend Object? getFrontByRegion(com.gu.recipe.backend.graphql.generated.type.Regions region, com.gu.recipe.backend.graphql.generated.type.Editions edition, int recipesLimit, kotlin.coroutines.Continuation<? super com.gu.recipe.backend.graphql.GraphQlResult<? extends java.util.List<com.gu.recipe.backend.graphql.generated.GetFrontsByRegionQuery.Front>>>);
   }
 
 }
