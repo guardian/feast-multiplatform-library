@@ -1,9 +1,10 @@
-package com.gu.recipe.api.repository
+package com.gu.recipe.backend.repository
 
-import com.gu.recipe.api.di.feastApiModule
+import com.gu.recipe.backend.di.feastApiModule
 import com.gu.recipe.backend.graphql.GraphQlResult
 import com.gu.recipe.backend.graphql.generated.type.Editions
 import com.gu.recipe.backend.graphql.generated.type.Regions
+import com.gu.recipe.backend.repository.GraphQLRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.junit.Ignore

@@ -1,7 +1,7 @@
-package com.gu.recipe.api.di
+package com.gu.recipe.backend.di
 
-import com.gu.recipe.api.repository.GraphQlRepositoryImpl
-import com.gu.recipe.api.repository.GraphQLRepository
+import com.gu.recipe.backend.repository.GraphQlRepositoryImpl
+import com.gu.recipe.backend.repository.GraphQLRepository
 import com.gu.recipe.backend.graphql.config.GraphQlConfig
 import com.gu.recipe.backend.graphql.di.graphQlModule
 import kotlinx.coroutines.CoroutineDispatcher

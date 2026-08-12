@@ -1,4 +1,4 @@
-package com.gu.recipe.api.repository
+package com.gu.recipe.backend.repository
 
 import com.gu.recipe.backend.graphql.GraphQlResult
 import com.gu.recipe.backend.graphql.generated.GetFrontsByRegionQuery
