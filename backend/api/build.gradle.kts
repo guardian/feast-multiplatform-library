@@ -22,6 +22,14 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.metalava)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.skie)
+}
+
+skie {
+    build {
+        produceDistributableFramework()
+        enableSwiftLibraryEvolution.set(true)
+    }
 }
 
 kotlin {
