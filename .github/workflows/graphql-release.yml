@@ -78,7 +78,7 @@ jobs:
           git config --local user.name "${{ steps.create-app-token.outputs.app-slug }}[bot]"
           git remote set-url origin https://x-access-token:${{ steps.create-app-token.outputs.token }}@github.com/${{ github.repository }}.git
           git checkout -b "$BRANCH"
-          git add backend/api/Package.swift
+          git add backend/Package.swift
           
           if git diff --cached --quiet; then
             echo "No GraphQL Package.swift changes to commit."
