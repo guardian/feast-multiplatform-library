@@ -649,7 +649,7 @@ class RenderRecipeTest {
     }
 
     @Test
-    fun `renderRecipeForTerminology retains guidance when more unguided terms follows`() {
+    fun `renderRecipeForTerminology retains guidance when more unguided terms follow`() {
         val guidance = "European butter typically has a higher fat percentage."
         val terminologyTable = com.gu.recipe.terminology.TerminologyTable(
             terminologyMap = mapOf(
