@@ -660,9 +660,16 @@ class RenderRecipeTest {
                     block = listOf("cookie butter"),
                     ukGuidance = "",
                     usGuidance = guidance
+                ),
+                "pepper" to TerminologyEntry(
+                    id = 63,
+                    ukTerm = "pepper",
+                    usTerm = "pepper",
+                    block = emptyList(),
+                    ukGuidance = "",
+                    usGuidance = ""
                 )
             )
-        )
         val recipe = RecipeV3(
             id = "test-recipe",
             ingredients = listOf(
