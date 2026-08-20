@@ -34,6 +34,7 @@ jobs:
           # marks those dependencies as 'development' scope, while all other configurations
           # (runtimeClasspath, releaseRuntimeClasspath, compileClasspath, etc.) retain their
           # default 'runtime' scope since they are not excluded.
+          DEPENDENCY_GRAPH_RUNTIME_INCLUDE_CONFIGURATIONS: "releaseRuntimeClasspath"
           DEPENDENCY_GRAPH_RUNTIME_EXCLUDE_CONFIGURATIONS: "classpath|.*[Tt]est.*"
       - name: Log snapshot for user validation
         id: validate
