@@ -114,7 +114,7 @@ class TerminologyTable(
      *
      * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
      * matched terminology entry used for metadata, and any associated highlights( <u> tag for usTerms in the
-     * ingredeint sentence), or null if no conversion occurred.
+     * ingredient sentence), or null if no conversion occurred.
      */
     internal data class ConversionResult(
         val replacedText: String,
