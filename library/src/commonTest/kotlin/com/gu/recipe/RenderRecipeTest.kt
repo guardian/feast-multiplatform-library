@@ -670,6 +670,7 @@ class RenderRecipeTest {
                     usGuidance = ""
                 )
             )
+        )
         val recipe = RecipeV3(
             id = "test-recipe",
             ingredients = listOf(
