@@ -31,29 +31,29 @@ class DataLoader(
                         convertTerminologies = convertTerminologies,
                     ).getOrElse {
                         onError?.invoke("RenderSession initialisation failed: ${it.message}")
-                        fallbackSession()
+                        fallbackSession(convertTerminologies)
                     }
                 }
                 densityResult is DataLoadResult.Failure -> {
                     densityResult.reason?.let { onError?.invoke(it) }
-                    fallbackSession()
+                    fallbackSession(convertTerminologies)
                 }
                 terminologyResult is DataLoadResult.Failure -> {
                     terminologyResult.reason?.let { onError?.invoke(it) }
-                    fallbackSession()
+                    fallbackSession(convertTerminologies)
                 }
-                else -> fallbackSession()
+                else -> fallbackSession(convertTerminologies)
             }
         } catch (e: Exception) {
             onError?.invoke("Bridge exception: ${e.message}")
-            fallbackSession()
+            fallbackSession(convertTerminologies)
         }
     }
 
-    private fun fallbackSession(): RenderSession {
-        return newRenderSession(null, null).getOrElse {
+    private fun fallbackSession(convertTerminologies: Boolean = true): RenderSession {
+        return newRenderSession(null, null, convertTerminologies = convertTerminologies).getOrElse {
             onError?.invoke("Internal data also failed: ${it.message}")
-            noCustomaryRenderSession()
+            noCustomaryRenderSession(convertTerminologies)
         }
     }
 }
