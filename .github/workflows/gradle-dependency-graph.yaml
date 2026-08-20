@@ -34,11 +34,10 @@ jobs:
           # marks those dependencies as 'development' scope, while all other configurations
           # (runtimeClasspath, releaseRuntimeClasspath, compileClasspath, etc.) retain their
           # default 'runtime' scope since they are not excluded.
-          DEPENDENCY_GRAPH_RUNTIME_EXCLUDE_CONFIGURATIONS: "classpath"
+          DEPENDENCY_GRAPH_RUNTIME_EXCLUDE_CONFIGURATIONS: "classpath|.*[Tt]est.*"
       - name: Log snapshot for user validation
         id: validate
-        run: cat
-          /home/runner/work/feast-multiplatform-library/feast-multiplatform-library/dependency-graph-reports/update_dependency_graph_for_gradle-dependency-graph.json
-          | jq
+        run: |
+          cat /Users/runner/work/feast-multiplatform-library/feast-multiplatform-library/dependency-graph-reports/update_dependency_graph_for_gradle-dependency-graph.json | jq
     permissions:
       contents: write
