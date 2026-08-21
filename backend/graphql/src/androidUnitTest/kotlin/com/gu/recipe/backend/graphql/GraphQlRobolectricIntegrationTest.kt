@@ -98,9 +98,37 @@ class GraphQlRobolectricIntegrationTest {
             }
         }
 
+    @Test
+    fun `given live data source when querying dotd by region then it returns a recipe through real graphql client`() =
+        runTest {
+            val context = ApplicationProvider.getApplicationContext<Context>()
+            val cacheName = "feast_graphql_datasource_${System.nanoTime()}.db"
+            context.deleteDatabase(cacheName)
+
+            val dataSource = ApolloRecipeGraphQlDataSource(
+                FeastGraphQlClient(createApolloClient()),
+            )
+
+            try {
+                when (val result = dataSource.getDishOfTheDayRecipe(
+                    region = Regions.northern,
+                    edition = Editions.all,
+                )) {
+                    is GraphQlResult.Success -> {
+                        assertNotNull(result.value, "Expected live GraphQL datasource to return a recipe")
+                        assertNotNull(result.value.title)
+                    }
+
+                    is GraphQlResult.Failure -> fail("Expected success from live GraphQL datasource but got $result")
+                }
+            } finally {
+                context.deleteDatabase(cacheName)
+            }
+        }
+
     private fun createApolloClient(): ApolloClient {
         val config = GraphQlConfig(
-            baseUrl = "https://recipes.code.dev-guardianapis.com",
+            baseUrl = "https://recipes.guardianapis.com",
         )
 
         return ApolloClientFactory(Dispatchers.IO).create(
