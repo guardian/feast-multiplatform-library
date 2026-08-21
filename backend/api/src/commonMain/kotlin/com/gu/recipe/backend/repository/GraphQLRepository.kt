@@ -22,4 +22,9 @@ interface GraphQLRepository {
         edition: Editions,
         recipesLimit: Int
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>>
+
+    fun getDishOfTheDayData(
+        region: Regions,
+        edition: Editions,
+    ): Unit
 }

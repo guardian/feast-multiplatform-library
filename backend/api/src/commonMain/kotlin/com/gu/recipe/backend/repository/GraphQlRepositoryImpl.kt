@@ -21,4 +21,8 @@ internal class GraphQlRepositoryImpl(
             recipesLimit = recipesLimit,
         )
     }
+
+    override fun getDishOfTheDayData(region: Regions, edition: Editions) {
+        TODO("Not yet implemented")
+    }
 }
