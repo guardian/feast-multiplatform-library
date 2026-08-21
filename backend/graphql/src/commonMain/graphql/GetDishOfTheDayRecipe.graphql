@@ -1,0 +1,22 @@
+query GetDishOfTheDayRecipe(
+    $region: regions!,
+    $edition: editions!,
+    $alias: String!
+) {
+    Recipe: curatedContainerByAlias(region: $region, edition: $edition, alias: $alias) {
+        title
+        items {
+            ... on RecipeReference {
+                recipe {
+                    title
+                    featuredImage {
+                        templateUrl
+                        caption
+                    }
+                    id
+                    diets
+                }
+            }
+        }
+    }
+}
