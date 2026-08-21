@@ -26,4 +26,11 @@ class ApolloRecipeGraphQlDataSource(
             result as GraphQlResult.Failure
         }
     }
+
+    override suspend fun getDishOfTheDayRecipe(
+        region: Regions,
+        edition: Editions,
+    ): GraphQlResult<Unit> {
+        TODO("Not yet implemented")
+    }
 }

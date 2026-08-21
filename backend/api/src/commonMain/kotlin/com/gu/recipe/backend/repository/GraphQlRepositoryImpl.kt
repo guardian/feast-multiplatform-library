@@ -22,7 +22,13 @@ internal class GraphQlRepositoryImpl(
         )
     }
 
-    override fun getDishOfTheDayData(region: Regions, edition: Editions) {
-        TODO("Not yet implemented")
+    override suspend fun getDishOfTheDayData(
+        region: Regions,
+        edition: Editions,
+    ): GraphQlResult<Unit> {
+        return dataSource.getDishOfTheDayRecipe(
+            region = region,
+            edition = edition,
+        )
     }
 }

@@ -23,8 +23,8 @@ interface GraphQLRepository {
         recipesLimit: Int
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>>
 
-    fun getDishOfTheDayData(
+    suspend fun getDishOfTheDayData(
         region: Regions,
         edition: Editions,
-    ): Unit
+    ): GraphQlResult<Unit>
 }
