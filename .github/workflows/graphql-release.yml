@@ -8,7 +8,7 @@ jobs:
     uses: guardian/gha-gradle-library-release-workflow/.github/workflows/reusable-release.yml@1308a50058e88c2307e2e3de610bf9cbcb473aad
     with:
       MODULES: 'backend:api,backend:graphql'
-      API_FILE: 'backend/api/api.txt'
+      API_FILE: 'api.txt'
       VERSION_FILE: 'backend/version.txt'
     secrets:
       SONATYPE_TOKEN: ${{ secrets.AUTOMATED_MAVEN_RELEASE_SONATYPE_TOKEN }}
