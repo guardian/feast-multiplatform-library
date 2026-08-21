@@ -28,10 +28,10 @@ class ApolloRecipeGraphQlDataSource(
         }
     }
 
-    override suspend fun getDishOfTheDayRecipe(
+    override suspend fun getDishOfTheDayContainer(
         region: Regions,
         edition: Editions,
-    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Recipe?> {
+    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Container?> {
         val result = feastGraphQlClient.query(
             GetDishOfTheDayRecipeQuery(
                 region = region,
@@ -40,7 +40,7 @@ class ApolloRecipeGraphQlDataSource(
             )
         )
         return if (result is GraphQlResult.Success) {
-            GraphQlResult.Success(result.value.Recipe)
+            GraphQlResult.Success(result.value.Container)
         } else {
             result as GraphQlResult.Failure
         }

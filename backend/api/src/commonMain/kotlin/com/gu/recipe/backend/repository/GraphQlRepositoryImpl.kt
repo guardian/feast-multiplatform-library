@@ -23,11 +23,11 @@ internal class GraphQlRepositoryImpl(
         )
     }
 
-    override suspend fun getDishOfTheDayRecipe(
+    override suspend fun getDishOfTheDayContainer(
         region: Regions,
         edition: Editions,
-    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Recipe?> {
-        return dataSource.getDishOfTheDayRecipe(
+    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Container?> {
+        return dataSource.getDishOfTheDayContainer(
             region = region,
             edition = edition,
         )

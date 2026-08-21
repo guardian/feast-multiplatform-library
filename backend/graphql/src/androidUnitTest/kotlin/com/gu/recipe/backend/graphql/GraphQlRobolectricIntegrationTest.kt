@@ -110,7 +110,7 @@ class GraphQlRobolectricIntegrationTest {
             )
 
             try {
-                when (val result = dataSource.getDishOfTheDayRecipe(
+                when (val result = dataSource.getDishOfTheDayContainer(
                     region = Regions.northern,
                     edition = Editions.all,
                 )) {

@@ -13,8 +13,8 @@ interface RecipeGraphQlDataSource {
         recipesLimit: Int,
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>>
 
-    suspend fun getDishOfTheDayRecipe(
+    suspend fun getDishOfTheDayContainer(
         region: Regions,
         edition: Editions,
-    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Recipe?>
+    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Container?>
 }
