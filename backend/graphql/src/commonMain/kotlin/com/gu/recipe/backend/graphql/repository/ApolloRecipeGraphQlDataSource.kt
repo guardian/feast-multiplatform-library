@@ -2,6 +2,7 @@ package com.gu.recipe.backend.graphql.repository
 
 import com.gu.recipe.backend.graphql.GraphQlResult
 import com.gu.recipe.backend.graphql.client.FeastGraphQlClient
+import com.gu.recipe.backend.graphql.generated.GetDishOfTheDayRecipeQuery
 import com.gu.recipe.backend.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.backend.graphql.generated.type.Editions
 import com.gu.recipe.backend.graphql.generated.type.Regions
@@ -30,7 +31,20 @@ class ApolloRecipeGraphQlDataSource(
     override suspend fun getDishOfTheDayRecipe(
         region: Regions,
         edition: Editions,
-    ): GraphQlResult<Unit> {
-        TODO("Not yet implemented")
+    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Recipe?> {
+        val result = feastGraphQlClient.query(
+            GetDishOfTheDayRecipeQuery(
+                region = region,
+                edition = edition,
+                alias = DISH_OF_THE_DAY_RECIPE_ALIAS
+            )
+        )
+        return if (result is GraphQlResult.Success) {
+            GraphQlResult.Success(result.value.Recipe)
+        } else {
+            result as GraphQlResult.Failure
+        }
     }
 }
+
+private const val DISH_OF_THE_DAY_RECIPE_ALIAS = "dotd"

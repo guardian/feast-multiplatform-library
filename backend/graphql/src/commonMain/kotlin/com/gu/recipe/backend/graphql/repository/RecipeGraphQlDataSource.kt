@@ -1,6 +1,7 @@
 package com.gu.recipe.backend.graphql.repository
 
 import com.gu.recipe.backend.graphql.GraphQlResult
+import com.gu.recipe.backend.graphql.generated.GetDishOfTheDayRecipeQuery
 import com.gu.recipe.backend.graphql.generated.GetFrontsByRegionQuery
 import com.gu.recipe.backend.graphql.generated.type.Editions
 import com.gu.recipe.backend.graphql.generated.type.Regions
@@ -15,5 +16,5 @@ interface RecipeGraphQlDataSource {
     suspend fun getDishOfTheDayRecipe(
         region: Regions,
         edition: Editions,
-    ): GraphQlResult<Unit>
+    ): GraphQlResult<GetDishOfTheDayRecipeQuery.Recipe?>
 }
