@@ -24,7 +24,7 @@ interface GraphQLRepository {
         recipesLimit: Int
     ): GraphQlResult<List<GetFrontsByRegionQuery.Front>>
 
-    suspend fun getDishOfTheDayData(
+    suspend fun getDishOfTheDayRecipe(
         region: Regions,
         edition: Editions,
     ): GraphQlResult<GetDishOfTheDayRecipeQuery.Recipe?>
