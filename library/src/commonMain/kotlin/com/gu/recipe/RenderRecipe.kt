@@ -201,6 +201,21 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
     }
 
     /**
+     * Adds the `formattedIngredients` property to the recipe data, ensure that this is run AFTER scaling and translation
+     * of the ingredient list
+     */
+    internal fun resolveIngredientIndexes(recipe: RecipeV3): RecipeV3 {
+        val flattenedIngredients = recipe.ingredients?.flatMap { it.ingredientsList ?: emptyList() } ?: emptyList()
+
+        val updatedSteps = (recipe.instructions ?: emptyList()).map { instruction ->
+            val filteredIndices = (instruction.ingredientIndexes ?: emptyList()).map { it.toInt() }.filter { it >= 0 && it < flattenedIngredients.size }
+            val ingredients = filteredIndices.map { flattenedIngredients[it] }
+            instruction.copy( formattedIngredients = if(ingredients.isNotEmpty()) ingredients.map { it.ingredientWithoutSuffix ?: it.name ?: "" } else null)
+        }
+        return recipe.copy(instructions = if (updatedSteps.isNotEmpty()) updatedSteps else null)
+    }
+
+    /**
      * renderRecipe used to convert units and scale recipe and now covert terminology too
      *
      * @param recipe The recipe as provided by the server (RecipeV3)
@@ -245,9 +260,9 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
         val scaledRecipe = recipe.copy(ingredients = scaledIngredients, instructions = scaledInstructions)
 
         return if(convertTerminologies == false || (measuringSystem == sourceMeasuringSystem)) {
-            scaledRecipe
+            resolveIngredientIndexes(scaledRecipe)
         } else {
-            renderRecipeForTerminology(scaledRecipe)
+            resolveIngredientIndexes(renderRecipeForTerminology(scaledRecipe))
         }
 
     }
