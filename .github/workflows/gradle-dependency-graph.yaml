@@ -20,10 +20,25 @@ jobs:
       - name: Submit dependencies
         id: submit
         uses: gradle/actions/dependency-submission@d156388eb19639ec20ade50009f3d199ce1e2808 # v4.1.0
+        env:
+          # By default, the plugin assigns NO scope to any dependency, and GitHub/Dependabot
+          # then treats unscoped dependencies as 'runtime'. Setting any of the four
+          # DEPENDENCY_GRAPH_RUNTIME_* parameters enables scope assignment globally.
+          #
+          # The four parameters define what counts as 'runtime'; everything else becomes
+          # 'development'. The values are regular expressions matched against configuration names.
+          #
+          # Gradle resolves plugins declared in settings.gradle.kts (pluginManagement {}) and
+          # in buildscript {} blocks into a configuration named exactly "classpath". These are
+          # build-tooling only — not part of the published artifact. Excluding "classpath" here
+          # marks those dependencies as 'development' scope, while all other configurations
+          # (runtimeClasspath, releaseRuntimeClasspath, compileClasspath, etc.) retain their
+          # default 'runtime' scope since they are not excluded.
+          DEPENDENCY_GRAPH_RUNTIME_INCLUDE_CONFIGURATIONS: "releaseRuntimeClasspath"
+          DEPENDENCY_GRAPH_RUNTIME_EXCLUDE_CONFIGURATIONS: "classpath|.*[Tt]est.*"
       - name: Log snapshot for user validation
         id: validate
-        run: cat
-          /home/runner/work/feast-multiplatform-library/feast-multiplatform-library/dependency-graph-reports/update_dependency_graph_for_gradle-dependency-graph.json
-          | jq
+        run: |
+          cat /Users/runner/work/feast-multiplatform-library/feast-multiplatform-library/dependency-graph-reports/update_dependency_graph_for_gradle-dependency-graph.json | jq
     permissions:
       contents: write
