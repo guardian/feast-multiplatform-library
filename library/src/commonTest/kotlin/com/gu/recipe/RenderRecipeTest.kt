@@ -679,6 +679,10 @@ class RenderRecipeTest {
                         IngredientItem(
                             text = "1 stick • ½ cup butter, plus salt and black pepper to taste",
                             template = "1 stick • ½ cup butter, plus salt and black pepper to taste"
+                        ),
+                        IngredientItem(
+                            text = "Butter crumbs",
+                            template = "Butter crumbs"
                         )
                     )
                 )
@@ -693,10 +697,18 @@ class RenderRecipeTest {
         ).renderRecipe(recipe, 1f, MeasuringSystem.USCustomary)
             .ingredients?.first()?.ingredientsList
 
-        assertEquals(
-            "<strong>1 stick</strong> • <strong>½ cup <u>butter</u></strong>, plus salt and black pepper to taste",
-            renderedRecipeIngredients?.first()?.text
-        )
+        renderedRecipeIngredients?.toCollection(ArrayList())?.let { ingredientsList ->
+            assertEquals(
+                "<strong>1 stick</strong> • <strong>½ cup <u>butter</u></strong>, plus salt and black pepper to taste",
+                ingredientsList[0].text
+            )
+
+            assertEquals(
+                "<strong><u>Butter</u> crumbs</strong>",
+                ingredientsList[1].text
+            )
+        }
+
         assertEquals(guidance, renderedRecipeIngredients?.first()?.usGuidance)
     }
 
