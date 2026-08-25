@@ -113,7 +113,8 @@ class TerminologyTable(
      * `pepper` may be replaced generally, while the `pepper` in `red pepper` remains unchanged.
      *
      * The [convertTerm] function returns a [ConversionResult] containing the modified string, the
-     * last matched terminology entry, and any associated highlights( <u> tag for usTerms in the ingredeint sentence), or null if no conversion occurred.
+     * matched terminology entry used for metadata, and any associated highlights( <u> tag for usTerms in the
+     * ingredient sentence), or null if no conversion occurred.
      */
     internal data class ConversionResult(
         val replacedText: String,
@@ -138,9 +139,13 @@ class TerminologyTable(
                     findBlockedRanges(source, replacementEntry)
                 }
                 if (!isBlocked(blockedRanges, match.range)) {
-                    lastMatchedEntry = replacementEntry
                     //Check when section needs highlights, if they have got guidance notes associated with it or not?
-                    val shouldAddUnderline = requireUnderline && replacementEntry.usGuidance?.isNotEmpty() == true
+                    val hasUsGuidance = replacementEntry.usGuidance?.isNotEmpty() == true
+                    val shouldAddUnderline = requireUnderline && hasUsGuidance
+                    if (lastMatchedEntry?.usGuidance?.isNotEmpty() != true ||
+                        hasUsGuidance) {
+                        lastMatchedEntry = replacementEntry
+                    }
                     replacementFor(match.value, replacementEntry, shouldAddUnderline)
                 } else {
                     match.value // Keep the original term if blocked

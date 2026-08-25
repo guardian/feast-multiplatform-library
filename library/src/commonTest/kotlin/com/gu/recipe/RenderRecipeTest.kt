@@ -649,6 +649,70 @@ class RenderRecipeTest {
     }
 
     @Test
+    fun `renderRecipeForTerminology retains guidance when more unguided terms follow`() {
+        val guidance = "European butter typically has a higher fat percentage."
+        val terminologyTable = com.gu.recipe.terminology.TerminologyTable(
+            terminologyMap = mapOf(
+                "butter" to TerminologyEntry(
+                    id = 120,
+                    ukTerm = "butter",
+                    usTerm = "butter",
+                    block = listOf("cookie butter"),
+                    ukGuidance = "",
+                    usGuidance = guidance
+                ),
+                "pepper" to TerminologyEntry(
+                    id = 63,
+                    ukTerm = "pepper",
+                    usTerm = "pepper",
+                    block = emptyList(),
+                    ukGuidance = "",
+                    usGuidance = ""
+                )
+            )
+        )
+        val recipe = RecipeV3(
+            id = "test-recipe",
+            ingredients = listOf(
+                IngredientsList(
+                    ingredientsList = listOf(
+                        IngredientItem(
+                            text = "1 stick • ½ cup butter, plus salt and black pepper to taste",
+                            template = "1 stick • ½ cup butter, plus salt and black pepper to taste"
+                        ),
+                        IngredientItem(
+                            text = "Butter crumbs",
+                            template = "Butter crumbs"
+                        )
+                    )
+                )
+            ),
+            originalMeasuringSystem = OriginalMeasuringSystem.Metric
+        )
+
+        val renderedRecipeIngredients = RenderSession(
+            densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
+            terminologyTable = terminologyTable,
+            convertTerminologies = true
+        ).renderRecipe(recipe, 1f, MeasuringSystem.USCustomary)
+            .ingredients?.first()?.ingredientsList
+
+        renderedRecipeIngredients?.toCollection(ArrayList())?.let { ingredientsList ->
+            assertEquals(
+                "<strong>1 stick</strong> • <strong>½ cup <u>butter</u></strong>, plus salt and black pepper to taste",
+                ingredientsList[0].text
+            )
+
+            assertEquals(
+                "<strong><u>Butter</u> crumbs</strong>",
+                ingredientsList[1].text
+            )
+        }
+
+        assertEquals(guidance, renderedRecipeIngredients?.first()?.usGuidance)
+    }
+
+    @Test
     fun `renderRecipeForTerminology default section converts every section`() {
         val session = RenderSession(
             densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap()),
