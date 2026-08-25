@@ -1,8 +1,8 @@
 package com.gu.recipe.loader
 
-import com.gu.recipe.IngredientItem
-import com.gu.recipe.IngredientsList
-import com.gu.recipe.RecipeV3
+import com.gu.recipe.generated.IngredientItem
+import com.gu.recipe.generated.IngredientsList
+import com.gu.recipe.generated.RecipeV3
 import com.gu.recipe.unit.MeasuringSystem
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
