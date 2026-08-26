@@ -81,6 +81,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.apollo)
+    alias(libs.plugins.metalava)
 }
 
 val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
