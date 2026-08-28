@@ -33,7 +33,7 @@ jobs:
           FEAST_GRAPHQL_INTROSPECTION_URL: ${{ vars.FEAST_GRAPHQL_INTROSPECTION_URL }}
         run: |
           ./gradlew :backend:graphql:downloadFeastApolloSchemaFromIntrospection
-          if ! git diff --exit-code src/commonMain/graphql/schema.graphqls; then
+          if ! git diff --exit-code backend/graphql/src/commonMain/graphql/schema.graphqls; then
             if [ "${{ contains(github.event.pull_request.labels.*.name, 'schema-drift-expected') }}" = "true" ]; then
               echo "::warning::Schema differs from production, override label present."
             else
