@@ -1,1 +1,7 @@
-java corretto-21.0.8.9.1
+# Runtime/tool versions for mise/asdf
+# Java pinned to latest Temurin 17 patch (17.0.20+101)
+# Gradle from gradle/wrapper/gradle-wrapper.properties
+java temurin-17.0.20+101
+gradle 9.5.0
+node 24
+python 3.14.7
