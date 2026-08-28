@@ -5,7 +5,7 @@
       "extensions" : [
         "hverlin.mise-vscode",
         "GitHub.copilot",
-        "JetBrains.kotlin",
+        "fwcd.kotlin",
         "vscjava.vscode-gradle",
         "GraphQL.vscode-graphql"
       ]

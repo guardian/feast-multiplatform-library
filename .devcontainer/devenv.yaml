@@ -28,7 +28,7 @@ modules:
 # Optional: IDE plugins - shared project plugins like language support
 plugins:
   vscode:
-    - JetBrains.kotlin
+    - fwcd.kotlin
     - vscjava.vscode-gradle
     - GraphQL.vscode-graphql
   intellij:
