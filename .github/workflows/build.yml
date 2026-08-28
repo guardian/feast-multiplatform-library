@@ -39,21 +39,7 @@ jobs:
         env:
           FEAST_GRAPHQL_INTROSPECTION_URL: ${{ vars.FEAST_GRAPHQL_INTROSPECTION_URL }}
         run: |
-          ./gradlew :backend:graphql:downloadFeastApolloSchemaFromIntrospection
-          npx graphql-inspector diff backend/graphql/src/commonMain/graphql/schema.graphqls backend/graphql/src/commonMain/graphql/schema.graphqls --fail-on-breaking
-#      - name: Check GraphQL Schema Drift
-#        if: steps.changes.outputs.backend_graphql == 'true'
-#        env:
-#          FEAST_GRAPHQL_INTROSPECTION_URL: ${{ vars.FEAST_GRAPHQL_INTROSPECTION_URL }}
-#        run: |
-#          ./gradlew :backend:graphql:downloadFeastApolloSchemaFromIntrospection
-#          if ! git diff --exit-code backend/graphql/src/commonMain/graphql/schema.graphqls; then
-#            if [ "${{ contains(github.event.pull_request.labels.*.name, 'schema-drift-expected') }}" = "true" ]; then
-#              echo "::warning::Schema differs from production, override label present."
-#            else
-#              exit 1
-#            fi
-#          fi
+          npx graphql-inspector diff ${FEAST_GRAPHQL_INTROSPECTION_URL} backend/graphql/src/commonMain/graphql/schema.graphqls --fail-on-breaking
 
   build:
     strategy:
