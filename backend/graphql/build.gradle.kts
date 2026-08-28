@@ -138,7 +138,7 @@ android {
                         schemaFile.set(localSchemaFile)
 
                         graphQlIntrospectionHeaders.orNull
-                            ?.split(',')
+                            ?.split(';')
                             ?.map(String::trim)
                             ?.filter(String::isNotBlank)
                             ?.forEach { rawHeader ->
@@ -162,19 +162,6 @@ android {
                     }
                 }
         }
-    }
-}
-
-val introspectionConfigured = graphQlIntrospectionUrl.orNull
-    ?.trim()
-    ?.isNotEmpty() == true
-
-if (introspectionConfigured) {
-    tasks.matching { task ->
-        task.name.contains("Apollo", ignoreCase = true) &&
-                task.name.contains("generate", ignoreCase = true)
-    }.configureEach {
-        dependsOn("downloadFeastApolloSchemaFromIntrospection")
     }
 }
 
