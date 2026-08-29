@@ -5,3 +5,4 @@ java temurin-17.0.20+101
 gradle 9.5.0
 node 24
 python 3.14.7
+android-sdk 23.0

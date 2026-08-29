@@ -41,10 +41,10 @@ plugins:
 postCreateCommand:
   - cmd: "sudo apt update && sudo apt install -y ripgrep"
     workingDirectory: "."
-  - cmd: "yes | sdkmanager --licenses"
-    workingDirectory: "."
-  - cmd: "sdkmanager --install 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0'"
-    workingDirectory: "."
+  # - cmd: "yes | sdkmanager --licenses"
+  #   workingDirectory: "."
+  # - cmd: "sdkmanager --install 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0'"
+  #   workingDirectory: "."
 # postStartCommand:
 #   - cmd: "echo 'Container started successfully'"
 #     workingDirectory: "."
