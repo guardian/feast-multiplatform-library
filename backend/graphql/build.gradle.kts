@@ -237,7 +237,7 @@ publishing {
         }
 
         pom {
-            name.set("Feast Multiplatform Library")
+            name.set("Feast Multiplatform Backend GraphQL")
             description.set(GraphQLConfig.PACKAGE_DESCRIPTION)
             url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
 

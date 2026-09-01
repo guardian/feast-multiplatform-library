@@ -127,7 +127,7 @@ publishing {
         }
 
         pom {
-            name.set("Feast Multiplatform Library")
+            name.set("Feast Multiplatform Backend API")
             description.set(APIConfig.PACKAGE_DESCRIPTION)
             url.set("https://github.com/${APIConfig.GITHUB_REPO}")
             licenses {
