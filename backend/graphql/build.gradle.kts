@@ -230,6 +230,10 @@ publishing {
     publications.withType<MavenPublication>().configureEach {
         groupId = GraphQLConfig.GROUP_ID
         version = project.version.toString()
+
+        println("Artifact ID: $name")
+        println("Version: $version")
+
         artifactId = when (name) {
             "kotlinMultiplatform" -> GraphQLConfig.MAVEN_ARTIFACT_ID
             "release" -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-android"
@@ -279,6 +283,9 @@ publishing {
                 (project.findProperty("repo.local") as? String)
                     ?: "${project.layout.buildDirectory.asFile.get().path}/custom"
             )
+
+            println("maven URL repo.local: ${project.findProperty("repo.local") as? String}")
+            println("maven URL: $url")
         }
     }
 }
