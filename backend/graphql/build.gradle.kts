@@ -237,8 +237,11 @@ publishing {
         artifactId = when (name) {
             "kotlinMultiplatform" -> GraphQLConfig.MAVEN_ARTIFACT_ID
             "release" -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-android"
+            "androidRelease" -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-android"
             else -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-$name"
         }
+
+        println("Artifact Id: $artifactId")
 
         pom {
             name.set("Feast Multiplatform Backend GraphQL")

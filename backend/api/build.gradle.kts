@@ -128,6 +128,7 @@ publishing {
         artifactId = when (name) {
             "kotlinMultiplatform" -> APIConfig.MAVEN_ARTIFACT_ID
             "release" -> "${APIConfig.MAVEN_ARTIFACT_ID}-android"
+            "androidRelease" -> "${APIConfig.MAVEN_ARTIFACT_ID}-android"
             else -> "${APIConfig.MAVEN_ARTIFACT_ID}-$name"
         }
 
@@ -163,7 +164,7 @@ publishing {
 
     repositories {
         // Adds a task for publishing locally to the build directory.
-        // Use as `./gradlew :backend:backend:publishReleasePublicationToCustomRepository`
+        // Use as `./gradlew :backend:api:publishReleasePublicationToCustomRepository`
         // Use with -Prepo.local=$LOCAL_ARTIFACTS_STAGING_PATH to output to a custom path.
         maven {
             name = "custom"
