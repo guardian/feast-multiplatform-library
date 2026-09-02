@@ -117,22 +117,18 @@ android {
 }
 
 publishing {
-    publications.withType<MavenPublication>().configureEach {
-        groupId = APIConfig.GROUP_ID
-        version = project.version.toString()
+    afterEvaluate {
+        publications.withType<MavenPublication>().configureEach {
+            groupId = APIConfig.GROUP_ID
+            version = project.version.toString()
+            artifactId = when {
+                name == "kotlinMultiplatform" -> APIConfig.MAVEN_ARTIFACT_ID
+                name.startsWith("android", ignoreCase = true) || name == "release" ->
+                    "${APIConfig.MAVEN_ARTIFACT_ID}-android"
+                else -> "${APIConfig.MAVEN_ARTIFACT_ID}-${name.lowercase()}"
+            }
 
-
-        println("Artifact ID: $name")
-        println("Version: $version")
-
-        artifactId = when (name) {
-            "kotlinMultiplatform" -> APIConfig.MAVEN_ARTIFACT_ID
-            "release" -> "${APIConfig.MAVEN_ARTIFACT_ID}-android"
-            "androidRelease" -> "${APIConfig.MAVEN_ARTIFACT_ID}-android"
-            else -> "${APIConfig.MAVEN_ARTIFACT_ID}-$name"
-        }
-
-        pom {
+            pom {
             name.set("Feast Multiplatform Backend API")
             description.set(APIConfig.PACKAGE_DESCRIPTION)
             url.set("https://github.com/${APIConfig.GITHUB_REPO}")
@@ -159,6 +155,7 @@ publishing {
                 developerConnection.set("scm:git:git://github.com/${APIConfig.GITHUB_REPO}.git")
                 url.set("https://github.com/${APIConfig.GITHUB_REPO}")
             }
+            }
         }
     }
 
@@ -172,10 +169,6 @@ publishing {
                 (project.findProperty("repo.local") as? String)
                     ?: "${project.layout.buildDirectory.asFile.get().path}/custom"
             )
-
-
-            println("maven URL repo.local: ${project.findProperty("repo.local") as? String}")
-            println("maven URL: $url")
         }
     }
 }
