@@ -287,6 +287,17 @@ publishing {
     }
 }
 
+// The reusable Guardian release workflow invokes this legacy task name. Stage the
+// KMP root metadata as well as the Android variant required by Android consumers.
+tasks.register("publishReleasePublicationToCustomRepository") {
+    group = "publishing"
+    description = "Publishes Backend GraphQL KMP metadata and Android artifacts to the custom repository."
+    dependsOn(
+        "publishKotlinMultiplatformPublicationToCustomRepository",
+        "publishAndroidReleasePublicationToCustomRepository",
+    )
+}
+
 tasks.withType<Test> {
     reports {
         junitXml.required.set(true)

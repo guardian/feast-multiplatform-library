@@ -173,6 +173,17 @@ publishing {
     }
 }
 
+// The reusable Guardian release workflow invokes this legacy task name. Stage the
+// KMP root metadata as well as the Android variant required by Android consumers.
+tasks.register("publishReleasePublicationToCustomRepository") {
+    group = "publishing"
+    description = "Publishes Backend KMP metadata and Android artifacts to the custom repository."
+    dependsOn(
+        "publishKotlinMultiplatformPublicationToCustomRepository",
+        "publishAndroidReleasePublicationToCustomRepository",
+    )
+}
+
 // iOS XCFramework publishing tasks
 tasks.register("zipXCFramework", Zip::class) {
     dependsOn("assemble${APIConfig.SPM_FRAMEWORK_NAME}XCFramework")
