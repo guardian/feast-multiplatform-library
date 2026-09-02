@@ -13,6 +13,34 @@ permissions:
   pull-requests: write
 
 jobs:
+  check-schema-drift:
+    name: "Check GraphQL Schema Drift"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install graphql-inspector
+        run: npm install -g @graphql-inspector/cli
+      - name: Detect backend GraphQL changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend_graphql:
+              - 'backend/graphql/src/commonMain/graphql/**'
+
+      - name: Check GraphQL schema drift
+        if: steps.changes.outputs.backend_graphql == 'true'
+        env:
+          FEAST_GRAPHQL_INTROSPECTION_URL: ${{ vars.FEAST_GRAPHQL_INTROSPECTION_URL }}
+        run: |
+          npx graphql-inspector diff ${FEAST_GRAPHQL_INTROSPECTION_URL} backend/graphql/src/commonMain/graphql/schema.graphqls --fail-on-breaking
+
   build:
     strategy:
       matrix:
@@ -27,6 +55,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Validate Gradle Wrapper
       uses: gradle/actions/wrapper-validation@v3
       continue-on-error: true

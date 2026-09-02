@@ -1,9 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-import java.io.FileInputStream
-import java.net.URI
-import java.security.MessageDigest
 
 object GraphQLConfig {
     const val GROUP_ID = "com.gu"
@@ -17,65 +14,6 @@ object GraphQLConfig {
 group = GraphQLConfig.GROUP_ID
 version = file("../version.txt").readText().trim()
 
-abstract class DownloadGraphQlSchemaTask : DefaultTask() {
-    @get:OutputFile
-    abstract val schemaFile: RegularFileProperty
-
-    @get:Input
-    abstract val schemaDownloadUrl: Property<String>
-
-    @get:Input
-    abstract val schemaDownloadHeaders: Property<String>
-
-    @get:Input
-    abstract val strictSchemaRefresh: Property<Boolean>
-
-    @TaskAction
-    fun refreshSchema() {
-        val schemaTarget = schemaFile.get().asFile
-        schemaTarget.parentFile.mkdirs()
-
-        val downloadUrl = schemaDownloadUrl.get().trim()
-        if (downloadUrl.isBlank()) {
-            if (strictSchemaRefresh.get()) {
-                throw GradleException(
-                    "GraphQL schema refresh is in strict mode, but no schema download URL was configured. " +
-                            "Set graphql.schema.download.url or FEAST_GRAPHQL_SCHEMA_DOWNLOAD_URL.",
-                )
-            }
-            logger.lifecycle("No GraphQL schema download URL configured. Using the checked-in schema at ${schemaTarget.path}.")
-            return
-        }
-
-        val connection = URI(downloadUrl).toURL().openConnection().apply {
-            connectTimeout = 15_000
-            readTimeout = 30_000
-            schemaDownloadHeaders.get()
-                .split(';')
-                .map(String::trim)
-                .filter(String::isNotBlank)
-                .forEach { rawHeader ->
-                    val separatorIndex = rawHeader.indexOf(':')
-                    require(separatorIndex > 0) {
-                        "Invalid GraphQL schema header '$rawHeader'. Use 'Header-Name: value;Other-Header: value'."
-                    }
-                    setRequestProperty(
-                        rawHeader.substring(0, separatorIndex).trim(),
-                        rawHeader.substring(separatorIndex + 1).trim(),
-                    )
-                }
-        }
-
-        val schemaContents = connection.getInputStream().bufferedReader().use { it.readText() }
-        if (schemaContents.isBlank()) {
-            throw GradleException("Downloaded GraphQL schema was empty from $downloadUrl")
-        }
-
-        schemaTarget.writeText(schemaContents)
-        logger.lifecycle("GraphQL schema refreshed at ${schemaTarget.path}")
-    }
-}
-
 plugins {
     `maven-publish`
     alias(libs.plugins.kotlinMultiplatform)
@@ -84,29 +22,16 @@ plugins {
     alias(libs.plugins.metalava)
 }
 
-val schemaDirectory = layout.projectDirectory.dir("src/commonMain/graphql")
-val localSchemaFile = schemaDirectory.file("schema.graphqls")
-val graphQlSchemaDownloadUrl = providers.gradleProperty("graphql.schema.download.url")
-    .orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_URL"))
-val graphQlIntrospectionUrl = providers.gradleProperty("graphql.introspection.url")
+val schemaDirectory: Directory = layout.projectDirectory.dir("src/commonMain/graphql")
+val localSchemaFile: RegularFile = schemaDirectory.file("schema.graphqls")
+
+val graphQlIntrospectionUrl = providers
+    .gradleProperty("graphql.introspection.url")
     .orElse(providers.environmentVariable("FEAST_GRAPHQL_INTROSPECTION_URL"))
-    .orElse(graphQlSchemaDownloadUrl)
-val graphQlSchemaHeaders = providers.gradleProperty("graphql.schema.download.headers")
-    .orElse(providers.environmentVariable("FEAST_GRAPHQL_SCHEMA_DOWNLOAD_HEADERS"))
-val graphQlStrictSchemaRefresh = providers.gradleProperty("graphql.schema.strict")
-    .map(String::toBooleanStrictOrNull)
-    .orElse(false)
 
-
-val downloadGraphQlSchema by tasks.registering(DownloadGraphQlSchemaTask::class) {
-    group = "graphql"
-    description = "Refreshes the Feast GraphQL schema before Apollo code generation."
-    outputs.upToDateWhen { false }
-    schemaFile.set(localSchemaFile)
-    schemaDownloadUrl.set(graphQlSchemaDownloadUrl.orElse(""))
-    schemaDownloadHeaders.set(graphQlSchemaHeaders.orElse(""))
-    strictSchemaRefresh.set(graphQlStrictSchemaRefresh)
-}
+val graphQlIntrospectionHeaders = providers
+    .gradleProperty("graphql.introspection.headers")
+    .orElse(providers.environmentVariable("FEAST_GRAPHQL_INTROSPECTION_HEADERS"))
 
 kotlin {
     androidTarget {
@@ -203,6 +128,7 @@ android {
             packageName.set("com.gu.recipe.backend.graphql.generated")
             srcDir("src/commonMain/graphql")
             schemaFile.set(localSchemaFile)
+
             graphQlIntrospectionUrl.orNull
                 ?.trim()
                 ?.takeIf(String::isNotEmpty)
@@ -210,21 +136,34 @@ android {
                     introspection {
                         endpointUrl.set(introspectionUrl)
                         schemaFile.set(localSchemaFile)
+
+                        graphQlIntrospectionHeaders.orNull
+                            ?.split(';')
+                            ?.map(String::trim)
+                            ?.filter(String::isNotBlank)
+                            ?.forEach { rawHeader ->
+                                val separatorIndex = rawHeader.indexOf(':')
+
+                                require(separatorIndex > 0) {
+                                    "Invalid GraphQL introspection header '$rawHeader'. " +
+                                            "Use 'Header-Name: value;Other-Header: value'."
+                                }
+
+                                val headerName = rawHeader
+                                    .substring(0, separatorIndex)
+                                    .trim()
+
+                                val headerValue = rawHeader
+                                    .substring(separatorIndex + 1)
+                                    .trim()
+
+                                headers.put(headerName, headerValue)
+                            }
                     }
                 }
         }
     }
 }
-
-tasks.matching { task ->
-    task.name.contains("Apollo", ignoreCase = true) && task.name.contains(
-        "generate",
-        ignoreCase = true
-    )
-}
-    .configureEach {
-        dependsOn(downloadGraphQlSchema)
-    }
 
 publishing {
     publications.withType<MavenPublication>().configureEach {

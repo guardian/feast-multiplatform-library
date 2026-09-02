@@ -1,4 +1,5 @@
 query GetFrontsByRegion($region: regions!, $edition: editions!, $recipesLimit2: Int!) {
+    # dummy update to trigger graphql schema drift detection
     Front: curation(region: $region, edition: $edition){
         title
         items {
