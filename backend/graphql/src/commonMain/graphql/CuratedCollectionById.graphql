@@ -1,0 +1,39 @@
+query CuratedContainerById($collectionId: uuid!) {
+    curatedContainerById(id: $collectionId) {
+        title
+        body
+        items {
+            ... on RecipeReference {
+                recipe {
+                    id
+                    title
+                    renderedTimings {
+                        forCard
+                    }
+                    previewImage {
+                        url
+                    }
+                    appExclusiveBranding
+                    contributors {
+                        webTitle
+                    }
+                    cuisines
+                    diets
+                    mealTypes
+                    canonicalArticle
+                }
+            }
+            ... on Chef {
+                chef {
+                    image
+                    id
+                    meta {
+                        bylineImageUrl
+                        contributorId
+                        webTitle
+                    }
+                }
+            }
+        }
+    }
+}
