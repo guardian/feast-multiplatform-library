@@ -166,17 +166,19 @@ android {
 }
 
 publishing {
-    publications.withType<MavenPublication>().configureEach {
-        groupId = GraphQLConfig.GROUP_ID
-        version = project.version.toString()
-        artifactId = when (name) {
-            "kotlinMultiplatform" -> GraphQLConfig.MAVEN_ARTIFACT_ID
-            "release" -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-android"
-            else -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-$name"
-        }
+    afterEvaluate {
+        publications.withType<MavenPublication>().configureEach {
+            groupId = GraphQLConfig.GROUP_ID
+            version = project.version.toString()
+            artifactId = when {
+                name == "kotlinMultiplatform" -> GraphQLConfig.MAVEN_ARTIFACT_ID
+                name.startsWith("android", ignoreCase = true) || name == "release" ->
+                    "${GraphQLConfig.MAVEN_ARTIFACT_ID}-android"
+                else -> "${GraphQLConfig.MAVEN_ARTIFACT_ID}-${name.lowercase()}"
+            }
 
-        pom {
-            name.set("Feast Multiplatform Library")
+            pom {
+            name.set("Feast Multiplatform Backend GraphQL")
             description.set(GraphQLConfig.PACKAGE_DESCRIPTION)
             url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
 
@@ -205,6 +207,7 @@ publishing {
                 developerConnection.set("scm:git:git://github.com/${GraphQLConfig.GITHUB_REPO}.git")
                 url.set("https://github.com/${GraphQLConfig.GITHUB_REPO}")
             }
+            }
         }
     }
 
@@ -218,8 +221,20 @@ publishing {
                 (project.findProperty("repo.local") as? String)
                     ?: "${project.layout.buildDirectory.asFile.get().path}/custom"
             )
+
         }
     }
+}
+
+// The reusable Guardian release workflow invokes this legacy task name. Stage the
+// KMP root metadata as well as the Android variant required by Android consumers.
+tasks.register("publishReleasePublicationToCustomRepository") {
+    group = "publishing"
+    description = "Publishes Backend GraphQL KMP metadata and Android artifacts to the custom repository."
+    dependsOn(
+        "publishKotlinMultiplatformPublicationToCustomRepository",
+        "publishAndroidReleasePublicationToCustomRepository",
+    )
 }
 
 tasks.withType<Test> {

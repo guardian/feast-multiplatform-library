@@ -117,17 +117,19 @@ android {
 }
 
 publishing {
-    publications.withType<MavenPublication>().configureEach {
-        groupId = APIConfig.GROUP_ID
-        version = project.version.toString()
-        artifactId = when (name) {
-            "kotlinMultiplatform" -> APIConfig.MAVEN_ARTIFACT_ID
-            "release" -> "${APIConfig.MAVEN_ARTIFACT_ID}-android"
-            else -> "${APIConfig.MAVEN_ARTIFACT_ID}-$name"
-        }
+    afterEvaluate {
+        publications.withType<MavenPublication>().configureEach {
+            groupId = APIConfig.GROUP_ID
+            version = project.version.toString()
+            artifactId = when {
+                name == "kotlinMultiplatform" -> APIConfig.MAVEN_ARTIFACT_ID
+                name.startsWith("android", ignoreCase = true) || name == "release" ->
+                    "${APIConfig.MAVEN_ARTIFACT_ID}-android"
+                else -> "${APIConfig.MAVEN_ARTIFACT_ID}-${name.lowercase()}"
+            }
 
-        pom {
-            name.set("Feast Multiplatform Library")
+            pom {
+            name.set("Feast Multiplatform Backend API")
             description.set(APIConfig.PACKAGE_DESCRIPTION)
             url.set("https://github.com/${APIConfig.GITHUB_REPO}")
             licenses {
@@ -153,12 +155,13 @@ publishing {
                 developerConnection.set("scm:git:git://github.com/${APIConfig.GITHUB_REPO}.git")
                 url.set("https://github.com/${APIConfig.GITHUB_REPO}")
             }
+            }
         }
     }
 
     repositories {
         // Adds a task for publishing locally to the build directory.
-        // Use as `./gradlew :backend:backend:publishReleasePublicationToCustomRepository`
+        // Use as `./gradlew :backend:api:publishReleasePublicationToCustomRepository`
         // Use with -Prepo.local=$LOCAL_ARTIFACTS_STAGING_PATH to output to a custom path.
         maven {
             name = "custom"
@@ -168,6 +171,17 @@ publishing {
             )
         }
     }
+}
+
+// The reusable Guardian release workflow invokes this legacy task name. Stage the
+// KMP root metadata as well as the Android variant required by Android consumers.
+tasks.register("publishReleasePublicationToCustomRepository") {
+    group = "publishing"
+    description = "Publishes Backend KMP metadata and Android artifacts to the custom repository."
+    dependsOn(
+        "publishKotlinMultiplatformPublicationToCustomRepository",
+        "publishAndroidReleasePublicationToCustomRepository",
+    )
 }
 
 // iOS XCFramework publishing tasks
