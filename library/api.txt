@@ -87,7 +87,7 @@ package com.gu.recipe {
   public final class RenderRecipeKt {
     method @Deprecated public static String ingredientWithoutSuffix(String renderedTemplate);
     method @KotlinOnly public static kotlin.Result<com.gu.recipe.RenderSession> newRenderSession(optional String? rawDensityData, optional String? rawTerminologyData, optional Boolean? convertTerminologies);
-    method public static com.gu.recipe.RenderSession noCustomaryRenderSession();
+    method public static com.gu.recipe.RenderSession noCustomaryRenderSession(optional Boolean? convertTerminologies);
     method @KotlinOnly public static kotlin.Result<com.gu.recipe.terminology.TerminologyTable> setUpTerminologyTable(optional String? rawTerminologyData);
   }
 

@@ -1,5 +1,9 @@
 package com.gu.recipe.loader
 
+import com.gu.recipe.generated.IngredientItem
+import com.gu.recipe.generated.IngredientsList
+import com.gu.recipe.generated.RecipeV3
+import com.gu.recipe.unit.MeasuringSystem
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -148,6 +152,51 @@ class DataLoaderTest {
         val session = loader.initialiseConversionSession("https://example.com/density", "https://example.com/terminology", "token123")
 
         assertTrue(errors.isEmpty())
+    }
+
+    private val aubergineRecipe = RecipeV3(
+        id = "test-recipe",
+        ingredients = listOf(
+            IngredientsList(
+                ingredientsList = listOf(IngredientItem(text = "1 aubergine"))
+            )
+        )
+    )
+
+    @Test
+    fun `convertTerminologies false is respected on the fallback session`() = runTest {
+        // Force the fallback path (invalid JSON) which uses bundled internal terminology data
+        val bridge = FakeBridge(DataLoadResult.Success(invalidJson), DataLoadResult.Success(invalidJson))
+        val loader = DataLoader(bridge)
+
+        val session = loader.initialiseConversionSession(
+            "https://example.com/density",
+            "https://example.com/terminology",
+            "token123",
+            convertTerminologies = false
+        )
+
+        val rendered = session.renderRecipe(aubergineRecipe, 1f, MeasuringSystem.USCustomary)
+
+        // Ingredient name must NOT be converted because terminologies are disabled
+        assertEquals("1 aubergine", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
+    }
+
+    @Test
+    fun `convertTerminologies default true still converts on the fallback session`() = runTest {
+        val bridge = FakeBridge(DataLoadResult.Success(invalidJson), DataLoadResult.Success(invalidJson))
+        val loader = DataLoader(bridge)
+
+        val session = loader.initialiseConversionSession(
+            "https://example.com/density",
+            "https://example.com/terminology",
+            "token123"
+        )
+
+        val rendered = session.renderRecipe(aubergineRecipe, 1f, MeasuringSystem.USCustomary)
+
+        // With terminologies enabled (default), the ingredient name is converted
+        assertEquals("1 <u>eggplant</u>", rendered.ingredients?.first()?.ingredientsList?.first()?.text)
     }
 
 }

@@ -331,10 +331,10 @@ fun newRenderSession(rawDensityData: String? = null, rawTerminologyData: String?
  * Creates a RenderSession without any density conversion data.  This is intended as a fallback
  * if newRenderSession fails on internal data
  */
-fun noCustomaryRenderSession(): RenderSession {
+fun noCustomaryRenderSession(convertTerminologies: Boolean? = null): RenderSession {
     val densityTable = DensityTable(preparedAt = "none", HashMap(), HashMap())
     val terminologyTable = TerminologyTable(HashMap())
-    return RenderSession(densityTable, terminologyTable)
+    return RenderSession(densityTable, terminologyTable, convertTerminologies)
 }
 
 
