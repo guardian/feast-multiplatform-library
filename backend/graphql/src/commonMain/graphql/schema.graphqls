@@ -15,17 +15,17 @@ type Chef {
 type ChefBio {
   bio: String
 
-  bylineImageUrl: String
-
   webUrl: String!
-
-  bylineLargeImageUrl: String
 
   contributorId: String!
 
-  webTitle: String!
-
   apiUrl: String
+
+  bylineImageUrl: String
+
+  bylineLargeImageUrl: String
+
+  webTitle: String!
 
   """
   returns all recipes
@@ -75,25 +75,25 @@ enum ContentTypes {
 }
 
 type CustomMessage {
-  image: String!
-
-  foregroundColor: AppColour!
-
-  isDismissable: Boolean!
-
-  title: String!
+  showChevron: Boolean!
 
   size: PromptSize!
 
-  isIcon: Boolean!
+  title: String!
 
-  showChevron: Boolean!
+  image: String!
+
+  isDismissable: Boolean!
+
+  supporting: String
 
   backgroundColor: AppColour!
 
   ctaLabel: String
 
-  supporting: String
+  isIcon: Boolean!
+
+  foregroundColor: AppColour!
 }
 
 type CustomMessageInsert {
@@ -103,11 +103,11 @@ type CustomMessageInsert {
 type FeastAppContainer {
   identityId: String
 
-  targetedRegions: [String!]
-
   title: String!
 
   id: uuid!
+
+  targetedRegions: [String!]
 
   body: String
 
@@ -132,9 +132,9 @@ type Insert {
 type KeywordStats {
   sumOtherDocCount: Int!
 
-  docCountErrorUpperBound: Int!
-
   buckets: [StatBucket!]!
+
+  docCountErrorUpperBound: Int!
 }
 
 type KeywordSuggestionsInsert {
@@ -172,13 +172,13 @@ type PrivateNote {
 
   owner: Int!
 
-  noteText: String
-
   lastModified: ZonedDateTime!
 
-  recipeId: String!
+  noteText: String
 
   pk: Int!
+
+  recipeId: String!
 }
 
 enum PromptSize {
@@ -194,6 +194,11 @@ type Query {
   search(pageSize: Int, page: Int, uprateByDate: SortableDates, cuisineFilter: [String!], contributorFilter: [String!], dietFilter: [String!], mealTypeFilter: [String!], celebrationFilter: [String!], sponsorFilter: [String!], enableCutOff: Boolean, q: String!, limit: Int): SearchResponse
 
   availableFilters: availableFilters!
+
+  """
+  returns imported search-term scores ordered by most recent search
+  """
+  recentSearchTerms(limit: Int! = 20, since: ZonedDateTime): [ScoredSearchTerm!]!
 
   """
   returns a recipe with the specific unique id
@@ -242,33 +247,33 @@ A field containing a raw JSON object
 scalar RawJson
 
 type Recipe {
-  canonicalArticle: String
-
   bookCredit: String
 
-  appExclusiveBranding: Boolean!
-
-  lastModifiedDate: LocalDateTime
-
   title: String
+
+  firstPublishedDate: LocalDateTime
+
+  originalMeasuringSystem: OriginalMeasuringSystem!
 
   isAppReady: Boolean
 
   composerId: String
 
-  checksumV2: String
-
-  firstPublishedDate: LocalDateTime
+  publishedDate: LocalDateTime
 
   description: String
 
-  originalMeasuringSystem: OriginalMeasuringSystem!
+  checksumV2: String
 
   id: String!
 
   difficultyLevel: String
 
-  publishedDate: LocalDateTime
+  canonicalArticle: String
+
+  appExclusiveBranding: Boolean!
+
+  lastModifiedDate: LocalDateTime
 
   ingredients: [ingredientSection!]!
 
@@ -357,17 +362,17 @@ type RecipeReference {
 type SavedCollection {
   collectionId: String!
 
-  collectionType: CollectionTypes!
-
-  title: String!
-
   owner: Int!
-
-  softDeleted: Boolean!
 
   lastModified: ZonedDateTime!
 
+  title: String!
+
+  softDeleted: Boolean!
+
   pk: Int!
+
+  collectionType: CollectionTypes!
 
   contentType: ContentTypes!
 
@@ -398,6 +403,46 @@ type SavedRecipe {
   Content of the saved recipe
   """
   recipe: Recipe
+}
+
+"""
+A search term and the scoring statistics imported from PostgreSQL.
+"""
+type ScoredSearchTerm {
+  """
+  The search phrase.
+  """
+  searchString: String!
+
+  """
+  The country associated with the search.
+  """
+  countryKey: String!
+
+  """
+  When this search term was most recently used.
+  """
+  mostRecent: ZonedDateTime!
+
+  """
+  The number of times this term was searched.
+  """
+  searchCount: Int!
+
+  """
+  The number of search results returned.
+  """
+  resultCount: Int!
+
+  """
+  The highest score returned for this term.
+  """
+  maxScore: Float
+
+  """
+  The average score returned for this term.
+  """
+  avgScore: Float
 }
 
 type SearchHit {
@@ -446,23 +491,23 @@ enum SortableDates {
 }
 
 type SponsorData {
+  sponsorshipType: String!
+
+  sponsorLink: String!
+
+  sponsorLogoHeight: Int
+
+  highContrastSponsorLogoWidth: Int
+
   highContrastSponsorLogo: String
 
   sponsorLogo: String!
 
   sponsorLogoWidth: Int
 
-  sponsorshipType: String!
-
   highContrastSponsorLogoHeight: Int
 
-  sponsorLogoHeight: Int
-
   sponsorName: String!
-
-  sponsorLink: String!
-
-  highContrastSponsorLogoWidth: Int
 }
 
 type StatBucket {
@@ -472,15 +517,15 @@ type StatBucket {
 }
 
 type StatsSection {
-  contributors: KeywordStats
+  suitableForDietIds: KeywordStats
 
   cuisineIds: KeywordStats
 
-  mealTypeIds: KeywordStats
-
   bylines: KeywordStats
 
-  suitableForDietIds: KeywordStats
+  contributors: KeywordStats
+
+  mealTypeIds: KeywordStats
 }
 
 type SubCollection {
@@ -507,9 +552,9 @@ type SubCollectionData {
 }
 
 type SuggestedContributor {
-  id: String!
-
   type: SuggestedFilterType!
+
+  id: String!
 
   """
   Information about this chef
@@ -518,9 +563,9 @@ type SuggestedContributor {
 }
 
 type SuggestedFilter {
-  id: String!
-
   type: SuggestedFilterType!
+
+  id: String!
 }
 
 """
