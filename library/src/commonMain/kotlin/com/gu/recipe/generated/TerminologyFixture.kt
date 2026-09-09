@@ -2,7 +2,7 @@
 package com.gu.recipe.generated
 
 val internalTerminologyData = """{
-  "prepared_at": "2026-07-23T14:33:07.361Z",
+  "prepared_at": "2026-08-17T10:18:06.578Z",
   "key": [
     "id",
     "ukTerm",
@@ -19,8 +19,8 @@ val internalTerminologyData = """{
       [
         "eggplant"
       ],
-      "Testing uk guidance notes for aubergine",
-      "Testing us guidance notes for eggplant"
+      "",
+      "Eggplants come in a variety of shapes, sizes and colours – though mostly we’re talking about globe or Italian eggplants, unless stated. US eggplants can be up to double the size of a UK eggplant  "
     ],
     [
       2,
@@ -30,7 +30,7 @@ val internalTerminologyData = """{
         "eggplants"
       ],
       "",
-      ""
+      "Eggplants come in a variety of shapes, sizes and colours – though mostly we’re talking about globe or Italian eggplants, unless stated. US eggplants can be up to double the size of a UK eggplant  "
     ],
     [
       3,
@@ -40,7 +40,7 @@ val internalTerminologyData = """{
         "American bacon"
       ],
       "",
-      ""
+      "American bacon American bacon is the same cut as British streaky bacon. Back bacon is leaner and the closest substitute is Canadian bacon"
     ],
     [
       4,
@@ -50,12 +50,12 @@ val internalTerminologyData = """{
         "Canadian bacon"
       ],
       "",
-      ""
+      "Canadian bacon Canadian bacon is a similar cut as British back bacon. American bacon is fattier and the same cut as British streaky bacon"
     ],
     [
       5,
+      "square tin",
       "square pan",
-      "pan",
       [
         "pan"
       ],
@@ -90,14 +90,19 @@ val internalTerminologyData = """{
         "flap steak"
       ],
       "",
-      ""
+      "Flap steak is taken from the bottom sirloin of a cow. It has a coarse grain, is suitable for fast frying and similar in texture to a hanger steak"
     ],
     [
       9,
       "beef mince",
       "ground beef",
       [
-        "ground beef"
+        "ground beef",
+        "mince pies",
+        "chicken mince",
+        "turkey mince",
+        "lamb mince",
+        "pork mince"
       ],
       "",
       ""
@@ -130,7 +135,7 @@ val internalTerminologyData = """{
         "cookie butter"
       ],
       "",
-      ""
+      "In the UK, Biscoff is the standard cookie butter. Different brands available in the US may differ in spice, sweetness and texture"
     ],
     [
       13,
@@ -140,7 +145,7 @@ val internalTerminologyData = """{
         "berries"
       ],
       "",
-      ""
+      "Blackcurrants are tiny and tart, and aren’t widely available in the US. Substitute with your favorite in-season berry. You may need to adjust sweetness"
     ],
     [
       14,
@@ -177,7 +182,8 @@ val internalTerminologyData = """{
       "broad beans",
       "fava beans",
       [
-        "fava beans"
+        "fava beans",
+        "dried fava beans"
       ],
       "",
       ""
@@ -205,12 +211,12 @@ val internalTerminologyData = """{
     [
       20,
       "cavolo nero",
-      "lacinato kale",
+      "Tuscan kale",
       [
-        "lacinato kale"
+        "Tuscan kale"
       ],
       "",
-      ""
+      "This bobbly, dark green kale has many monikers, including lacinato kale, dinosaur kale and cavalo nero"
     ],
     [
       21,
@@ -235,9 +241,9 @@ val internalTerminologyData = """{
     [
       23,
       "chickpeas",
-      "garbanzo beans",
+      "chickpeas",
       [
-        "garbanzo beans"
+        "chickpeas"
       ],
       "",
       ""
@@ -261,14 +267,22 @@ val internalTerminologyData = """{
         "chocolate chips",
         "tortilla chips",
         "corn chips",
-        "butterscotch chips"
+        "butterscotch chips",
+        "pitta chips",
+        "polenta chips",
+        "dandelion chips",
+        "yam chips",
+        "taro chips",
+        "choc chip",
+        "choc chips",
+        "coconut chips"
       ],
       "",
-      ""
+      "Chips are a British institution and cover the spectrum of skinny (French fries), chunky and curly. Not to be confused with crisps (what the US would call potato chips)"
     ],
     [
       26,
-      "chopped tomatoes",
+      "tinned chopped tomatoes",
       "canned diced tomatoes",
       [
         "canned diced tomatoes"
@@ -338,7 +352,7 @@ val internalTerminologyData = """{
         "half-and-half"
       ],
       "",
-      ""
+      "UK single cream is 24% fat; heavy cream is ~36%, light cream ~18-30%, half-and-half ~12%. If you can’t find light cream as a single cream swap, combine half-and-half and heavy cream"
     ],
     [
       33,
@@ -348,34 +362,45 @@ val internalTerminologyData = """{
         "heavy cream"
       ],
       "",
-      ""
+      "UK double cream is 48% fat and whipping cream is ~40% fat. US heavy cream is around 36% and a fine stand-in for both"
     ],
     [
       34,
       "crisps",
       "potato chips",
       [
-        "potato chips"
+        "potato chips",
+        "crisp",
+        "chilli crisp",
+        "crispy"
       ],
       "",
       ""
     ],
     [
       35,
-      "Demerara sugar",
-      "raw sugar",
+      "demerara sugar",
+      "turbinado sugar",
       [
-        "raw sugar"
+        "turbinado sugar"
       ],
       "",
-      ""
+      "Turbinado sugar is minimally processed, comes in large, crunchy crystals with a golden molasses flavour and colour. Also sold as raw cane sugar and demerara "
     ],
     [
       36,
       "desiccated coconut",
-      "shredded unsweetened coconut",
+      "unsweetened shredded coconut",
       [
-        "shredded unsweetened coconut"
+        "unsweetened shredded coconut",
+        "coconut",
+        "coconut flakes",
+        "toasted coconut flakes",
+        "coconut chips",
+        "coconut flour",
+        "coconut",
+        "coconut sugar",
+        "sweetened shredded coconut"
       ],
       "",
       ""
@@ -388,7 +413,7 @@ val internalTerminologyData = """{
         "Graham crackers"
       ],
       "",
-      ""
+      "Graham crackers are similar to British digestive biscuits: both are sweet and made with coarse whole-wheat flour. A fine swap for dessert crusts and crumbs"
     ],
     [
       38,
@@ -398,7 +423,7 @@ val internalTerminologyData = """{
         "eggs"
       ],
       "",
-      ""
+      "British and American eggs sizes differ. In savoury dishes this is unlikely to matter, in desserts it might. A British medium egg is the same as a US large egg. A British large egg is the same as a US extra large or jumbo egg"
     ],
     [
       39,
@@ -423,9 +448,9 @@ val internalTerminologyData = """{
     [
       41,
       "flat-leaf parsley",
-      "Italian parsley",
+      "flat-leaf parsley",
       [
-        "Italian parsley"
+        "flat-leaf parsley"
       ],
       "",
       ""
@@ -438,7 +463,7 @@ val internalTerminologyData = """{
         "hothouse rhubarb"
       ],
       "",
-      ""
+      "Hothouse rhubarb (forced rhubarb in the UK) is available at the start of the season and is typically pinker and less stringy than later-season field-grown"
     ],
     [
       43,
@@ -453,12 +478,12 @@ val internalTerminologyData = """{
     [
       44,
       "gooseberries",
-      "berries",
+      "gooseberries",
       [
         "berries"
       ],
       "",
-      ""
+      "Sour gooseberries are most likely found at bigger grocery stores and farmers’ markets. Substitute your favorite in-season berry. You may need to adjust sweetness"
     ],
     [
       45,
@@ -468,7 +493,7 @@ val internalTerminologyData = """{
         "plums"
       ],
       "",
-      ""
+      "Greengages aren’t commonly found in the US, but plums make a good substitute"
     ],
     [
       46,
@@ -485,7 +510,16 @@ val internalTerminologyData = """{
       "ground almonds",
       "almond flour",
       [
-        "almond flour"
+        "almond flour",
+        "almond",
+        "almonds",
+        "flaked almonds",
+        "blanched almonds",
+        "toasted almonds",
+        "almond essence",
+        "almond extract",
+        "slivered almonds",
+        "sliced almonds"
       ],
       "",
       ""
@@ -777,6 +811,16 @@ val internalTerminologyData = """{
     ],
     [
       76,
+      "self raising flour",
+      "self-rising flour",
+      [
+        "flour"
+      ],
+      "",
+      ""
+    ],
+    [
+      77,
       "semi-skimmed milk",
       "low-fat milk",
       [
@@ -786,7 +830,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      77,
+      78,
       "set honey",
       "creamed honey",
       [
@@ -796,7 +840,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      78,
+      79,
       "shin",
       "shank",
       [
@@ -806,7 +850,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      79,
+      80,
       "shortcrust pastry",
       "pie crust",
       [
@@ -816,7 +860,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      80,
+      81,
       "silverside",
       "bottom round",
       [
@@ -826,17 +870,17 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      81,
+      82,
       "spring onion",
-      "green onion",
+      "scallion",
       [
-        "green onion"
+        "scallion"
       ],
       "",
       ""
     ],
     [
-      82,
+      83,
       "strong white flour",
       "white bread flour",
       [
@@ -846,7 +890,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      83,
+      84,
       "sultanas",
       "raisins",
       [
@@ -856,7 +900,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      84,
+      85,
       "swede",
       "rutabaga",
       [
@@ -866,7 +910,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      85,
+      86,
       "sweetcorn",
       "corn",
       [
@@ -876,7 +920,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      86,
+      87,
       "Tenderstem broccoli",
       "broccolini",
       [
@@ -886,7 +930,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      87,
+      88,
       "tomato puree",
       "tomato paste",
       [
@@ -896,7 +940,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      88,
+      89,
       "topside",
       "top round",
       [
@@ -906,7 +950,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      89,
+      90,
       "treacle",
       "molasses",
       [
@@ -916,7 +960,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      90,
+      91,
       "wholemeal flour",
       "wholewheat flour",
       [
@@ -926,7 +970,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      91,
+      92,
       "dried active yeast",
       "active dry yeast",
       [
@@ -936,7 +980,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      92,
+      93,
       "easy bake yeast",
       "instant yeast",
       [
@@ -946,17 +990,17 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      93,
+      94,
       "golden syrup",
-      "light molasses or corn syrup",
+      "corn syrup",
       [
-        "light molasses or corn syrup"
+        "corn syrup"
       ],
       "",
-      ""
+      "golden syrup is a thick, vegan, very sweet, golden (cane) sugar syrup. It doesn’t have a like-for-like alternative in the US – try corn syrup "
     ],
     [
-      94,
+      95,
       "gammon",
       "cured ham",
       [
@@ -966,7 +1010,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      95,
+      96,
       "spring greens",
       "collard greens",
       [
@@ -976,7 +1020,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      96,
+      97,
       "gem lettuce",
       "Bibb lettuce",
       [
@@ -986,7 +1030,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      97,
+      98,
       "soured cream",
       "sour cream",
       [
@@ -996,7 +1040,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      98,
+      99,
       "fromage frais",
       "thick creamy yogurt",
       [
@@ -1006,7 +1050,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      99,
+      100,
       "suet",
       "beef fat",
       [
@@ -1016,7 +1060,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      100,
+      101,
       "bangers",
       "sausages",
       [
@@ -1026,7 +1070,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      101,
+      102,
       "fairy cake",
       "cupcake",
       [
@@ -1036,7 +1080,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      102,
+      103,
       "candy floss",
       "cotton candy",
       [
@@ -1046,7 +1090,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      103,
+      104,
       "greaseproof paper",
       "parchment paper",
       [
@@ -1056,7 +1100,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      104,
+      105,
       "tea towel",
       "dish towel",
       [
@@ -1066,7 +1110,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      105,
+      106,
       "kitchen roll",
       "paper towels",
       [
@@ -1076,7 +1120,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      106,
+      107,
       "washing-up liquid",
       "dish soap",
       [
@@ -1086,7 +1130,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      107,
+      108,
       "gherkin",
       "pickle",
       [
@@ -1096,7 +1140,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      108,
+      109,
       "jacket potato",
       "baked potato",
       [
@@ -1106,7 +1150,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      109,
+      110,
       "semolina",
       "farina",
       [
@@ -1116,7 +1160,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      110,
+      111,
       "lemonade",
       "lemon-lime soda",
       [
@@ -1126,7 +1170,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      111,
+      112,
       "bubble and squeak",
       "potato and cabbage hash",
       [
@@ -1136,7 +1180,7 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      112,
+      113,
       "saveloy",
       "frankfurter",
       [
@@ -1146,9 +1190,9 @@ val internalTerminologyData = """{
       ""
     ],
     [
-      113,
+      114,
       "sponge",
-      "frankfurter",
+      "cake",
       [
         "cake",
         "victoria sponge",
@@ -1159,6 +1203,165 @@ val internalTerminologyData = """{
       ],
       "",
       ""
+    ],
+    [
+      115,
+      "clotted cream",
+      "",
+      [],
+      "",
+      "UK clotted cream is thick, buttery and 55% fat, and doesn’t have a similar US alternative. Try mascarpone at a push"
+    ],
+    [
+      116,
+      "large eggs",
+      "jumbo eggs",
+      [
+        "eggs"
+      ],
+      "",
+      "British and American eggs sizes differ. In savoury dishes this is unlikely to matter, in desserts it might. A British medium egg is the equivalent of a US large egg. A British large egg is the equivalent of a US extra large or jumbo egg"
+    ],
+    [
+      117,
+      "biscuit",
+      "cookie",
+      [
+        "cookie"
+      ],
+      "",
+      ""
+    ],
+    [
+      118,
+      "scone",
+      "biscuit",
+      [
+        "biscuit"
+      ],
+      "",
+      ""
+    ],
+    [
+      119,
+      "whipping cream",
+      "heavy cream",
+      [
+        "heavy cream"
+      ],
+      "",
+      "UK double cream is 48% fat and whipping cream is ~40% fat. US heavy cream is around 36% and a fine stand-in for both"
+    ],
+    [
+      120,
+      "butter",
+      "butter",
+      [
+        "cookie butter"
+      ],
+      "",
+      "European butter typically has a higher fat percentage (and less water) that US butter. This may affect the richness and flavour of bakes"
+    ],
+    [
+      121,
+      "flaked almond",
+      "sliced almonds",
+      [
+        "sliced almonds",
+        "almond flour",
+        "almond",
+        "almonds",
+        "blanched almonds",
+        "toasted almonds",
+        "almond essence",
+        "almond extract",
+        "slivered almonds",
+        "ground almonds"
+      ],
+      "",
+      ""
+    ],
+    [
+      122,
+      "hand-held blender",
+      "immersion blender",
+      [
+        "immersion blender"
+      ],
+      "",
+      ""
+    ],
+    [
+      123,
+      "stick blender",
+      "immersion blender",
+      [
+        "immersion blender"
+      ],
+      "",
+      ""
+    ],
+    [
+      124,
+      "pan",
+      "pot",
+      [
+        "pot"
+      ],
+      "",
+      ""
+    ],
+    [
+      125,
+      "passata",
+      "strained tomatoes",
+      [
+        "strained tomatoes"
+      ],
+      "",
+      ""
+    ],
+    [
+      126,
+      "hen of the woods",
+      "maitake",
+      [
+        "maitake"
+      ],
+      "",
+      ""
+    ],
+    [
+      127,
+      "lebanese cucumbers",
+      "persian cucumbers",
+      [],
+      "",
+      ""
+    ],
+    [
+      128,
+      "giant couscous",
+      "pearl couscous",
+      [],
+      "",
+      ""
+    ],
+    [
+      129,
+      "israeli couscous",
+      "pearl couscous",
+      [],
+      "",
+      ""
+    ],
+    [
+      130,
+      "cucumber",
+      "English cucumber",
+      [],
+      "",
+      ""
     ]
   ]
-}"""
+}""".trimIndent()

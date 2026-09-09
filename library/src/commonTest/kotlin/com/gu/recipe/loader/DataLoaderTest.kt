@@ -1,5 +1,6 @@
 package com.gu.recipe.loader
 
+import com.gu.recipe.unit.MeasuringSystem
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -53,6 +54,27 @@ class DataLoaderTest {
         assertNotNull(session)
         // onError must NOT be called — proves remote data was used, not fallback
         assertTrue(errors.isEmpty(), "Expected no errors when remote data and terminology data are valid")
+    }
+
+    @Test
+    fun `disabled terminology conversion is passed to the remote session`() = runTest {
+        val loader = DataLoader(
+            FakeBridge(
+                DataLoadResult.Success(validDensityJson),
+                DataLoadResult.Success(validTerminologyJson)
+            )
+        )
+
+        val session = loader.initialiseConversionSession(
+            "https://example.com/density",
+            "https://example.com/terminology",
+            convertTerminologies = false
+        )
+
+        assertEquals(
+            "aubergine tart",
+            session.applyTerminologyToRecipeTitle("aubergine tart", MeasuringSystem.USCombined)
+        )
     }
 
     @Test

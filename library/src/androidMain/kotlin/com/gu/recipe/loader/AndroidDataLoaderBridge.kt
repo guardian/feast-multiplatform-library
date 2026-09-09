@@ -23,7 +23,6 @@ class AndroidDataLoaderBridge(private val cacheDir: File) : DataLoaderBridge {
                 }
 
                 performRequest(url, authToken, cached)
-                performRequest(url, authToken, cached)
             } catch (e: Exception) {
                 if (cached != null) {
                     DataLoadResult.Success(cached.content)
