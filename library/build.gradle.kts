@@ -197,6 +197,14 @@ publishing {
     }
 }
 
+// Ensure executing 'publishReleasePublicationTo...' also publishes JVM and root metadata
+tasks.matching { it.name.startsWith("publishReleasePublicationTo") }.configureEach {
+    dependsOn(tasks.matching {
+        it.name.startsWith("publishServerPublicationTo") ||
+        it.name.startsWith("publishKotlinMultiplatformPublicationTo")
+    })
+}
+
 // iOS XCFramework publishing tasks
 tasks.register("zipXCFramework", Zip::class) {
     dependsOn("assemble${Config.SPM_FRAMEWORK_NAME}XCFramework")
