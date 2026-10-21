@@ -1,11 +1,13 @@
 package com.gu.recipe
 
 import com.gu.recipe.density.DensityTable
+import com.gu.recipe.density.Ingredient
 import com.gu.recipe.template.OvenTemperaturePlaceholder
 import com.gu.recipe.template.ParsedTemplate
 import com.gu.recipe.template.QuantityPlaceholder
 import com.gu.recipe.template.TemplateConst
 import com.gu.recipe.unit.MeasuringSystem
+import kotlin.String
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -665,6 +667,39 @@ class RenderTemplateTest {
             convertedText = convertedText.replace(Regex("\\b$ukTerm\\b", RegexOption.IGNORE_CASE), usTerm)
         }
         return convertedText
+    }
+
+    @Test
+    fun `test conversion for flaked almonds to avoid oz and display only cup conversion if US combined`() {
+        // Arrange
+        val densityTable = DensityTable(
+            preparedAt = "none",
+            hashMapOf("flaked almond" to Ingredient(id = 1, name = "flaked almond", normalised_name = "flaked almond", density = 0.422676f)),
+            HashMap()
+        )
+        val renderSession = RenderSession(densityTable)
+
+        val template = ParsedTemplate(
+            listOf(
+                QuantityPlaceholder(
+                    min = 40f,
+                    max = 40f,
+                    unit = "g",
+                    scale = true,
+                    ingredient = "flaked almond",
+                    usCust = true
+                ),
+                TemplateConst(" toasted flaked almonds, to serve"),
+            )
+        )
+        val factor = 1.0f
+        val measuringSystem = MeasuringSystem.USCombined
+
+        // Act
+        val result = renderSession.renderTemplate(template, factor, measuringSystem, MeasuringSystem.Metric)
+
+        // Assert
+        assertEquals("⅓ cup toasted flaked almonds, to serve", result)
     }
 }
 

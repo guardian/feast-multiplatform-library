@@ -179,7 +179,7 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 renderQuantity(element, factor, MeasuringSystem.Imperial, originalMeasuringSystem)
                             }
 
-                            if (usCustomaryPart == imperialPart || imperialPart == null) {
+                            if (usCustomaryPart == imperialPart || imperialPart == null || imperialPart.trimEnd().endsWith(" oz")) {
                                 usCustomaryPart
                             } else {
                                 imperialPart + " • " + usCustomaryPart
