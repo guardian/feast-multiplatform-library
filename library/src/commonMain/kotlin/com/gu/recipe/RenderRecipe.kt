@@ -171,11 +171,20 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
                         } else {
                             val usCustomaryPart = renderQuantity(element, factor, MeasuringSystem.USCustomary, originalMeasuringSystem)
-                            val imperialPart = if (unit == Units.FLUID_OUNCE) { // Skip rendering fluid ounces
+                            val imperialPart = if (element.ingredient == "butter" || unit == Units.STICK) {
+                                renderQuantity(
+                                    element,
+                                    factor,
+                                    MeasuringSystem.Imperial,
+                                    originalMeasuringSystem,
+                                )
+                            } else if (unit == Units.FLUID_OUNCE) { // Skip rendering fluid ounces
                                 null
                             } else if (unit.unitType == UnitType.VOLUME) {
                                 usCustomaryPart
-                            } else if (unit.unitType == UnitType.WEIGHT && !unit.symbol.endsWith(Units.OUNCE.symbol)) {
+                            } else if (unit.unitType == UnitType.WEIGHT &&
+                                !unit.symbol.endsWith(Units.OUNCE.symbol) &&
+                                !(element.ingredient == "butter" || unit == Units.STICK) ) {
                                 usCustomaryPart
                             } else {
                                 renderQuantity(element, factor, MeasuringSystem.Imperial, originalMeasuringSystem)
