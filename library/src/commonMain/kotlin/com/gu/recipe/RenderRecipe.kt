@@ -175,11 +175,13 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 null
                             } else if (unit.unitType == UnitType.VOLUME) {
                                 usCustomaryPart
+                            } else if (unit.unitType == UnitType.WEIGHT && !unit.symbol.endsWith(Units.OUNCE.symbol)) {
+                                usCustomaryPart
                             } else {
                                 renderQuantity(element, factor, MeasuringSystem.Imperial, originalMeasuringSystem)
                             }
 
-                            if (usCustomaryPart == imperialPart || imperialPart == null || imperialPart.trimEnd().endsWith(Units.OUNCE.symbol)) {
+                            if (usCustomaryPart == imperialPart || imperialPart == null) {
                                 usCustomaryPart
                             } else {
                                 imperialPart + " • " + usCustomaryPart
