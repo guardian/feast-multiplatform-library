@@ -175,6 +175,10 @@ class RenderSession(private val densityTable: DensityTable, private val terminol
                                 null
                             } else if (unit.unitType == UnitType.VOLUME) {
                                 usCustomaryPart
+                            } else if (unit.unitType == UnitType.WEIGHT &&
+                                !unit.symbol.endsWith(Units.OUNCE.symbol) &&
+                                !(element.ingredient == "butter" || unit == Units.STICK) ) {
+                                usCustomaryPart
                             } else {
                                 renderQuantity(element, factor, MeasuringSystem.Imperial, originalMeasuringSystem)
                             }
