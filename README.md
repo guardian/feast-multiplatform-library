@@ -24,3 +24,13 @@ To avoid any error and make evolving these models easier, we generate the kotlin
 see `./generate-models.sh` for the script that does this.
 
 The generated file is commit to github, making the build deterministic.
+
+## Kotlin/JS dependencies
+
+Kotlin Multiplatform manages the Node.js tooling dependencies through Gradle and
+stores their lockfile in `kotlin-js-store/yarn.lock`. Transitive security overrides
+are configured using `YarnRootExtension` in the root `build.gradle.kts`, with
+versions in `gradle/libs.versions.toml`, rather than a manually maintained
+`package.json`. After changing an override, run `./gradlew kotlinUpgradeYarnLock`
+and commit the updated lockfile. Run `./gradlew :library:jsNodeTest` to check the
+JavaScript target.
