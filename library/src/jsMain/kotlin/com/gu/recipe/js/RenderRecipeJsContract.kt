@@ -53,7 +53,7 @@ fun renderTemplate(templateElements: List<TemplateElement>, session: RenderSessi
     }
     val originalMeasuringSystem = when (originalUnits) {
         "imperial" -> MeasuringSystem.Imperial
-        "aus-cups" -> MeasuringSystem.Metric
+        "aus-cup" -> MeasuringSystem.Metric
         "metric" -> MeasuringSystem.Metric
         "us" -> MeasuringSystem.USCustomary
         else -> throw IllegalArgumentException("Unknown unit: $originalUnits")
