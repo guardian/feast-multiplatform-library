@@ -335,7 +335,7 @@ data class Instruction (
  */
 @Serializable
 enum class OriginalMeasuringSystem(val value: String) {
-    @SerialName("aus-cup") AusCup("aus-cup"),
+    @SerialName("aus-cup") AusCup("metric"),
     @SerialName("imperial") Imperial("imperial"),
     @SerialName("metric") Metric("metric"),
     @SerialName("us") Us("us");
