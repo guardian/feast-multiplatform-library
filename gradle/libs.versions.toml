@@ -12,7 +12,7 @@ okio = "3.18.2"
 netty = "4.1.137.Final"
 bouncycastle = "1.84"
 jackson = "2.18.8"
-skie = "0.10.13"
+skie = "0.10.16"
 brace-expansion = "2.1.6"
 
 [libraries]
