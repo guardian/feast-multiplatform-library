@@ -28,11 +28,7 @@ The generated file is commit to github, making the build deterministic.
 ## Kotlin/JS dependencies
 
 Kotlin Multiplatform manages the Node.js tooling dependencies through Gradle and
-stores their lockfile in `kotlin-js-store/yarn.lock`. Transitive security overrides
-are configured using `YarnRootExtension` in the root `build.gradle.kts`, with
-versions in `gradle/libs.versions.toml`, rather than a manually maintained
-`package.json`. After changing an override, run `./gradlew kotlinUpgradeYarnLock`
-and commit the updated lockfile. Run `./gradlew :library:jsNodeTest` to check the
-JavaScript target.
-The Mocha version used by Kotlin/JS tests is configured in the root build and
-version catalog; upgrading it also requires regenerating the lockfile.
+stores their lockfile in `kotlin-js-store/yarn.lock`. The Mocha version used by
+Kotlin/JS tests is configured in the root build and `gradle/libs.versions.toml`.
+After changing it, run `./gradlew kotlinUpgradeYarnLock` and commit the updated
+lockfile. Run `./gradlew :library:jsNodeTest` to check the JavaScript target.
