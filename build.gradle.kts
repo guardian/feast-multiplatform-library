@@ -11,6 +11,8 @@ plugins.withType<YarnPlugin> {
     extensions.configure<YarnRootExtension> {
         // Fix CVE-2026-102276 and CVE-2026-102278 in Kotlin/JS test tooling.
         resolution("brace-expansion", libs.versions.brace.expansion.get())
+        // Mocha 12 is incompatible with Kotlin's test reporter; replace its vulnerable dependency.
+        resolution("serialize-javascript", libs.versions.serialize.javascript.get())
     }
 }
 
