@@ -1,5 +1,5 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
     alias(libs.plugins.androidLibrary) apply false
@@ -7,10 +7,12 @@ plugins {
     alias(libs.plugins.vanniktech.mavenPublish) apply false
 }
 
-plugins.withType<NodeJsRootPlugin> {
-    extensions.configure<NodeJsRootExtension> {
-        // Upgrade Kotlin/JS's Mocha tooling to remove vulnerable dependencies.
-        versions.mocha.version = libs.versions.mocha.get()
+plugins.withType<YarnPlugin> {
+    extensions.configure<YarnRootExtension> {
+        // Fix CVE-2026-102276 and CVE-2026-102278 in Kotlin/JS test tooling.
+        resolution("brace-expansion", libs.versions.brace.expansion.get())
+        // Mocha 12 is incompatible with Kotlin's test reporter; replace its vulnerable dependency.
+        resolution("serialize-javascript", libs.versions.serialize.javascript.get())
     }
 }
 
