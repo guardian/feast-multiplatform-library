@@ -34,3 +34,5 @@ versions in `gradle/libs.versions.toml`, rather than a manually maintained
 `package.json`. After changing an override, run `./gradlew kotlinUpgradeYarnLock`
 and commit the updated lockfile. Run `./gradlew :library:jsNodeTest` to check the
 JavaScript target.
+The Mocha version used by Kotlin/JS tests is configured in the root build and
+version catalog; upgrading it also requires regenerating the lockfile.

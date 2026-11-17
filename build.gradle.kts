@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 
 plugins {
     alias(libs.plugins.androidLibrary) apply false
@@ -11,6 +13,13 @@ plugins.withType<YarnPlugin> {
     extensions.configure<YarnRootExtension> {
         // Fix CVE-2026-102276 and CVE-2026-102278 in Kotlin/JS test tooling.
         resolution("brace-expansion", libs.versions.brace.expansion.get())
+    }
+}
+
+plugins.withType<NodeJsRootPlugin> {
+    extensions.configure<NodeJsRootExtension> {
+        // Upgrade Kotlin/JS's Mocha tooling to remove vulnerable dependencies.
+        versions.mocha.version = libs.versions.mocha.get()
     }
 }
 
